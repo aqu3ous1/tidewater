@@ -261,13 +261,15 @@ const UI = (() => {
     const d = typeof docId === 'string' ? DOCS[docId] : docId;
     if (!d) return Promise.resolve();
     Sound.sfx('paper');
-    const width = d.style === 'news' ? 38 : 34;
+    // characters per line must fit the paper drawn in drawDoc (6px glyphs, 12px margins)
+    const width = Math.floor((docBox(d).w - 24) / 6);
     const pages = (typeof d.pages === 'function' ? d.pages(Game.st) : d.pages).map((p) => wrapText(name(p), width));
     // split long pages
     const out = [];
     for (const p of pages) for (let i = 0; i < p.length; i += 15) out.push(p.slice(i, i + 15));
     return push({ type: 'doc', d, pages: out, page: 0 });
   }
+  function docBox(d) { return d.style === 'news' ? { x: 34, y: 14, w: 252, h: 212 } : { x: 44, y: 14, w: 232, h: 212 }; }
   function updDoc(m, dt) {
     if (Input.repeat('right', dt) && m.page < m.pages.length - 1) { m.page++; Sound.sfx('paper', { vol: 0.5 }); }
     if (Input.repeat('left', dt) && m.page > 0) { m.page--; Sound.sfx('paper', { vol: 0.5 }); }
@@ -277,7 +279,7 @@ const UI = (() => {
   function drawDoc(ctx, m) {
     fill(ctx, 0, 0, W, H, 'rgba(0,0,0,0.6)');
     const d = m.d;
-    const x = 44, y = 14, w = 232, h = 212;
+    const { x, y, w, h } = docBox(d);
     const paperC = d.paper || (d.style === 'news' ? '#e4e0d0' : d.style === 'child' ? '#f6f2e4' : '#efe9d6');
     fill(ctx, x, y, w, h, paperC); frame(ctx, x, y, w, h, '#8a7a5a');
     if (d.style === 'child' || d.style === 'hand') for (let ly = y + 30; ly < y + h - 8; ly += 12) fill(ctx, x + 4, ly + 9, w - 8, 1, 'rgba(90,120,200,0.25)');

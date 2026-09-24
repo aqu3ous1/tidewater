@@ -62,7 +62,7 @@ const Title = (() => {
     if (UI.busy) return;
     if (phase === 'boot') {
       if (t > 0.3 && t < 0.35 && Sound.ready) Sound.sfx('boot');
-      if (t > 4.2 || (t > 0.5 && (Input.pressed('a') || Input.pressed('start')))) { Input.eat('a'); Input.eat('start'); phase = Sound.ready ? 'menu' : 'press'; Game.mode = 'title'; t = 0; titleMusic(); }
+      if (t > 4.2 || (t > 0.5 && (Input.pressed('a') || Input.pressed('start')))) { Input.eat('a'); Input.eat('start'); phase = 'press'; Game.mode = 'title'; t = 0; titleMusic(); }
       return;
     }
     if (phase === 'press') {

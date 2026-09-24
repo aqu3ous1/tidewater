@@ -139,7 +139,7 @@ const Font = (() => {
       for (let y = 0; y < g.length; y++) for (let x = 0; x < 5; x++) {
         if (g[y][x]) {
           const o = ((y + 1) * cv.width + i * CW + x) * 4;
-          img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; img.data[o + 3] = 255;
+          img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; img.data[o + 3] = c[3] == null ? 255 : c[3];
         }
       }
     });

@@ -14,14 +14,14 @@ const Input = (() => {
     Tab: 'select', KeyC: 'select', KeyI: 'select',
   };
   const BUTTONS = ['up', 'down', 'left', 'right', 'a', 'b', 'start', 'select'];
-  const kb = {}, pad = {}, prev = {}, now = {};
+  const kb = {}, pad = {}, prev = {}, now = {}, latch = {};
   let anyKeyCb = null;
   let typed = [];
   let lastActivity = performance.now();
 
   window.addEventListener('keydown', (e) => {
     const b = KEYMAP[e.code];
-    if (b) { kb[b] = true; e.preventDefault(); }
+    if (b) { kb[b] = true; latch[b] = true; e.preventDefault(); }
     if (e.key && e.key.length === 1) typed.push(e.key);
     else if (e.key === 'Backspace') typed.push('\b');
     else if (e.key === 'Enter') typed.push('\n');
@@ -56,7 +56,7 @@ const Input = (() => {
 
   function update() {
     pollPad();
-    for (const b of BUTTONS) { prev[b] = now[b]; now[b] = !!(kb[b] || pad[b]); }
+    for (const b of BUTTONS) { prev[b] = now[b]; now[b] = !!(kb[b] || pad[b] || latch[b]); latch[b] = false; }
   }
 
   const held = (b) => !!now[b];

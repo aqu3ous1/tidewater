@@ -30,6 +30,11 @@ const _hexCache = {};
 function hex(c) {
   if (Array.isArray(c)) return c;
   if (_hexCache[c]) return _hexCache[c];
+  const m = /^rgba?\(([^)]*)\)$/.exec(c);
+  if (m) {
+    const p = m[1].split(',').map(Number);
+    return (_hexCache[c] = [p[0], p[1], p[2], p.length > 3 ? Math.round(p[3] * 255) : 255]);
+  }
   let s = c.replace('#', '');
   if (s.length === 3) s = s[0] + s[0] + s[1] + s[1] + s[2] + s[2];
   const v = [parseInt(s.slice(0, 2), 16), parseInt(s.slice(2, 4), 16), parseInt(s.slice(4, 6), 16), s.length >= 8 ? parseInt(s.slice(6, 8), 16) : 255];
