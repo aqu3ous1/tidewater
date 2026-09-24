@@ -33,6 +33,9 @@ WebGL is required. Sound starts after your first key press. Headphones help.
 | Items, collection, goals, map | Tab / C / I | Select / Y |
 | Pause, options | Esc / P | Start |
 
+- The **map** (Tab, then → to MAP) is a folded visitor's map of Bellwood. ↑/↓ picks
+  a place and shows its sign, whether it's open, and a short note about it. A star
+  marks where your current goal is.
 - Save by using your **bed**, or when asked after sleeping. The game also saves
   automatically at the start of every day.
 - **Options** (from the title screen or the pause menu) include a SOFT/SHARP
@@ -107,7 +110,7 @@ index.html            entry point (classic scripts, works from file://)
 src/core/             math, bitmap font, renderer, input, audio
 src/gfx/              pixel painter + atlas, textures, sprites, decals/photos/icons
 src/world/            map builder, props, runtime (collision, camera, NPCs, doors)
-src/game/             state/saves, script API, UI, menus, title, story, endings
+src/game/             state/saves, script API, UI, menus, town map, title, story, endings
 src/data/             items, documents, NPC routines and dialogue
 src/maps/             town, house, aquarium, basement, shops, school, the Underneath
 tools/                viewer + automated playthrough harness (Playwright)

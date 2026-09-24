@@ -1279,43 +1279,6 @@ const Story = {
       return t;
     });
   },
-  drawMap(ctx, t) {
-    const st = Game.st;
-    UI.panel(ctx, 8, 26, 304, 190, { bg: '#e8e0c8', border: '#6a5a4a', inner: 'rgba(0,0,0,0)' });
-    const mx = (x) => 160 + x * 1.72, mz = (z) => 128 + z * 0.94;
-    const R_ = (x0, z0, x1, z1, c) => { ctx.fillStyle = c; ctx.fillRect(Math.round(mx(x0)), Math.round(mz(z0)), Math.round((x1 - x0) * 1.72), Math.round((z1 - z0) * 0.94)); };
-    R_(-78, -92, 78, -90, '#5a8ac8');
-    // streets
-    for (const z of [-58, -18, 22, 64]) R_(-78, z - 4, 78, z + 4, '#9a9690');
-    R_(-4, -62, 4, 70, '#9a9690');
-    const mem = st.day >= 8;
-    if (mem) R_(25, -14, 31, 18, '#9a9690');
-    const bld = (x0, z0, x1, z1, c, label, ly) => { R_(x0, z0, x1, z1, c); if (label) Font.draw(ctx, label, Math.round(mx((x0 + x1) / 2) - label.length * 3), Math.round(mz(ly != null ? ly : (z0 + z1) / 2) - 4), '#2a2430'); };
-    bld(-30, -88, 14, -68, '#7aa0d8', 'AQUARIUM');
-    if (!mem) bld(-76, -46, -58, -26, '#b8b0a0', 'CHURCH');
-    bld(-52, -44, -36, -26, '#b8a080', 'MKT');
-    bld(-30, -42, -14, -26, '#d89090', "HAL'S");
-    bld(10, -40, 22, -26, '#a0d0c0', 'SUDS');
-    bld(26, -40, 38, -26, '#a0a098', '');
-    bld(56, -48, 74, -36, '#d8d0c0', "GUS'S");
-    bld(-76, -6, -62, 12, '#a8c098', '');
-    bld(-54, -6, -40, 12, '#9a9480', '');
-    bld(-32, -6, -18, 12, mem ? '#9a9480' : '#e0b0b0', 'MILLER');
-    bld(10, -6, 24, 12, '#a8c0d8', mem ? "EVAN'S" : 'HOME');
-    bld(32, -6, 46, 12, '#d8d8d0', ''); bld(54, -6, 70, 12, '#d8c890', '');
-    bld(-76, 30, -8, 56, '#a8c890', 'PARK');
-    bld(12, 32, 50, 50, '#c8a878', 'SCHOOL');
-    bld(44, -110, 48, -90, '#8a7a62', '');
-    Font.draw(ctx, 'PIER', Math.round(mx(50)), Math.round(mz(-96)), '#2a2430');
-    if (st.map === 'town') {
-      const p = World.player;
-      if (Math.floor(t * 3) % 2) { ctx.fillStyle = '#c83a3a'; ctx.fillRect(Math.round(mx(p.x)) - 2, Math.round(mz(p.z)) - 2, 5, 5); }
-      Font.draw(ctx, 'YOU ARE HERE', 16, 204, '#6a3a3a');
-    } else {
-      Font.draw(ctx, 'YOU ARE INSIDE: ' + ((MAPS[st.map] && MAPS[st.map].name) || '?'), 16, 204, '#6a3a3a');
-    }
-    Font.draw(ctx, 'BELLWOOD', 250, 30, '#6a5a4a');
-  },
   slotDisguise(s, meta) {
     if (meta.trueDone) return null;
     if (s.flags && s.flags.backpackPlaced) return { name: 'EVAN', day: s.flags.underneath ? 'DAY 1' : 'DAY ' + s.day };

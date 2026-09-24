@@ -38,6 +38,8 @@ const Menus = (() => {
       if (Input.repeat('up', dt)) { m.sel = (m.sel + cats.length - 1) % cats.length; Sound.sfx('move'); }
       if (Input.repeat('down', dt)) { m.sel = (m.sel + 1) % cats.length; Sound.sfx('move'); }
       if (Input.pressed('a')) { Input.eat('a'); m.cat = cats[m.sel]; m.catSel = 0; Sound.sfx('select'); }
+    } else if (m.tab === 3) {
+      TownMap.update(m, dt);
     }
   }
   function updCat(m, dt) {
@@ -159,7 +161,7 @@ const Menus = (() => {
       const hist = Story.historyView ? Story.historyView(st) : st.hist.slice().reverse();
       for (const h of hist) { if (y > 204) break; Font.draw(ctx, UIName(h).slice(0, 48), 18, y, '#7a7a90'); y += 10; }
     } else if (m.tab === 3) {
-      Story.drawMap(ctx, t);
+      TownMap.draw(ctx, m, t);
     }
   }
   function UIName(s) { return String(s).replace(/\{name\}/g, (Game.st && Game.st.name) || 'YOU'); }
