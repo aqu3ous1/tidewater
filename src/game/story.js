@@ -340,18 +340,20 @@ const Story = {
     S.done('findwalter');
     await W('There you are! Come on, I\'ll show you around. Stay close, it\'s easy to get turned around in here.');
     await S.obj('follow', 'FOLLOW WALTER.', { quiet: false });
+    // waypoints keep Walter (and you, following him) off the tanks, benches and the touch pool
     const stops = [
       { to: [[-11.5, -4]], lines: ['This is the reef tank. Two hundred gallons of the prettiest fish this side of the river.', 'That orange one is Pumpkin. He thinks he runs the place.'] },
       { to: [[-2, -6.2]], lines: ['The touch pool. Kids love it. Two fingers, gently. That\'s the rule.', 'We had a boy once who tried to take a sea star home in his pocket. Nearly made it, too.'] },
-      { to: [[10, -17.5]], lines: ['And this is Mister Eight. Our octopus.', 'He\'s smarter than most people in this town. Don\'t tell them I said that.', 'He can open a jar from the inside. He likes some people and not others. Nobody knows why.'] },
+      { to: [[4, -6.5], [11, -11], [10, -17.5]], lines: ['And this is Mister Eight. Our octopus.', 'He\'s smarter than most people in this town. Don\'t tell them I said that.', 'He can open a jar from the inside. He likes some people and not others. Nobody knows why.'] },
       { to: [[3.5, -27]], lines: ['That one\'s closed. Has been for a while. Renovations.', 'Mind the tarp.'] },
-      { to: [[-18.5, -9.5]], lines: ['And these are the penguins. Pip, Squeak, and Admiral. Admiral\'s the fat one.', 'They eat twice a day and they\'ll remind you if you forget.'] },
-      { to: [[-4, -1]], lines: [] },
+      { to: [[-10, -24], [-10, -10], [-18.5, -9.5]], lines: ['And these are the penguins. Pip, Squeak, and Admiral. Admiral\'s the fat one.', 'They eat twice a day and they\'ll remind you if you forget.'] },
+      { to: [[-12, -9], [-8, -4], [-8, 0], [-5, 0.8]], lines: [] },
     ];
+    const calls = ['WALTER: Over here!', 'WALTER: This way, kiddo!', 'WALTER: Don\'t get lost now.'];
     for (const stop of stops) {
-      await S.walk('walter', stop.to, { speed: 2.4 });
-      // wait for the player to catch up
-      for (let i = 0; i < 1200; i++) { const p = World.player, w = World.npc('walter'); if (!w || Math.hypot(p.x - w.x, p.z - w.z) < 4.2) break; await S.wait(0.1); }
+      // you can walk the whole time: while he walks, and until you catch up with him
+      await S.free(() => S.walk('walter', stop.to, { speed: 2.8 }));
+      await S.near('walter', 4.2, { call: calls });
       S.face('walter', 'player');
       for (const l of stop.lines) await W(l);
     }

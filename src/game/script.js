@@ -6,6 +6,7 @@
 
 const Script = (() => {
   let busyCount = 0;
+  let freeCount = 0; // >0 while a running script lets the player walk (e.g. following someone)
   const queue = [];
   const timers = [];
   let camOverride = null;
@@ -36,7 +37,7 @@ const Script = (() => {
     }
   }
   function wait(sec) { const d = deferred(); timers.push({ t: sec, resolve: d.resolve }); return d; }
-  function reset() { gen++; queue.length = 0; busyCount = 0; running = false; camOverride = null; }
+  function reset() { gen++; queue.length = 0; busyCount = 0; freeCount = 0; running = false; camOverride = null; }
 
   const st = () => Game.st;
 
@@ -92,6 +93,30 @@ const Script = (() => {
     },
     fade(to, t, color) { return UI.fade(to, t == null ? 0.5 : t, color); },
     npc(id) { return World.npc(id); },
+    // run fn while the player keeps control of their feet
+    async free(fn) {
+      const g = gen;
+      freeCount++;
+      try { return await fn(); } finally { if (g === gen) freeCount--; }
+    },
+    // wait (with the player free to walk) until they're within r of an NPC.
+    // If they wander off, the NPC calls out now and then without stopping them.
+    async near(id, r, o) {
+      o = o || {};
+      await S.free(async () => {
+        let t = 0, called = 0;
+        for (;;) {
+          const n = World.npc(id), p = World.player;
+          if (!n || !p || Math.hypot(p.x - n.x, p.z - n.z) < r) break;
+          await wait(0.1); t += 0.1;
+          if (o.call && t > 7 + called * 9) {
+            called++;
+            UI.subtitle = o.call[(called - 1) % o.call.length];
+            wait(2.4).then(() => { if (UI.subtitle === o.call[(called - 1) % o.call.length]) UI.subtitle = null; });
+          }
+        }
+      });
+    },
     walk(id, x, z, o) {
       o = o || {};
       const d = deferred();
@@ -150,6 +175,8 @@ const Script = (() => {
   return {
     run, bg, update, wait, reset, S,
     get busy() { return busyCount > 0 || queue.length > 0; },
+    // the script is running, but the player can still walk (doors, menus and talking stay off)
+    get playerFree() { return freeCount > 0; },
     get camOverride() { return camOverride; },
   };
 })();

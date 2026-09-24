@@ -310,7 +310,7 @@ const World = (() => {
   function update(dt, controllable) {
     time += dt;
     doorCooldown -= dt; lockedMsgCooldown -= dt;
-    updatePlayer(dt, controllable && !Script.busy);
+    updatePlayer(dt, controllable && (!Script.busy || Script.playerFree));
     for (const n of npcs) updateNpc(n, dt);
     for (const e of map.ents) updateEnt(e, dt);
     if (!Script.busy) checkTriggers();

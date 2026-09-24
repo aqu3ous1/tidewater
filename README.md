@@ -136,6 +136,7 @@ The playthroughs jump between doors, so two more checks cover walking:
 ```sh
 node tools/reach.js    # every map, every day: can each door and object be reached on foot?
 node tools/walk.js     # walks key routes with real arrow-key presses (front door -> aquarium, ...)
+node tools/follow.js   # plays the day-1 aquarium tour by keyboard: follow Walter, take the job
 ```
 
 Jump anywhere with the debug launcher, e.g.

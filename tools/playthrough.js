@@ -22,7 +22,7 @@ async function main() {
   const idle = async (ms) => {
     const t0 = Date.now();
     await p.waitForTimeout(120);
-    while (Date.now() - t0 < (ms || 45000)) {
+    while (Date.now() - t0 < (ms || 90000)) {
       const ok = await p.evaluate(() => T.idle());
       if (ok) { await p.waitForTimeout(150); if (await p.evaluate(() => T.idle())) return true; }
       await p.waitForTimeout(100);
@@ -52,7 +52,7 @@ async function main() {
       continue;
     } else if (op === 'print') { console.log(JSON.stringify(await p.evaluate(a[0]))); continue; }
     if (js) { try { await p.evaluate(js); } catch (e) { console.log('eval error at step', n, e.message); } }
-    await idle(a[a.length - 1] && typeof a[a.length - 1] === 'number' && op !== 'use' && op !== 'tp' && op !== 'doorAt' ? a[a.length - 1] : 45000);
+    await idle(a[a.length - 1] && typeof a[a.length - 1] === 'number' && op !== 'use' && op !== 'tp' && op !== 'doorAt' ? a[a.length - 1] : 90000);
     const log = await p.evaluate(() => { const l = T.log.slice(); T.log.length = 0; return l; });
     for (const line of log) console.log('   ' + line);
     const perr = await p.evaluate(() => { const e = T.errors.slice(); T.errors.length = 0; return e; });
