@@ -103,6 +103,13 @@ const World = (() => {
   }
 
   // ------------------------------------------------------------ collision
+  // maps made of walkable rects (the Underneath): every corner of the player's
+  // footprint must be on some rect, so overlapping rects join up seamlessly
+  function walkOk(x, z) {
+    const wk = map.def.walkable; if (!wk) return true;
+    const on = (px, pz) => wk.some((r) => px >= r[0] && px <= r[2] && pz >= r[1] && pz <= r[3]);
+    return on(x - P_RADIUS, z - P_RADIUS) && on(x + P_RADIUS, z - P_RADIUS) && on(x - P_RADIUS, z + P_RADIUS) && on(x + P_RADIUS, z + P_RADIUS);
+  }
   function blocked(x, z, r) {
     for (const c of map.colliders) {
       if (c.r != null) { if (Math.hypot(x - c.cx, z - c.cz) < r + c.r) return true; }
@@ -194,9 +201,8 @@ const World = (() => {
       const sp = (player.run ? 5.6 : 3.3) * player.speedMul * (Game.debugSpeed || 1);
       const nx = player.x + mx * sp * dt, nz = player.z + mz * sp * dt;
       let [cx, cz] = collide(nx, nz, P_RADIUS, null);
-      const wk = map.def.walkable;
-      if (wk) {
-        const ok = (x, z) => wk.some((r) => x >= r[0] + 0.3 && x <= r[2] - 0.3 && z >= r[1] + 0.3 && z <= r[3] - 0.3);
+      if (map.def.walkable) {
+        const ok = walkOk;
         if (!ok(cx, cz)) { if (ok(cx, player.z)) cz = player.z; else if (ok(player.x, cz)) cx = player.x; else { cx = player.x; cz = player.z; } }
       }
       const moved = Math.hypot(cx - player.x, cz - player.z);
@@ -464,7 +470,7 @@ const World = (() => {
   }
 
   return {
-    load, update, draw, addNpc, removeNpc, npc, interact, collide, blocked, useDoor, fishTank, drawChar, applyEnv,
+    load, update, draw, addNpc, removeNpc, npc, interact, collide, blocked, walkOk, useDoor, fishTank, drawChar, applyEnv,
     get map() { return map; }, get npcs() { return npcs; }, get player() { return player; }, get cam() { return cam; },
     get target() { return target; }, get time() { return time; }, firedTriggers,
   };

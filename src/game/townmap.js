@@ -252,8 +252,11 @@ const TownMap = (() => {
     if (mem) for (let y = mz(-14); y < mz(18); y++) if (y % 6 < 3) p.set(mx(28), y, '#f0d060');
     // crosswalks where Center Ave meets each street
     for (const [z0, z1] of streets) for (let y = mz(z0); y < mz(z1); y += 2) { p.set(mx(-6), y, '#f4f0e4'); p.set(mx(-5), y, '#f4f0e4'); p.set(mx(4), y, '#f4f0e4'); p.set(mx(5), y, '#f4f0e4'); }
+    // barrels where the roads leave town
+    for (const [z0, z1] of streets) for (let y = mz(z0) + 1; y < mz(z1); y += 2) { p.set(mx(-76.7), y, '#e8742a'); p.set(mx(76.7), y, '#e8742a'); }
+    for (let x = mx(-3.4); x <= mx(3.4); x += 2) p.set(x, mz(71.4), '#e8742a');
     // fence behind the shops
-    for (let x = mx(-58); x < VW; x += 2) p.set(x, mz(-50), '#8a8478');
+    for (let x = 0; x < VW; x += 2) if (x < mx(-6) || x >= mx(6)) p.set(x, mz(-50), '#8a8478');
 
     // buildings — roofs seen from above, fronts facing south (the way the camera sees them)
     function bld(x0, z0, x1, z1, o) {

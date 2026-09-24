@@ -213,6 +213,20 @@ Object.assign(MapBuilder.prototype, {
     }
     return this;
   },
+  // traffic barrels across a road end (visible from any camera angle) + a ROAD CLOSED sign facing the player
+  roadBlock(x0, z0, x1, z1, o) {
+    o = o || {};
+    const len = Math.hypot(x1 - x0, z1 - z0), n = Math.max(2, Math.round(len / 1.1));
+    for (let i = 0; i <= n; i++) {
+      const t = i / n, x = lerp(x0, x1, t), z = lerp(z0, z1, t);
+      this.cyl(x, 0, z, 0.32, 0.95, 'barrel_stripes', { sides: 8, tile: 0.95, tileU: 1, topTex: 'plastic_red', solid: false });
+    }
+    this.solid(Math.min(x0, x1) - 0.32, Math.min(z0, z1) - 0.32, Math.max(x0, x1) + 0.32, Math.max(z0, z1) + 0.32);
+    const sx = o.signX != null ? o.signX : (x0 + x1) / 2, sz = o.signZ != null ? o.signZ : (z0 + z1) / 2;
+    this.cyl(sx, 0, sz, 0.05, 1.9, 'metal', { sides: 4, solid: false });
+    this.decal('sign_roadclosed', sx, 1.25, sz + 0.08, 0.95, 0.6, 's', { off: 0, twoSided: true });
+    return this;
+  },
   hedge(x0, z0, x1, z1, h) { this.box((x0 + x1) / 2, 0, (z0 + z1) / 2, Math.abs(x1 - x0), h || 1.2, Math.abs(z1 - z0), 'hedge'); return this; },
   streetSign(x, z, region, face) {
     this.cyl(x, 0, z, 0.05, 2.6, 'metal', { sides: 4, solid: false });
@@ -340,7 +354,7 @@ Object.assign(MapBuilder.prototype, {
   // look at something: text may be a string, array, or fn(st) returning either (or null to skip)
   look(x, z, text, o) {
     o = o || {};
-    this.inter(x, z, Object.assign({ r: o.r || 1.1, y: o.y || 1.2 }, o, {
+    this.inter(x, z, Object.assign({ r: o.r || 1.1, y: o.y || 1.2, label: typeof text === 'function' ? 'look' : [].concat(text)[0] }, o, {
       use: async (S) => {
         let t = typeof text === 'function' ? text(S.st, S) : text;
         if (t && typeof t.then === 'function') t = await t;

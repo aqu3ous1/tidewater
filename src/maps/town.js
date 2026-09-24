@@ -132,6 +132,17 @@ MAPS.town = {
     for (let z = -60; z < 70; z += 7) { M.tree(-81, z, (z / 7) % 2 ? 'tree_pine' : 'tree_round'); M.tree(81, z + 3, (z / 7) % 2 ? 'tree_round' : 'tree_pine'); }
     for (let x = -70; x < 80; x += 9) M.tree(x, 76 + (x % 3), 'tree_pine');
     M.solid(-90, -92, -78, 72); M.solid(78, -92, 90, 72);
+    // make the edge of town visible: bushes where you can't go on, barrels where the roads leave
+    const roadsZ = [[-62, -54], [-22, -14], [18, 26], [60, 68]];
+    const onRoad = (z) => roadsZ.some(([a, b]) => z > a - 1.2 && z < b + 1.2);
+    for (let z = -90.5; z < 71; z += 2.6) {
+      if (onRoad(z)) continue;
+      M.billboard('bush', -78.3, z, 2.2, 1.35);
+      M.billboard('bush', 78.3, z, 2.2, 1.35);
+    }
+    for (let x = -77; x < 78; x += 2.6) { if (Math.abs(x) < 6.5) continue; M.billboard('bush', x, 73, 2.2, 1.35); }
+    for (const [a, b] of roadsZ) { M.roadBlock(-76.7, a + 0.6, -76.7, b - 0.6, { signX: -75.6 }); M.roadBlock(76.7, a + 0.6, 76.7, b - 0.6, { signX: 75.6 }); }
+    M.roadBlock(-3.4, 71.4, 3.4, 71.4, { signX: 0, signZ: 70.9 });
 
     // ---------------------------------------------------------------- the aquarium
     const aqX0 = -30, aqX1 = 14, aqZ0 = -88, aqZ1 = -68;
@@ -235,8 +246,9 @@ MAPS.town = {
     M.decal('vending', 65.5, 0, -36, 1.0, 2.0, 's');
     M.look(65.5, -35.4, (s) => s.money >= 1 ? 'A soda machine. It eats your dollar and gives you nothing.' : 'A soda machine. You don\'t have any money.', { r: 1.1 });
     // alleys closed at the back of the shop row
-    M.fence(-58, -50, 78, -50, { region: 'fence_chain', h: 2, seg: 3 });
-    M.solid(-78, -50.4, -58, -49.6);
+    // (Center Ave stays open: it's the only way from Main St up to Harbor Rd and the aquarium)
+    M.fence(-78, -50, -6, -50, { region: 'fence_chain', h: 2, seg: 3 });
+    M.fence(6, -50, 78, -50, { region: 'fence_chain', h: 2, seg: 3 });
 
     // ---------------------------------------------------------------- houses (fronts at z = 12)
     // Pruitt house (Dana's)

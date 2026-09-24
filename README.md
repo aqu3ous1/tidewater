@@ -131,6 +131,13 @@ node tools/playthrough.js day8 out/        # the last day and the true ending
 node tools/playthrough.js end_escape out/  # other endings
 ```
 
+The playthroughs jump between doors, so two more checks cover walking:
+
+```sh
+node tools/reach.js    # every map, every day: can each door and object be reached on foot?
+node tools/walk.js     # walks key routes with real arrow-key presses (front door -> aquarium, ...)
+```
+
 Jump anywhere with the debug launcher, e.g.
 `index.html?debug&day=6&map=aquarium&spawn=front&run=1`.
 It also accepts `tod`, `flags=a,b`, `items=x,y` and `speed=2`.
