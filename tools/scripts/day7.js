@@ -8,7 +8,7 @@ module.exports = {
     ['talk', 'gus'], ['talk', 'ray'],
     ['door', 'diner'], ['talk', 'hal'], ['door', 'town'],
     ['check', "Game.st.obj.id === 'home7'"],
-    ['use', 69, -35.3], ['use', 10.7, -1.2], ['use', 9.5, 2.8], ['door', 'town', 'gas'],
+    ['use', 60, -35.3], ['use', 10.7, -1.2], ['use', 9.5, 2.8], ['door', 'town', 'gas'],
     ['door', 'laundry'], ['talk', 'mae'], ['talk', 'mae'], ['door', 'town'],
     ['door', 'kessler'], ['use', 2.6, -8.4], ['use', 4.8, -7], ['door', 'town'],
     ['door', 'church'], ['answers', [1]], ['use', -4.8, -9.3], ['door', 'town'],

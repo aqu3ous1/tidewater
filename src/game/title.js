@@ -12,6 +12,7 @@ const Title = (() => {
   let nameBuf = '', gridSel = 0;
   let msg = '', msgT = 0;
   let pendingLoad = null;
+  let nameIgnore = 0;
   const GRID = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ-. '.split('').concat(['DEL', 'END']);
 
   function init() {
@@ -46,7 +47,7 @@ const Title = (() => {
     const meta = State.getMeta();
     const hasSave = State.list().some((s) => s);
     const opts = [];
-    if (!(meta.deaths > 0 && !meta.trueDone && hasSave)) opts.push('NEW GAME');
+    if (!(State.load(3) && !meta.trueDone)) opts.push('NEW GAME');
     if (hasSave) opts.push('CONTINUE');
     opts.push('OPTIONS');
     return opts;
@@ -81,7 +82,7 @@ const Title = (() => {
         Input.eat('a'); Input.eat('start');
         const o = opts[sel];
         Sound.sfx('select');
-        if (o === 'NEW GAME') { phase = 'name'; nameBuf = ''; gridSel = 0; Input.takeTyped(); }
+        if (o === 'NEW GAME') { phase = 'name'; nameBuf = ''; gridSel = 0; Input.takeTyped(); nameIgnore = 0.3; }
         else if (o === 'CONTINUE') { Menus.saveSlots('load').then(onLoadPick); }
         else if (o === 'OPTIONS') { phase = 'options'; sel = 0; }
       }
@@ -104,6 +105,7 @@ const Title = (() => {
       return;
     }
     if (phase === 'name') {
+      if (nameIgnore > 0) { nameIgnore -= dt; Input.takeTyped(); return; }
       const typed = Input.takeTyped();
       if (typed.length) {
         for (const ch of typed) {

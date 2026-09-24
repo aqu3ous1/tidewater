@@ -173,11 +173,21 @@ Object.assign(Story, {
   async locker(S) {
     const st = S.st;
     if (st.inv.includes('backpack') || st.flags.backpackPlaced) { await S.say(null, 'Locker 6. Empty now. There\'s a sticker on the inside of the door: a cartoon octopus.'); return; }
-    if (!(st.day === 7 && st.flags.helping)) { await S.say(null, 'Staff lockers. Number 6 has a combination lock on it. It has never been opened while you were here.'); return; }
+    if (!(st.day === 7 && st.flags.helping)) {
+      await S.say(null, 'Staff lockers. Number 6 has a combination lock on it. It has never been opened while you were here.');
+      if (st.day >= 6) await S.say(null, 'Locker 3 is empty. Scratched into the inside of the door, very small: DON\'T FINISH IT.');
+      return;
+    }
     await S.say(null, 'Locker 6. A four-number combination lock.');
     const code = await S.numpad(4, { title: 'LOCKER 6' });
     if (code == null) return;
-    if (code !== '0812') { S.sfx('locked'); await S.say(null, 'The lock doesn\'t open.'); return; }
+    if (code !== '0812') {
+      S.sfx('locked'); await S.say(null, 'The lock doesn\'t open.');
+      S.flag('lockerTries', (S.get('lockerTries') || 0) + 1);
+      if (S.get('lockerTries') === 2) { UI.subtitle = 'His birthday. He used his birthday for everything.'; await S.wait(2.5); UI.subtitle = null; }
+      if (S.get('lockerTries') >= 3) { UI.subtitle = 'August. The twelfth. I always forgot it. He never let me forget.'; await S.wait(3); UI.subtitle = null; }
+      return;
+    }
     S.sfx('switch'); await S.wait(0.4); S.sfx('door', { vol: 0.5 });
     await S.say(null, 'The lock opens. Inside, folded up very neatly: a blue backpack.');
     await S.give('backpack');
@@ -386,14 +396,13 @@ Object.assign(Story, {
   },
   async sandbox2(S) {
     const st = S.st;
-    if (st.day >= 8 && (S.isObj('key') || S.isObj('playground')) && !st.inv.includes('key_t6')) {
+    if (st.day >= 8 && !st.inv.includes('key_t6')) {
       await S.say(null, 'Something small is buried in the sandbox. Right where a kid would bury something.');
       const ok = await Story.hold('DIGGING', 1.6);
       if (!ok) { await S.say(null, 'Hold Z to dig.'); return true; }
       await S.give('key_t6');
-      if (S.isObj('playground')) S.done('playground');
-      S.done('key');
-      await S.obj('openbasement', 'OPEN THE BASEMENT.', { voice: 'walter' });
+      const wasGuided = S.isObj('key') || S.isObj('playground') || S.isObj('photo') || S.isObj('hang');
+      if (wasGuided) { S.done(st.obj.id); await S.obj('openbasement', 'OPEN THE BASEMENT.', { voice: 'walter' }); }
       return true;
     }
     return false;
@@ -749,6 +758,20 @@ Object.assign(Story, {
         if (Story._fstep <= 0 && p.moving) { Story._fstep = 3 + Math.random() * 4; Sound.sfx('step', { surf: 'hard', vol: 0.5, far: true }); Sound.sfx('step', { surf: 'hard', vol: 0.5, far: true, delay: 0.34 }); }
       }
     }
+    // sounds with no source
+    Story._amb = (Story._amb || 5) - dt;
+    if (Story._amb <= 0) {
+      Story._amb = 9 + Math.random() * 14;
+      if (map === 'town' && st.day <= 5 && st.tod !== 'night' && Math.hypot(p.x + 25, p.z - 44) < 30) Sound.sfx('laugh', { far: true, vol: 0.5 });
+      if (map === 'town' && st.day === 7 && st.tod === 'night') Sound.sfx('laugh', { far: true, vol: 0.25 });
+      if (map === 'aquarium' && st.day === 7 && st.tod === 'night' && !f.ghostMet) { Sound.sfx('door', { far: true, vol: 0.5 }); }
+      if (map === 'aquarium' && st.day === 7 && st.tod === 'night' && f.ghostMet && !f.backpackPlaced && Math.random() < 0.5) Sound.sfx('knock', { n: 3, far: true, vol: 0.7 });
+      if (map === 'house' && st.day >= 5 && st.day <= 7 && st.tod === 'night' && !Story.phoneRinging) Sound.sfx('knock', { n: 2, far: true, vol: 0.4 });
+    }
+    // day 6: the pump gets very loud near Tank 6, then stops being loud
+    if (st.day === 6 && map === 'aquarium' && !f.pumpLoud && p.z < -24 && Math.abs(p.x) < 8) { f.pumpLoud = true; Sound.ambLevel('pump', 6, 0.3); setTimeout(() => Sound.ambLevel('pump', 1, 1.5), 3500); }
+    // day 7 night: a phone rings in Walter's empty office
+    if (st.day === 7 && st.tod === 'night' && map === 'aquarium' && f.ghostMet && !f.officePhone && p.x > 16) { f.officePhone = true; for (let i = 0; i < 4; i++) setTimeout(() => Sound.sfx('phone', { vol: 0.5, far: true }), i * 3400); }
     // stealth
     if (map === 'aquarium' && f.lightsOut && !f.leftAquariumFinal) { if (!Story.stealth) Story.stealthReset(); Story.updateStealth(dt); }
     // the house, last night

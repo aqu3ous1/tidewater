@@ -54,6 +54,10 @@ MAPS.house = {
     M.decal('radiator', -6.95, 0.2, 7.2, 1.8, 0.9, 'e');
     M.pickup(-6.5, 7.2, 'postcard', { hidden: true, r: 1.1, cond: (s) => s.day >= 2, text: 'Something is wedged behind the radiator. You work it free.' });
     M.look(-6.5, 7.2, 'An old radiator. It clanks when nobody\'s touching it.', { r: 1.1, cond: (s) => s.day < 2 || s.found.postcard });
+    M.decal('fireplace', 6.97, 0, 6.8, 1.9, 1.9, 'w');
+    M.box(6.6, 0, 6.8, 0.8, 0.12, 2.0, 'brick', { solid: true });
+    M.pickup(6.2, 6.8, 'burned_photo', { hidden: true, secret: true, r: 1.1, cond: (s) => s.day >= 5, text: 'In the ashes at the back of the fireplace, something didn\'t finish burning.' });
+    M.look(6.2, 6.8, (s) => s.day >= 8 ? 'The fireplace. The ashes are warm.' : 'An old brick fireplace. It hasn\'t been used in years. The ashes are still in it.', { r: 1.1, cond: (s) => s.day < 5 || s.inv.includes('burned_photo') });
     M.decal('clock', 3.2, 2.1, 0, 0.5, 0.5, 's');
     M.look(3.2, 0.6, (s) => s.day >= 8 ? 'The clock says 10:12. It has always said 10:12.' : 'A clock. It\'s a little slow.', { r: 1, y: 2.4 });
     // the empty nail
@@ -102,6 +106,8 @@ MAPS.house = {
 
     // --- hallway
     M.decal('mirror', 1.98, 0.9, -1.8, 0.7, 1.1, 'w');
+    M.box(-1.2, 2.2, -5, 0.04, 0.8, 0.04, 'rubber', { solid: false });
+    M.look(-1.2, -5, (s) => s.day >= 8 && s.tod === 'night' ? ['The attic hatch is open. It\'s very dark up there.', 'Someone is sitting in the dark, very still, with their knees pulled up. It\'s a pile of boxes. It\'s only a pile of boxes.'] : s.day >= 6 ? ['A cord hangs from the ceiling: the attic hatch. It\'s painted shut.', 'Tonight, the cord is swaying a little. There\'s no draft.'] : ['A cord hangs from the ceiling: the attic hatch. It\'s painted shut.'], { r: 1.0, y: 2.8 });
     M.look(1.4, -1.8, (s) => (s.day >= 8 && s.tod === 'night') ? 'In the mirror, the hallway is shorter.' : 'A mirror. The helmet takes up most of it.', { r: 1 });
     M.door(0, -9, 's', { tex: 'door_evan', w: 1.3, to: 'evanroom', use: async (S) => Story.evanDoor(S) });
     if (d >= 4 && !f.tookDrawingCat && !st.found.drawing_cat) {

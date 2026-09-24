@@ -206,7 +206,7 @@ const Story = {
       await W('...Here. You earned this.');
       await S.give('fc10');
       if (st.day < 5) S.flag('walterSlip');
-      return;
+      await S.wait(0.4);
     }
     if (st.day === 1) {
       if (!f.hired) return Story.tour(S);
@@ -392,6 +392,7 @@ const Story = {
   },
   async lostFound(S) {
     const st = S.st;
+    if (st.day >= 5 && st.found.mitten && !S.get('sawPinkKey')) { S.flag('sawPinkKey'); await S.say(null, 'Under the socks: a house key on a pink keychain. The paper tag says 12 MAPLE ST.'); await S.say(null, 'It isn\'t yours. Your key is in your pocket.'); return; }
     if (!st.found.mitten && st.day >= 2) { await S.say(null, 'A box behind the counter: LOST & FOUND. Mostly single socks.'); await S.give('mitten'); return; }
     await S.say(null, st.day >= 8 ? 'The lost and found box is full of blue backpacks. All the same one.' : 'LOST & FOUND. A lot of single socks. Nobody ever comes back for socks.');
   },
@@ -971,7 +972,7 @@ const Story = {
       await W('You were gone a long time.');
       await W('Did you go to the school?');
       const c = await S.ask('walter', 'What did she tell you?', ['SHE TALKED ABOUT EVAN.', 'NOTHING.']);
-      if (c === 0) { S.flag('toldWalterSchool'); await W('...Evan had problems.'); await W('It\'s not something I like to talk about. You understand. You\'re a good kid. You understand.'); }
+      if (c === 0) { S.flag('toldWalterSchool'); await W('...Evan had problems.'); await W('It\'s not something I like to talk about. You understand. You\'re a good kid. You understand.'); await S.wait(0.8); await W('You remind me of him, you know.'); }
       else await W('Good. She talks too much. Always did.');
       await W('Clean up the staff kitchen, would you? I cooked a big batch this week. It\'s a mess.');
       Story.walterSpot(S, 'office');

@@ -120,7 +120,7 @@ const NPCS = {
   },
 
   hal: {
-    where: (st) => (st.day <= 7 && st.tod !== 'night' ? { map: 'diner', x: 1.5, z: -4.6, face: 's' } : null),
+    where: (st) => (st.day <= 7 && st.tod !== 'night' ? { map: 'diner', x: 1.5, z: -4.6, face: 's', wrongFace: st.day >= 6 } : null),
     async talk(S) {
       const st = S.st, H = (t) => S.say('hal', t);
       if (st.day === 3 && S.isObj('lunch')) return Story.buyLunch(S);
@@ -153,7 +153,7 @@ const NPCS = {
   },
 
   priya: {
-    where: (st) => (st.day <= 7 && st.tod !== 'night' ? { map: 'market', x: -5, z: 2.3, face: 's' } : null),
+    where: (st) => (st.day <= 7 && st.tod !== 'night' ? { map: 'market', x: -5, z: 2.3, face: 's', wrongFace: st.day === 7 } : null),
     async talk(S) {
       const st = S.st, P = (t) => S.say('priya', t);
       if (st.inv.includes('milk') && !S.get('paidMilk')) return Story.payMilk(S);
@@ -173,7 +173,7 @@ const NPCS = {
   gus: {
     where(st) {
       if (st.day >= 8 || st.tod === 'night') return null;
-      if (st.day === 7 && !st.flags.garageKey) return { map: 'town', x: 66, z: -33.6, face: 's' };
+      if (st.day === 7 && !st.flags.garageKey) return { map: 'town', x: 63, z: -33.4, face: 's' };
       return { map: 'gas', x: -2.5, z: -3.2, face: 's' };
     },
     async talk(S) {
@@ -207,6 +207,7 @@ const NPCS = {
     },
     async talk(S) {
       const st = S.st, O = (t) => S.say('okafor', t);
+      Story.explored(S, 'school');
       if (st.day === 5 && st.inv.includes('brochures')) return Story.deliverBrochures(S);
       if (st.day === 7) { await O('I\'m sorry. I know you worked for him.'); await O('...Now maybe someone will finally look.'); return; }
       if (st.day === 6 || (knowsEvan(st) && S.get('okaforEvan'))) {
@@ -314,6 +315,18 @@ const NPCS = {
     },
   },
 
+  visitor1: {
+    where: (st) => (st.day >= 2 && st.day <= 5 && daytime(st) ? { map: 'aquarium', x: -12.4, z: -4.8, face: 'w' } : null),
+    async talk(S) { await S.say('visitor1', ['We drove three hours for this. Worth it for the octopus alone.', 'Is the big tank ever going to open? We came last year and it was closed then, too.', 'He looked right at me. The octopus. Right at me.', 'My mother brought me here when I was little. The same fish. They can\'t be the same fish.'][S.st.day - 2]); },
+  },
+  visitor2: {
+    where: (st) => (st.day >= 2 && st.day <= 5 && daytime(st) ? { map: 'aquarium', x: 1.4, z: -6.8, face: 'n', wander: 1.2 } : null),
+    async talk(S) { await S.say('visitor2', ['I touched a starfish! It felt like a wet sneaker!', 'Why is your head a fishbowl? Can fish live in it?', 'There\'s a kid in the big closed tank. My brother said. He knocks.', 'The turtle is looking at me.'][S.st.day - 2]); },
+  },
+  visitor3: {
+    where: (st) => (st.day >= 3 && st.day <= 5 && daytime(st) ? { map: 'aquarium', x: -19.4, z: -14, face: 'w' } : null),
+    async talk(S) { await S.say('visitor3', ['Pip, Squeak and Admiral. I\'ve got all three on film now.', 'I take a picture of the penguins every summer. They never look any older.', 'The owner asked me not to take pictures of the big tank. It\'s just plywood.'][S.st.day - 3]); },
+  },
   bea: {
     where(st) {
       if (st.day >= 7 || !daytime(st)) return st.day >= 8 && daytime(st) && !st.flags.kidsVanished ? { map: 'town', x: -22, z: 45, face: 's', ghostKid: true } : null;

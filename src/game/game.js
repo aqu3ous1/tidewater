@@ -32,6 +32,7 @@ const Game = {
     const st = this.st;
     st.map = id; st.spawn = spawn;
     World.load(id, spawn, st);
+    World.player.set = st.flags.trapped ? 'player_ghost' : 'player';
     this.spawnNpcs();
     this.applyAudio();
     const def = MAPS[id];

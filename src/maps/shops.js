@@ -73,7 +73,7 @@ MAPS.market = {
   build(M, st) {
     M.room(-9, -8, 9, 6, 3.4, { floor: 'tile_white', wall: 'wall_white', trim: 'plastic_green' });
     M.light(0, 3.2, -2, 12, '#f0fff0', 0.5);
-    for (const x of [-5, 0]) { M.shelf(x, -3.5, 3, 1.8, 's', 'shelf_goods'); M.shelf(x, -2.9, 3, 1.8, 'n', 'shelf_goods'); }
+    for (const x of [-5, 0]) M.box(x, 0, -3.2, 3, 1.8, 1.0, { top: 'wood_dark', sides: 'wood_dark', s: '@shelf_goods', n: '@shelf_goods' }, { fit: { s: true, n: true } });
     M.look(-5, -1.9, 'Cereal, soup, a whole shelf of sardines.', { r: 1.4 });
     M.look(0, -1.9, 'Bread, peanut butter, instant coffee. Everything is a little dusty on top.', { r: 1.4 });
     M.box(7.8, 0, -3, 1.2, 2.0, 6, { sides: 'plastic_white', w: '@shelf_milk' }, { fit: { w: true } });

@@ -78,7 +78,7 @@ MAPS.aquarium = {
 
     // ---------------------------------------------------------------- main hall
     const hallWall = old ? 'wall_navy' : 'wall_blue';
-    M.room(-16, -30, 16, 4, H + 0.8, { floor: 'tile_aqua', wall: hallWall, gaps: [{ side: 'w', at: -9, w: 4, h: 3.2 }, { side: 'e', at: -25, w: 1.6, h: 2.6 }, { side: 's', at: 0, w: 8, h: H }, { side: 'n', at: 0, w: 13.4, h: 4.05 }], trim: 'rubber' });
+    M.room(-16, -30, 16, 4, H + 0.8, { floor: old ? 'carpet_grey' : 'carpet_blue', wall: hallWall, gaps: [{ side: 'w', at: -9, w: 4, h: 3.2 }, { side: 'e', at: -25, w: 1.6, h: 2.6 }, { side: 's', at: 0, w: 8, h: H }, { side: 'n', at: 0, w: 13.4, h: 4.05 }], trim: 'rubber' });
     // Tanks (west wall, facing east)
     const t1 = M.tank(-16 + 1.2, -3, 6, 2.8, 2.0, 'e', { back: 'tank_back_reef', decor: 'coral', dirty: false });
     const t2 = M.tank(-16 + 1.2, -14.5, 5, 2.8, 2.0, 'e', { back: 'tank_back_jelly' });
@@ -117,6 +117,17 @@ MAPS.aquarium = {
     } else World.fishTank(M, t6, ['fish7'], 2, { scale: 1.4, col: [0.25, 0.3, 0.4, 1] });
     M.decal('label_t6', 6.9, 3.9, -30.0, 1.6, 0.5, 's');
     M.inter(0, -29.2, { r: 3.4, y: 3, use: async (S) => Story.tank6(S) });
+    // the column tank: floor to ceiling, fish swimming all the way around
+    {
+      const cx = 7, cz = -14, r = 1.9, h = 4.4;
+      M.cyl(cx, 0, cz, r + 0.25, 0.5, 'wall_navy', { sides: 10, topTex: 'rubber' });
+      M.cyl(cx, h + 0.5, cz, r + 0.25, 0.4, 'wall_navy', { sides: 10, solid: false });
+      M.cyl(cx, 0.5, cz, r * 0.35, 0.5, 'rock', { sides: 6, solid: false });
+      M.cyl(cx, 0.5, cz, r, h, 'water_tank', { sides: 10, solid: false, blend: true, alpha: 0.45, lit: false, cap: false, color: old ? '#6a8aa0' : '#bfe8ff' });
+      World.fishTank(M, { x0: cx - r + 0.3, x1: cx + r - 0.3, y0: 1.0, y1: h - 0.2, z0: cz - 0.2, z1: cz + 0.2, front: [0, 0, 1] }, ['fish0', 'fish1', 'fish4', 'fish6'], ph === 'dark' ? 3 : 9, { scale: 0.9 });
+      M.light(cx, 2.5, cz, 7, '#60c0ff', ph === 'dark' ? 0.8 : 0.55);
+      M.look(cx, cz + r + 0.9, (s) => s.day >= 8 ? 'The column tank. The fish are swimming in a circle, all in the same direction, perfectly spaced.' : 'The column tank goes all the way up to the ceiling. The fish go round and round. Kids press their faces against it.', { r: 1.5 });
+    }
     // center: touch pool + kids' corner + benches
     M.box(0, 0, -9, 4.2, 0.75, 3, { sides: 'rock', top: 'rubber' }, {});
     M.plane('water_tank', [-1.9, 0.72, -7.7], [1, 0, 0], [0, 0, -1], 3.8, 2.6, { blend: true, alpha: 0.7, lit: false, scroll: [0.03, 0.01], sub: 99 });
@@ -127,7 +138,7 @@ MAPS.aquarium = {
     M.tvCart(-9, -22.3, 'e', ph === 'dark' ? 'tv_you' : old ? 'tv_static' : 'tv_title');
     M.look(-8.2, -22.3, (s) => Story.kidsTV(s), { r: 1.2 });
     M.chair(-5.5, -19, 'n', 'plastic_red'); M.chair(-4.2, -19.3, 'n', 'plastic_yellow'); M.chair(-6.8, -18.8, 'n', 'plastic_blue');
-    M.bench(4, -1, 's'); M.bench(4, -20, 's');
+    M.bench(-3, -1, 's'); M.bench(4, -21, 's');
     M.decal(old ? 'poster_deep' : 'poster_reef', -16 + 0.02, 2.1, -8.8 + 3.2, 1.3, 1.3, 'e');
     M.decal('poster_octopus', 16 - 0.02, 2.0, -12.2, 1.3, 1.1, 'w');
     M.decal('poster_jelly', -16 + 0.02, 2.2, -18.7, 1.1, 1.0, 'e');

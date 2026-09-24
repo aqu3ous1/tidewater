@@ -14,7 +14,7 @@
 function outdoorEnv(st) {
   const tod = st.tod, day = st.day;
   if (day >= 8 && tod !== 'night') return { fog: '#d6d6c2', fogNear: 14, fogFar: 52, sky: ['#c4ccb4', '#e6e6d4', 0.5], ambient: [0.95, 0.95, 0.86], sat: 0.55, grade: [1.02, 1.0, 0.94] };
-  if (day >= 8) return { fog: '#07080c', fogNear: 4, fogFar: 30, sky: ['#000000', '#0c0e14', 0.5], ambient: [0.2, 0.22, 0.3], sat: 0.6, snap: 1.6, affine: 1, wobble: 0.02 };
+  if (day >= 8) return { fog: '#07080c', fogNear: 5, fogFar: 34, sky: ['#000000', '#0c0e14', 0.5], ambient: [0.27, 0.28, 0.38], sat: 0.6, snap: 1.6, affine: 1, wobble: 0.02 };
   if (tod === 'night') return { fog: '#10141f', fogNear: 8, fogFar: 42, sky: ['#04050a', '#161c2c', 0.5], ambient: [0.3, 0.34, 0.5] };
   if (day === 7) return { fog: '#b4b8bc', fogNear: 18, fogFar: 62, sky: ['#9aa0a8', '#c4c8cc', 0.5], ambient: [0.8, 0.82, 0.86], sat: 0.7 };
   if (tod === 'evening') return { fog: '#c89080', fogNear: 25, fogFar: 75, sky: ['#5a4a8a', '#f0a070', 0.45], ambient: [0.98, 0.76, 0.66] };
@@ -142,9 +142,9 @@ MAPS.town = {
       // dome over the main hall
       M.cyl(-8, 7.5, -78, 7, 2.5, aqOld ? 'wall_grey' : 'glass_dark', { sides: 8, solid: false });
       M.cyl(-8, 10, -78, 4.5, 1.2, aqOld ? 'wall_grey' : 'glass_dark', { sides: 8, solid: false });
-      M.decal(aqOld ? 'aq_sign_old' : 'aq_sign', -8, 4.4, aqZ1, 11, 2.75, 's', { lit: false, bright: night ? 0.7 : 1.05 });
+      M.decal(aqOld ? 'aq_sign_old' : 'aq_sign', -8, 3.3, aqZ1, 11, 2.75, 's', { lit: false, bright: night ? 0.7 : 1.05 });
       for (const x of [-26, -20, 4, 10]) M.decal('win_aq_round', x, 2.2, aqZ1, 2.4, 2.4, 's');
-      M.box(-8, 2.9, aqZ1 + 1.2, 8, 0.2, 2.4, aqOld ? 'wall_grey' : 'plastic_blue', { solid: false });
+      M.box(-8, 2.75, aqZ1 + 1.0, 5, 0.18, 2.0, aqOld ? 'wall_grey' : 'plastic_blue', { solid: false });
       const aqClosed = (d === 7 && !night);
       M.door(-8, aqZ1, 's', {
         tex: 'door_glass', w: 3.2, h: 2.6, to: 'aquarium', spawn: 'front',
@@ -206,7 +206,7 @@ MAPS.town = {
       M.look(-67, -27, 'An empty lot. Weeds. The ground is flat, like nothing was ever built here.', { r: 3 });
     }
     // Market
-    shopExt(M, -52, -44, -36, -26, { sign: 'sign_market', wall: 'brick_tan', awning: 'plastic_green', lit: night, dark: mem && night, doorOpts: { to: 'market', spawn: 'front', locked: (s) => s.tod === 'night' || memory(s), lockedMsg: (s) => memory(s) ? 'The lights are on, but the door won\'t open. Nobody is inside.' : 'CLOSED. Open 7 AM to 8 PM.' } });
+    shopExt(M, -52, -44, -36, -26, { sign: 'sign_market', wall: mem ? 'white' : 'brick_tan', awning: 'plastic_green', lit: night, dark: mem && night, doorOpts: { to: 'market', spawn: 'front', locked: (s) => s.tod === 'night' || memory(s), lockedMsg: (s) => memory(s) ? 'The lights are on, but the door won\'t open. Nobody is inside.' : 'CLOSED. Open 7 AM to 8 PM.' } });
     // Diner
     shopExt(M, -30, -42, -14, -26, { sign: 'sign_hals', wall: 'wall_white', trim: 'plastic_red', awning: 'plastic_red', lit: night && !mem, dark: mem, doorOpts: { to: 'diner', spawn: 'front', locked: (s) => s.tod === 'night' && !memory(s), lockedMsg: 'Hal\'s is closed. The chairs are up on the tables.' } });
     // bus stop
@@ -223,17 +223,17 @@ MAPS.town = {
     M.look(34.5, -25, (s) => s.day >= 8 ? ['BACK AT 2.', 'It has been two o\'clock for a very long time.'] : ['A note taped inside the door: BACK AT 2.', 'The chairs are stacked. There\'s dust on the menus.'], { r: 1.3 });
     // Gas station
     M.box(65, 0, -42, 18, 4.6, 12, { sides: 'wall_white', top: 'roof_flat' }, { back: false });
-    M.decal('sign_gus', 60, 3.0, -36, 5, 1.4, 's');
-    M.decal(night ? 'win_shop_lit' : 'win_shop', 60, 0.6, -36, 3, 1.8, 's', { lit: !night });
-    M.door(57, -36, 's', { tex: 'door_glass', to: 'gas', spawn: 'front', locked: (s) => s.tod === 'night' || memory(s), lockedMsg: (s) => memory(s) ? 'The door is locked. There is a newspaper on the counter inside. It looks new.' : 'Gus\'s is closed for the night.' });
-    M.decal('door_garage', 69, 0, -36, 5.6, 3.6, 's');
-    M.inter(69, -35.3, { r: 2.4, y: 2, use: async (S) => Story.garageDoor(S) });
-    M.box(55, 4.2, -30, 16, 0.3, 8, { sides: 'plastic_red', top: 'roof_flat', bottom: 'metal' }, { solid: false, bottom: true });
-    for (const x of [49, 61]) { M.box(x, 0, -30, 0.35, 4.2, 0.35, 'metal', { solid: true }); }
+    M.decal('sign_gus', 70, 3.0, -36, 5, 1.4, 's');
+    M.decal(night ? 'win_shop_lit' : 'win_shop', 72.6, 0.6, -36, 2.2, 1.8, 's', { lit: !night });
+    M.door(69, -36, 's', { tex: 'door_glass', to: 'gas', spawn: 'front', locked: (s) => s.tod === 'night' || memory(s), lockedMsg: (s) => memory(s) ? 'The door is locked. There is a newspaper on the counter inside. It looks new.' : 'Gus\'s is closed for the night.' });
+    M.decal('door_garage', 60, 0, -36, 5.6, 3.6, 's');
+    M.inter(60, -35.3, { r: 2.4, y: 2, use: async (S) => Story.garageDoor(S) });
+    M.box(53, 5.0, -30, 12, 0.3, 7, { sides: 'plastic_red', top: 'roof_flat', bottom: 'metal' }, { solid: false, bottom: true });
+    for (const x of [48, 58]) { M.box(x, 0, -30, 0.35, 5.0, 0.35, 'metal', { solid: true }); }
     M.gasPump(52, -30, 's'); M.gasPump(58, -30, 's');
     M.decal('sign_prices', 73, 3.6, -26.2, 2, 1.2, 's', { twoSided: true, off: 0 }); M.box(73, 0, -26.3, 0.2, 3.6, 0.2, 'metal');
-    M.decal('vending', 52.5, 0, -36, 1.0, 2.0, 's');
-    M.look(52.5, -35.4, (s) => s.money >= 1 ? 'A soda machine. It eats your dollar and gives you nothing.' : 'A soda machine. You don\'t have any money.', { r: 1.1 });
+    M.decal('vending', 65.5, 0, -36, 1.0, 2.0, 's');
+    M.look(65.5, -35.4, (s) => s.money >= 1 ? 'A soda machine. It eats your dollar and gives you nothing.' : 'A soda machine. You don\'t have any money.', { r: 1.1 });
     // alleys closed at the back of the shop row
     M.fence(-58, -50, 78, -50, { region: 'fence_chain', h: 2, seg: 3 });
     M.solid(-78, -50.4, -58, -49.6);
@@ -263,8 +263,8 @@ MAPS.town = {
     M.fence(9, 16, 16.2, 16); M.fence(17.8, 16, 20, 16); M.fence(21.2, 16, 25, 16);
     M.tree(8, 4, 'tree_round');
     // Delgado house
-    houseExt(M, 32, -6, 46, 12, { st, siding: 'siding_white', roof: 'roof_green', lit: night && !mem, boarded: mem && night, doorOpts: { locked: true, lockedMsg: (s) => Story.knock(s, 'delgado') } });
-    M.mailbox(42.5, 15.5, 's');
+    houseExt(M, 32, -6, 46, 12, { st, siding: 'siding_white', roof: 'roof_green', lit: night && !mem, boarded: mem && night, doorX: d >= 5 ? 44.6 : 39, doorOpts: { locked: true, lockedMsg: (s) => Story.knock(s, 'delgado') } });
+    if (d < 6) M.mailbox(42.5, 15.5, 's');
     // Okafor house
     houseExt(M, 54, -6, 70, 12, { st, siding: 'siding_yellow', roof: 'roof_blue', lit: night && !mem, doorOpts: { locked: true, lockedMsg: (s) => Story.knock(s, 'okafor') } });
     M.mailbox(66, 15.5, 's');
@@ -282,6 +282,11 @@ MAPS.town = {
     M.tree(-10, -2); M.tree(50, 2); M.tree(-58, 0, 'tree_pine'); M.tree(74, -2);
     // lamp posts
     for (const x of [-60, -30, 10, 40, 70]) { M.lampPost(x, 17.3, night); M.lampPost(x + 10, -12.6, night); M.lampPost(x - 5, -52.6, night); }
+    // small wrong things, a little more each day
+    if (d >= 6) { M.at(0, 0, 's', () => M.mailbox(42.5, 15.5, 's'), 0.45); M.look(42.5, 16.3, 'A mailbox. It\'s not touching the ground. Not by much.', { r: 1.0, y: 2 }); }
+    if (d >= 6 && d < 8) M.billboard('tree_round', 50, 2.5, 1.2, 1.6);
+    if (d >= 7) M.cutout('flat_chair', 22.5, 14.2, 0.9, 1.35, 's');
+    if (d >= 7) M.look(22.5, 14.9, (s) => 'A chair in the yard. It\'s flat, like a picture of a chair. It wasn\'t there yesterday.', { r: 1 });
     // missing posters on lamp posts
     if (d >= 4 && d <= 7) for (const x of [10, -30, 40]) { M.decal('poster_cat_small', x, 1.4, 17.3 + 0.1, 0.45, 0.6, 's', { off: 0.02 }); M.look(x, 18.1, 'MISSING: MARMALADE. Orange tabby. Red collar with a bell.', { r: 0.9, y: 1.8 }); }
 
@@ -354,8 +359,8 @@ MAPS.town = {
     M.spawn('diner', -22, -24.8, 's');
     M.spawn('market', -44, -24.8, 's');
     M.spawn('laundry', 16, -24.8, 's');
-    M.spawn('gas', 57, -34.8, 's');
-    M.spawn('garage', 69, -34.4, 's');
+    M.spawn('gas', 69, -34.8, 's');
+    M.spawn('garage', 60, -34.4, 's');
     M.spawn('church', -67, -24.8, 's');
     M.spawn('school', 31, 51.2, 's');
     M.spawn('aquarium', -8, -66.5, 's');

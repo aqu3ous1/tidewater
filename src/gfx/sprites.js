@@ -24,6 +24,9 @@ const CHAR_DEFS = {
   bea: { h: 36, headW: 18, headH: 18, bodyW: 10, bodyH: 8, legH: 6, skin: '#f0c8a0', hair: '#e8b040', hairStyle: 'pigtails', top: '#e86a8a', topStyle: 'plain', skirt: '#6a8ad0', bottom: '#f0c8a0', shoes: '#e8e8e8', blush: true },
   tommy: { h: 36, headW: 18, headH: 18, bodyW: 10, bodyH: 8, legH: 6, skin: '#d8a070', hair: '#6a3a1a', hairStyle: 'short', top: '#4aa04a', topStyle: 'plain', bottom: '#3a5aa0', shoes: '#e8e8e8', blush: true },
   evan: { h: 37, headW: 18, headH: 18, bodyW: 10, bodyH: 9, legH: 6, skin: '#f0c8a0', hair: '#8a5a2a', hairStyle: 'messy', top: '#ecece4', topStyle: 'stripes', stripe: '#3a6ab8', bottom: '#5a6a8a', shoes: '#d83a32', backpack: '#3a7ad0', blush: true },
+  visitor1: { h: 44, headW: 19, headH: 19, bodyW: 13, bodyH: 11, legH: 8, skin: '#e8c0a0', hair: '#8a4a2a', hairStyle: 'long', top: '#6a9ad8', topStyle: 'plain', bottom: '#e8e0d0', shoes: '#6a4a3a' },
+  visitor2: { h: 35, headW: 18, headH: 18, bodyW: 10, bodyH: 8, legH: 5, skin: '#c89070', hair: '#e8c040', hairStyle: 'cap', cap: '#e8c040', top: '#c83a3a', topStyle: 'plain', bottom: '#3a5aa0', shoes: '#f0f0f0', blush: true },
+  visitor3: { h: 47, headW: 20, headH: 20, bodyW: 15, bodyH: 13, legH: 8, skin: '#f0c8a8', hair: '#4a3a2a', hairStyle: 'short', glasses: true, top: '#8aa870', topStyle: 'bag', bag: '#2a2a2a', bottom: '#8a7a5a', shoes: '#4a3a2a', nose: true },
   toby: { h: 36, headW: 18, headH: 18, bodyW: 10, bodyH: 8, legH: 6, skin: '#f0d0b0', hair: '#d8b870', hairStyle: 'short', glasses: true, top: '#d88a3a', topStyle: 'plain', bottom: '#4a5a3a', shoes: '#6a4a2a', blush: true },
 };
 

@@ -62,6 +62,7 @@ const ITEMS = {
   collar: { name: 'COLLAR', icon: 'collar', desc: 'A small bell on a red collar. The tag says MARM—. The rest is worn off.' },
   recipe: { name: 'RECIPE CARD', icon: 'recipe', desc: 'An index card that was held to the staff fridge with a magnet.', doc: 'recipe' },
   vet: { name: 'VET PAPERS', icon: 'vet', desc: 'A checkup form from the Bellwood Animal Clinic.', doc: 'vet' },
+  burned_photo: { name: 'BURNED PHOTOGRAPH', icon: 'photo_old', desc: 'Most of it is gone. What\'s left: a small hand, holding an orange kitten.' },
   toby_diary: { name: "TOBY'S DIARY", icon: 'notebook', desc: 'A small diary with a lock that doesn\'t work.', doc: 'toby_diary' },
 
   // ---------------------------------------------------------- AQUARIUM collection

@@ -28,6 +28,9 @@ const SPEAKERS = {
   you: { name: '{name}', pitch: 260 },
   kaylee: { name: 'KAYLEE', pitch: 360, style: 'ghost' },
   newkid: { name: 'NEW KID', pitch: 380 },
+  visitor1: { name: 'VISITOR', pitch: 300 },
+  visitor2: { name: 'LITTLE KID', pitch: 460 },
+  visitor3: { name: 'TOURIST', pitch: 170 },
   sign: { name: '', pitch: 220 },
 };
 

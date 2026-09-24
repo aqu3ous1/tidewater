@@ -49,7 +49,7 @@ MAPS.basement = {
       M.solid(-0.9, -8.3, 0.9, -7.7);
     }
     // the door your house's basement opens onto
-    if (f.houseBasementOpen) M.door(-8, 5, 'e', { tex: 'door_old', to: 'house', spawn: 'basement' });
+    if (f.houseBasementOpen) M.door(-8, 5, 'e', { tex: 'door_old', to: 'house', spawn: 'basement', locked: (s) => !!s.flags.lightsOut, lockedMsg: 'The door won\'t open. On the other side, very close to the door, someone is breathing.' });
     M.cam(-8, -8, 8, 8, { mode: 'follow', yaw: 0, pitch: 50, dist: 8, fov: 56, lookY: 0.6, ahead: 0.6, clamp: [-7.5, -7.5, 7.5, 7.6] });
 
     // ------------------------------------------------ tunnel
