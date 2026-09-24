@@ -1,0 +1,63 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>viewer</title>
+<style>html,body{margin:0;background:#000}canvas{width:960px;height:720px;image-rendering:pixelated}</style></head>
+<body><canvas id="screen"></canvas>
+<script src="../src/core/util.js"></script>
+<script src="../src/core/font.js"></script>
+<script src="../src/core/renderer.js"></script>
+<script src="../src/core/input.js"></script>
+<script src="../src/core/audio.js"></script>
+<script src="../src/gfx/pixel.js"></script>
+<script src="../src/gfx/textures.js"></script>
+<script src="../src/gfx/sprites.js"></script>
+<script src="../src/gfx/decals.js"></script>
+<script src="../src/world/builder.js"></script>
+<script src="../src/world/props.js"></script>
+<script src="../src/world/world.js"></script>
+<script src="../src/game/state.js"></script>
+<script src="../src/game/script.js"></script>
+<script src="../src/game/ui.js"></script>
+<script src="../src/game/menus.js"></script>
+<script src="../src/game/title.js"></script>
+<script src="../src/game/game.js"></script>
+<script>
+var ITEMS = {}, DOCS = {}, COLLECTION_CATS = {}, NPCS = {};
+var Story = { begin(){}, resume(){}, onEnterMap(){}, update(){}, drawMap(){} };
+const cv = document.getElementById('screen');
+cv.width = 960; cv.height = 720;
+R.init(cv);
+Atlas.init(); Tex.build(); Sprites.build(); Decals.build(); Props.atlas(); Atlas.upload();
+MAPS.test = {
+  name: 'TEST',
+  env: () => ({ fog: '#c8d8e8', fogNear: 18, fogFar: 50, ambient: [0.95, 0.95, 1.0], sky: ['#8ab8e0', '#d8e8f0', 0.5] }),
+  build(M) {
+    M.floor(-20, -20, 20, 20, 'grass', { tile: 4 });
+    M.floor(-3, -20, 3, 20, 'asphalt', { tile: 4, y: 0.01 });
+    M.floor(-20, 4, 20, 8, 'sidewalk', { tile: 2, y: 0.02 });
+    M.box(-8, 0, -8, 8, 4, 6, { sides: 'siding_blue', top: 'roof_grey' });
+    M.gable(-12, -11, -4, -5, 4, 2, 'roof_red', 'siding_blue');
+    M.decal('door_wood', -8, 0, -5, 1.2, 2.2, 's');
+    M.decal('win_house', -10.5, 1.5, -5, 1.2, 1.4, 's');
+    M.decal('win_house_lit', -5.5, 1.5, -5, 1.2, 1.4, 's');
+    M.box(9, 0, -9, 10, 5, 7, { sides: 'brick', top: 'roof_flat' });
+    M.decal('aq_sign', 9, 3.4, -5.5, 6, 1.5, 's');
+    M.tree(6, 2); M.tree(-15, 0, 'tree_pine'); M.tree(12, 3, 'bush');
+    M.lampPost(3.5, 5, false); M.bench(8, 6, 's'); M.car(-1.5, 12, 'n', 'plastic_blue');
+    M.fence(-20, 9, -4, 9);
+    M.mailbox(-5, 7, 's', 'mailbox_vane');
+    M.swingSet(-12, 14, 's', { moving: true });
+    M.spawn('default', 0, 6, 'n');
+  },
+};
+Game.st = State.newGame('TEST');
+Game.mode = 'play';
+World.load('test', 'default', Game.st);
+World.addNpc({ id: 'walter', x: 1.5, z: 4, face: Math.PI });
+World.addNpc({ id: 'dana', x: -1.8, z: 3, face: Math.PI / 2 });
+World.addNpc({ id: 'evan', x: 3, z: 2, face: -Math.PI / 2 });
+World.addNpc({ id: 'miller', x: -3, z: 1.5, face: Math.PI });
+window.frameOnce = function () { World.update(0.016, false); World.draw(); R.ui.clearRect(0,0,320,240); R.endFrame(); };
+window.showAtlas = function () { document.body.appendChild(Atlas.canvas); Atlas.canvas.style.cssText='position:absolute;left:0;top:0;width:2048px;background:#446'; };
+frameOnce();
+</script>
+</body></html>

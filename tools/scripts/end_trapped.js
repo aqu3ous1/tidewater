@@ -1,0 +1,20 @@
+module.exports = {
+  query: 'debug&day=8&map=aquarium&spawn=corridor&flags=ghostMet,lightsOut,remembered,tunnelOpen',
+  steps: [
+    ['wait', 2000],
+    ['eval', "Story.checkpoint(Script.S, 'aquarium', 'corridor')"],
+    ['eval', "const g = World.npc('ghost'); T.tp(g.x, g.z + 0.5)"], ['wait', 6000],
+    ['print', '({ mode: Game.mode, deaths: State.getMeta().deaths, slot4: !!State.load(3) })'],
+    ['shot', 'death_title'],
+    ['eval', "Game.loadGame(State.load(3))"],
+    ['wait', 2500],
+    ['print', 'T.summary()'],
+    ['check', "Game.st.flags.deathCount === 1"],
+    ['eval', "Story.stealthReset(); const g = World.npc('ghost'); T.tp(g.x, g.z + 0.5)"], ['wait', 7000],
+    ['shot', 'trapped'],
+    ['print', 'T.summary()'],
+    ['talk', 'newkid'],
+    ['wait', 12000],
+    ['print', '({ mode: Game.mode, endings: State.getMeta().endings })'],
+  ],
+};

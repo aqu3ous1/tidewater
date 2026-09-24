@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TIDEWATER</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; outline: none; }
+  #nogl { display: none; color: #bbb; font: 14px monospace; padding: 24px; }
+</style>
+</head>
+<body>
+<canvas id="screen" tabindex="0"></canvas>
+<div id="nogl">TIDEWATER needs WebGL, which this browser doesn't seem to have.</div>
+<!-- engine -->
+<script src="src/core/util.js"></script>
+<script src="src/core/font.js"></script>
+<script src="src/core/renderer.js"></script>
+<script src="src/core/input.js"></script>
+<script src="src/core/audio.js"></script>
+<!-- graphics -->
+<script src="src/gfx/pixel.js"></script>
+<script src="src/gfx/textures.js"></script>
+<script src="src/gfx/sprites.js"></script>
+<script src="src/gfx/decals.js"></script>
+<!-- world -->
+<script src="src/world/builder.js"></script>
+<script src="src/world/props.js"></script>
+<script src="src/world/world.js"></script>
+<!-- game systems -->
+<script src="src/game/state.js"></script>
+<script src="src/game/script.js"></script>
+<script src="src/game/ui.js"></script>
+<script src="src/game/menus.js"></script>
+<script src="src/game/title.js"></script>
+<script src="src/game/game.js"></script>
+<!-- content -->
+<script src="src/data/items.js"></script>
+<script src="src/data/docs.js"></script>
+<script src="src/data/npcs.js"></script>
+<script src="src/maps/town.js"></script>
+<script src="src/maps/house.js"></script>
+<script src="src/maps/aquarium.js"></script>
+<script src="src/maps/basement.js"></script>
+<script src="src/maps/shops.js"></script>
+<script src="src/maps/school.js"></script>
+<script src="src/maps/memory.js"></script>
+<script src="src/game/story.js"></script>
+<script src="src/game/story2.js"></script>
+<script src="src/game/endings.js"></script>
+<script src="src/debug.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>
