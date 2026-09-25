@@ -110,7 +110,11 @@ const Menus = (() => {
       if (list.length) {
         const it = ITEMS[list[m.sel]];
         UI.panel(ctx, 164, 26, 148, 190);
-        UI.icon(ctx, 'icon_' + it.icon, 214, 36, 3);
+        const id = list[m.sel], cu = Closeups.regionFor(id, st);
+        const ph = it.photo ? (typeof it.photo === 'function' ? it.photo(st) : it.photo) : null, pr = ph ? Atlas.get(ph) : null;
+        if (cu) { const r = Atlas.get(cu); ctx.drawImage(Atlas.canvas, r.x, r.y, r.w, r.h, 206, 36, r.w, r.h); }
+        else if (pr) { const s2 = Math.min(1, 64 / pr.w, 48 / pr.h); ctx.drawImage(Atlas.canvas, pr.x, pr.y, pr.w, pr.h, Math.round(238 - pr.w * s2 / 2), Math.round(60 - pr.h * s2 / 2), pr.w * s2, pr.h * s2); }
+        else UI.icon(ctx, 'icon_' + it.icon, 214, 36, 3);
         const nm = typeof it.name === 'function' ? it.name(st) : it.name;
         wrapText(nm, 22).forEach((l, i) => Font.center(ctx, l, 238, 90 + i * 10, c.hi));
         const d = typeof it.desc === 'function' ? it.desc(st) : (it.desc || '');
@@ -140,10 +144,19 @@ const Menus = (() => {
         const sc = Math.max(0, Math.min(m.catSel - 6, ids.length - vis));
         ids.slice(sc, sc + vis).forEach((id, i) => {
           const y = 46 + i * 12, idx = sc + i, f = st.found[id], it = ITEMS[id];
-          if (idx === m.catSel) UI.fill(ctx, 14, y - 2, 292, 12, 'rgba(244,224,112,0.15)');
+          if (idx === m.catSel) UI.fill(ctx, 14, y - 2, 204, 12, 'rgba(244,224,112,0.15)');
           const nm = f ? (typeof it.name === 'function' ? it.name(st) : it.name) : '???';
           Font.draw(ctx, (idx + 1 < 10 ? ' ' : '') + (idx + 1) + '. ' + nm, 20, y, f ? (idx === m.catSel ? c.hi : c.text) : '#5a5a70');
         });
+        // preview of the selected collectible
+        const sid = ids[m.catSel], sit = ITEMS[sid];
+        UI.panel(ctx, 222, 44, 82, 64, { bg: '#141a36' });
+        if (st.found[sid]) {
+          const cu = Closeups.regionFor(sid, st), ph = sit.photo ? (typeof sit.photo === 'function' ? sit.photo(st) : sit.photo) : null;
+          const r = cu ? Atlas.get(cu) : ph ? Atlas.get(ph) : null;
+          if (r) { const s2 = Math.min(1, 74 / r.w, 56 / r.h); ctx.drawImage(Atlas.canvas, r.x, r.y, r.w, r.h, Math.round(263 - r.w * s2 / 2), Math.round(76 - r.h * s2 / 2), Math.round(r.w * s2), Math.round(r.h * s2)); }
+          Font.center(ctx, 'Z: LOOK', 263, 112, c.dim);
+        } else Font.center(ctx, '?', 263, 72, '#5a5a70');
       }
     } else if (m.tab === 2) {
       UI.panel(ctx, 8, 26, 304, 190);

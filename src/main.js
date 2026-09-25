@@ -11,6 +11,7 @@
   Tex.build();
   Sprites.build();
   Decals.build();
+  Closeups.build();
   Props.atlas();
   if (typeof Story !== 'undefined' && Story.atlas) Story.atlas();
   Atlas.upload();

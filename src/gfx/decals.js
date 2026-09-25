@@ -421,7 +421,16 @@ const Decals = (() => {
 
   // ---------------------------------------------------------------- item icons (16x16)
   function icons() {
-    const I = (name, fn) => add('icon_' + name, P(16, 16, (p) => { fn(p); p.outline('#1a1420'); }));
+    const lightIcon = (p) => {
+      const src = p.clone(), a = (x, y) => src.alpha(x, y) > 0;
+      for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+        if (!a(x, y)) continue;
+        const c = src.get(x, y);
+        if (!a(x - 1, y) || !a(x, y - 1)) p.set(x, y, shade(c, 1.16));
+        else if (!a(x + 1, y) || !a(x, y + 1)) p.set(x, y, shade(c, 0.76));
+      }
+    };
+    const I = (name, fn) => add('icon_' + name, P(16, 16, (p) => { fn(p); lightIcon(p); p.outline('#1a1420'); }));
     const paper = (p, c) => { p.rect(3, 1, 10, 14, c || '#f4f0dc'); for (let y = 4; y < 14; y += 2) p.rect(5, y, 6, 1, '#9aa4b8'); };
     const key = (p, c) => { p.ring(5, 5, 4, 4, c); p.rect(8, 5, 7, 2, c); p.rect(12, 7, 2, 3, c); p.rect(14, 7, 1, 2, c); };
     I('key_house', (p) => key(p, '#d8b848'));
