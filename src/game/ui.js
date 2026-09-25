@@ -66,14 +66,29 @@ const UI = (() => {
   const top = () => modals[modals.length - 1];
 
   // ---------------------------------------------------------------- dialogue
+  // speaker -> sprite set used for their dialogue portrait
+  const FACE_OF = { walter: 'walter', walter_ghost: 'walter_ghost', dana: 'dana', miller: 'miller', hal: 'hal', donna: 'donna', priya: 'priya', gus: 'gus', okafor: 'okafor', ray: 'ray', lou: 'lou', ellis: 'ellis', mae: 'mae', bea: 'bea', tommy: 'tommy', evan: 'evan', you: 'player', kaylee: 'helmet_kaylee', newkid: 'helmet_newkid', visitor1: 'visitor1', visitor2: 'visitor2', visitor3: 'visitor3' };
+  const faceTop = {};
+  function faceFor(who, o) {
+    if (o && o.face === false) return null;
+    const set = (o && o.face) || FACE_OF[who];
+    if (!set || !Atlas.regions[set + '_s0']) return null;
+    if (faceTop[set] == null) {
+      const px = Atlas.get(set + '_s0').pix; let top = 0;
+      if (px) { outer: for (let y = 0; y < px.h; y++) for (let x = 0; x < px.w; x++) if (px.alpha(x, y)) { top = y; break outer; } }
+      faceTop[set] = top;
+    }
+    return set;
+  }
   function dialog(who, text, o) {
     o = o || {};
     const sp = SPEAKERS[who] || (who ? { name: who.toUpperCase(), pitch: 220 } : { name: '', pitch: 200 });
     const style = o.style || sp.style || (who ? 'normal' : 'narration');
-    const lines = wrapText(name(text), 48);
+    const face = style === 'tape' || style === 'narration' ? null : faceFor(who, o);
+    const lines = wrapText(name(text), face ? 39 : 48);
     const pages = [];
     for (let i = 0; i < lines.length; i += 4) pages.push(lines.slice(i, i + 4));
-    return push({ type: 'dialog', who, sp, style, pages, page: 0, chars: 0, speed: o.speed || (style === 'ghost' ? 26 : 44), choices: o.choices || null, sel: 0, inChoice: false, blipT: 0, auto: o.auto, autoT: o.auto || 0, noSkip: o.noSkip });
+    return push({ type: 'dialog', who, sp, style, face, pages, page: 0, chars: 0, speed: o.speed || (style === 'ghost' ? 26 : 44), choices: o.choices || null, sel: 0, inChoice: false, blipT: 0, auto: o.auto, autoT: o.auto || 0, noSkip: o.noSkip });
   }
   function pageLen(m) { return m.pages[m.page].join('\n').length; }
   function updDialog(m, dt) {
@@ -120,11 +135,25 @@ const UI = (() => {
       Font.draw(ctx, nm, x + 11, y - 10, paper ? '#8a3a3a' : ghost ? '#b8c8e0' : C.hi);
     }
     const col = paper ? '#2a3a8a' : ghost ? '#c8d8f0' : tape ? '#d8d8c8' : m.style === 'narration' ? '#dcdcd0' : C.text;
+    let tx = x + 9;
+    if (m.face) {
+      // portrait: the speaker's head at 2x, bobbing while they talk
+      const r = Atlas.get(m.face + '_s0'), top = faceTop[m.face] || 0;
+      const px = x + 5, py = y + 4, pw = 50, ph = 50;
+      fill(ctx, px, py, pw, ph, paper ? '#e4dcc4' : ghost ? '#0c1426' : '#1c2448');
+      for (let i = 0; i < 6; i++) fill(ctx, px + 1, py + ph - 6 + i, pw - 2, 1, paper ? 'rgba(160,140,100,0.12)' : 'rgba(120,150,220,0.06)');
+      const talking = m.chars < pageLen(m) && Math.floor(t * 8) % 2;
+      ctx.save(); ctx.beginPath(); ctx.rect(px + 1, py + 1, pw - 2, ph - 2); ctx.clip();
+      ctx.drawImage(Atlas.canvas, r.x + 4, r.y + Math.max(0, top - 1), 24, 25, px + 1, py + 2 + (talking ? 1 : 0), 48, 50);
+      ctx.restore();
+      frame(ctx, px, py, pw, ph, paper ? '#8a7a5a' : ghost ? '#8aa0c0' : C.border);
+      tx = px + pw + 7;
+    }
     let remaining = Math.floor(m.chars);
     m.pages[m.page].forEach((line, i) => {
       if (remaining <= 0) return;
       const n = Math.min(line.length, remaining);
-      Font.draw(ctx, line, x + 9, y + 7 + i * 11, col, { max: n, wobble: paper ? i + 1 : ghost && Math.random() < 0.02 ? Math.random() * 10 : 0, shadow: paper ? null : '#05060c' });
+      Font.draw(ctx, line, tx, y + 7 + i * 11, col, { max: n, wobble: paper ? i + 1 : ghost && Math.random() < 0.02 ? Math.random() * 10 : 0, shadow: paper ? null : '#05060c' });
       remaining -= line.length + 1;
     });
     if (m.chars >= pageLen(m) && !m.inChoice && !m.auto && Math.floor(t * 3) % 2) Font.draw(ctx, '▼', x + w - 14, y + h - 12, paper ? '#8a3a3a' : C.hi);
