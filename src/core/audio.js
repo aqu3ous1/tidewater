@@ -475,6 +475,17 @@ const Sound = (() => {
         [a, b, am].forEach((x) => { x.start(t); x.stop(t + 1.65); });
         break;
       }
+      case 'bell': {
+        // a big church bell: a low strike with inharmonic partials and a long hum
+        const base = (o.pitch || 1) * 196;
+        [[1, 0.5], [2.02, 0.28], [2.51, 0.2], [3.03, 0.12], [4.2, 0.07], [0.5, 0.3]].forEach(([m, a]) => {
+          const x = osc('sine', base * m), xg = ctx.createGain(); x.connect(xg); xg.connect(g);
+          xg.gain.setValueAtTime(0.0001, t); xg.gain.exponentialRampToValueAtTime(a, t + 0.01); xg.gain.exponentialRampToValueAtTime(0.0001, t + 4.5 / Math.sqrt(m));
+          x.start(t); x.stop(t + 4.6);
+        });
+        g.gain.setValueAtTime(0.16 * v, t);
+        break;
+      }
       case 'splash': {
         const [n, f] = nz(3000, 'lowpass'); f.frequency.setValueAtTime(3500, t); f.frequency.exponentialRampToValueAtTime(300, t + 0.5);
         g.gain.setValueAtTime(0.12 * v, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.6); n.start(t, Math.random()); n.stop(t + 0.62); break;

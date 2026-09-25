@@ -18,6 +18,9 @@ const ROUTES = [
   { name: 'B1: stairs -> freight elevator', q: 'day=5&flags=hired&map=aqb1&spawn=stairs&speed=2', pts: [[0, -5], [0, -48]] },
   { name: 'B1: old exhibits -> chalk passage -> boiler', q: 'day=5&flags=hired&map=aqb1&spawn=stairs&speed=2', pts: [[0, -5], [0, -34], [-18, -34], [-18, -22], [-9, -22], [0, -22]] },
   { name: 'B2: elevator -> life support, planning', q: 'day=6&flags=hired&map=aqb2&spawn=elevator&speed=2', pts: [[0, -6], [17, -10], [24, -10], [17, -10], [-11, -6], [-11, -2], [-13, -2], [-13, 3]] },
+  { name: 'storm drain: manhole -> Kessler hole', q: 'day=5&map=drain&spawn=manhole&speed=2', pts: [[0, 0], [-43, 0], [-43, -17]] },
+  { name: 'storm drain: manhole -> living room -> outfall', q: 'day=5&map=drain&spawn=manhole&speed=2', pts: [[0, -1], [0, -20], [-19, -20], [-19, -17], [-25, -17], [-19, -17], [-19, -20], [0, -20], [0, -43], [33, -43], [33, -67]] },
+  { name: 'Mrs. Miller: living room -> kitchen -> sewing room', q: 'day=2&map=miller&spawn=front&speed=2', pts: [[-4.8, 3.6], [-5, 1], [-5, -6], [-3, -8.5], [-5, -5], [-5, 3.6], [2.6, 3.6], [1.8, 1.5], [1.8, -6], [2.5, -9.5]] },
   { name: 'underneath: arrival -> hub', q: 'day=8&map=underneath&spawn=arrive&speed=2', pts: [[0, -30]] },
 ];
 

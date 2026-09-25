@@ -65,6 +65,11 @@ WebGL is required. Sound starts after your first key press. Headphones help.
   Hal's Diner, the market, Gus's gas station and garage, the laundromat, the
   church, the school, the park and playground, the pier and beach, the abandoned
   Kessler house, and the Underneath.
+- **Houses with more to them**: Mrs. Miller's kitchen and sewing room, the Kessler
+  house's kitchen and cellar, and the attic of your own house (from day 5).
+- **Hidden places** off the streets: the storm drain under the whole town (the
+  manhole opens on day 3), the Tide Club treehouse in the park (it wants a
+  password), under the pier, the church bell tower, and the back of Rosa's.
 - **The aquarium is a building to get lost in**, with more of it opening as the
   days go on:
   - *Ground floor*: the lobby, gift shop, main hall with six tanks, Penguin Point,
@@ -157,6 +162,7 @@ node tools/follow.js   # plays the day-1 aquarium tour by keyboard: follow Walte
 node tools/office.js   # day 6: leaving Walter's office never shuts you in
 node tools/loadday.js  # loading a start-of-day save replays the morning
 node tools/aqx.js      # the upper floor and both basement levels: stairs, keys, elevator, crawlspace
+node tools/hidden.js   # the storm drain, treehouse, pier, bell tower, Rosa's, attic, Miller and Kessler rooms
 node tools/playthrough.js dreams out/   # sleeps through all seven nights and finishes each dream
 ```
 

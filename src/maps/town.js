@@ -127,7 +127,10 @@ MAPS.town = {
     for (let x = -74; x < 76; x += 6) { if (Math.abs(x) < 6) continue; M.floorDecal('road_dash', x, -58, 2.4, 0.3, { y: 0.03, rot: 'e' }); M.floorDecal('road_dash', x, -18, 2.4, 0.3, { y: 0.03, rot: 'e' }); M.floorDecal('road_dash', x, 22, 2.4, 0.3, { y: 0.03, rot: 'e' }); M.floorDecal('road_dash', x, 64, 2.4, 0.3, { y: 0.03, rot: 'e' }); }
     for (let z = -50; z < 100; z += 6) { if ([-58, -18, 22, 64].some((r) => Math.abs(z - r) < 5)) continue; M.floorDecal('road_dash', 0, z, 0.3, 2.4, { y: 0.03 }); }
     for (const z of [-58, -18, 22, 64]) M.floorDecal('crosswalk', 0, z - 5, 8, 2, { y: 0.035 });
-    M.floorDecal('manhole', 1.5, 4, 1.4, 1.4, { y: 0.03 });
+    // the storm drain: the manhole cover is pushed aside from day 3
+    M.floorDecal(d >= 3 ? 'manhole_open' : 'manhole', 1.5, 4, d >= 3 ? 2.2 : 1.4, d >= 3 ? 2.2 : 1.4, { y: 0.06 });
+    M.inter(1.5, 4, { r: 1.2, y: 0.4, exit: true, use: async (S) => Story.manhole(S) });
+    M.spawn('manhole', 1.5, 5.8, 's');
     // tree lines at the town edges
     for (let z = -60; z < 70; z += 7) { M.tree(-81, z, (z / 7) % 2 ? 'tree_pine' : 'tree_round'); M.tree(81, z + 3, (z / 7) % 2 ? 'tree_round' : 'tree_pine'); }
     for (let x = -70; x < 80; x += 9) M.tree(x, 76 + (x % 3), 'tree_pine');
@@ -194,6 +197,16 @@ MAPS.town = {
     for (let x = 22; x < 76; x += 11) M.billboard('reeds', x, -90, 1.2, 1.4);
     M.pickup(31, -81, 'shell1', { cond: (s) => s.flags.shellQuest || s.day >= 2 });
     M.pickup(58.5, -88.5, 'shell2', { cond: (s) => s.flags.shellQuest || s.day >= 2 });
+    // the storm drain comes out on the beach
+    M.box(30, 0, -91.4, 3.4, 2.8, 1.6, 'concrete', { solid: true });
+    M.decal('drain_grate', 30, 0.1, -90.6, 2.6, 2.6, 's', { off: 0.02 });
+    M.door(30, -90.6, 's', { tex: false, w: 2.6, use: async (S) => Story.outfallFromBeach(S) });
+    M.floorDecal('stain', 30, -89.4, 3, 1.6, { y: 0.03, blend: true, color: '#4a5a6a' });
+    M.spawn('outfall', 30, -89, 's');
+    // where the pier meets the sand, the beach has washed out underneath
+    M.floorDecal('stain', 43, -88.6, 1.8, 1.4, { y: 0.03, blend: true, color: '#3a3020' });
+    M.inter(42.8, -88.6, { r: 1.2, y: 0.4, exit: true, use: async (S) => { await S.say(null, 'Where the pier meets the beach, the sand has washed out underneath. There\'s room to crawl under.'); const c = await S.ask(null, 'Crawl under the pier?', ['CRAWL UNDER', 'NO']); if (c === 0) await S.go('underpier', 'beach', { sfx: 'scrub' }); } });
+    M.spawn('underpier', 42, -87.4, 's');
     M.box(62, 0, -76, 3, 0.4, 1.2, 'wood_dark', { solid: true });
     M.look(62, -74.8, 'An old rowboat, upside down in the sand. Something has been living under it.', { r: 1.6 });
     M.ent({ type: 'sprite', region: (e, t) => 'gull_' + (Math.floor(t * 3) % 2), x: 52, y: 4, z: -100, w: 0.8, h: 0.5, cond: (s) => !isNight(s) && !memory(s) });
@@ -231,6 +244,12 @@ MAPS.town = {
     // Rosa's (closed, always)
     shopExt(M, 26, -40, 38, -26, { sign: 'sign_rosas', signW: 3.6, wall: 'brick', awning: 'plastic_green', awningW: 4, dark: true, doorTex: 'door_green', doorOpts: { locked: true, lockedMsg: 'A note in the window: BACK AT 2.' } });
     M.decal('sign_rosas_note', 32 + 1.1, 1.2, -26, 0.8, 0.6, 's', { off: 0.06 });
+    // Rosa's side door, down the gap between Rosa's and Gus's
+    M.door(38, -33, 'e', { tex: 'door_green', w: 1.1, h: 2.3, use: async (S) => Story.rosasBack(S) });
+    M.box(41.5, 0, -38.2, 2.4, 1.4, 1.3, { top: 'metal', sides: 'plastic_green' }, { solid: true });
+    M.look(41.5, -36.9, 'A dumpster. On top of it, very neatly, somebody has put a bowl of soup, still steaming.', { r: 1.3 });
+    if (d >= 4) M.box(38.5, 0, -32.2, 0.4, 0.2, 0.2, 'brick', { solid: false });
+    M.spawn('rosas', 39.2, -33, 'e');
     M.look(34.5, -25, (s) => s.day >= 8 ? ['BACK AT 2.', 'It has been two o\'clock for a very long time.'] : ['A note taped inside the door: BACK AT 2.', 'The chairs are stacked. There\'s dust on the menus.'], { r: 1.3 });
     // Gas station
     M.box(65, 0, -42, 18, 4.6, 12, { sides: 'wall_white', top: 'roof_flat' }, { back: false });
@@ -327,6 +346,15 @@ MAPS.town = {
     M.floorDecal('hopscotch', -16, 38, 1.2, 3.6, { y: 0.03 });
     M.look(-16, 39, (s) => memory(s) ? 'Hopscotch. The squares go 1 through 8, and then there is a 9 drawn much later, in a different chalk.' : 'Hopscotch. Someone drew it very carefully.', { r: 1.2 });
     M.fence(-37, 34.5, -13, 34.5, { skip: (i) => i === 6 });
+    // the Tide Club treehouse
+    M.cyl(-73, 0, 42, 0.55, 6.5, 'bark', { sides: 6 });
+    M.billboard('tree_round', -73, 41.6, 7, 8, { y: 1.5 });
+    M.box(-73, 3.6, 42.3, 3.2, 1.9, 3.0, { sides: 'wood', top: 'roof_brown' }, { solid: false });
+    M.decal('sign_club', -73, 4.6, 43.8, 1.4, 0.55, 's', { off: 0.02 });
+    M.decal(night ? 'win_dark' : 'win_house', -74.1, 4.1, 43.8, 0.8, 0.8, 's', { off: 0.02 });
+    for (let y = 0.4; y < 3.6; y += 0.45) M.box(-73, y, 42.6, 0.7, 0.08, 0.12, 'wood', { solid: false });
+    M.inter(-73, 43.2, { r: 1.2, y: 1.2, exit: true, use: async (S) => Story.treeLadder(S) });
+    M.spawn('treehouse', -73, 44, 's');
 
     // ---------------------------------------------------------------- school
     M.box(31, 0, 41, 38, 5, 18, { sides: 'brick_tan', top: 'roof_flat' }, { back: false });

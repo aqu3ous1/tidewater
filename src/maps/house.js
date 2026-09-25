@@ -107,7 +107,12 @@ MAPS.house = {
     // --- hallway
     M.decal('mirror', 1.98, 0.9, -1.8, 0.7, 1.1, 'w');
     M.box(-1.2, 2.2, -5, 0.04, 0.8, 0.04, 'rubber', { solid: false });
-    M.look(-1.2, -5, (s) => s.day >= 8 && s.tod === 'night' ? ['The attic hatch is open. It\'s very dark up there.', 'Someone is sitting in the dark, very still, with their knees pulled up. It\'s a pile of boxes. It\'s only a pile of boxes.'] : s.day >= 6 ? ['A cord hangs from the ceiling: the attic hatch. It\'s painted shut.', 'Tonight, the cord is swaying a little. There\'s no draft.'] : ['A cord hangs from the ceiling: the attic hatch. It\'s painted shut.'], { r: 1.0, y: 2.8 });
+    M.inter(-1.2, -5, { r: 1.0, y: 2.8, exit: true, use: async (S) => Story.atticCord(S) });
+    if (f.atticOpen) {
+      for (let i = 0; i < 6; i++) M.box(-1.2, 0.2 + i * 0.45, -5.4 + i * 0.05, 0.6, 0.05, 0.12, 'wood', { solid: false });
+      M.box(-1.5, 0, -5.2, 0.06, 2.8, 0.06, 'wood', { solid: false }); M.box(-0.9, 0, -5.2, 0.06, 2.8, 0.06, 'wood', { solid: false });
+    }
+    M.spawn('attic', -1.2, -4.2, 's');
     M.look(1.4, -1.8, (s) => (s.day >= 8 && s.tod === 'night') ? 'In the mirror, the hallway is shorter.' : 'A mirror. The helmet takes up most of it.', { r: 1 });
     M.door(0, -9, 's', { tex: 'door_evan', w: 1.3, to: 'evanroom', use: async (S) => Story.evanDoor(S) });
     if (d >= 4 && !f.tookDrawingCat && !st.found.drawing_cat) {

@@ -41,14 +41,14 @@ const TownMap = (() => {
               : 'Home of Tank the octopus and Penguin Point! Open 9 AM to 5 PM.',
     },
     {
-      id: 'pier', rect: [43, -110, 49, -86], maps: [],
+      id: 'pier', rect: [43, -110, 49, -86], maps: ['underpier'],
       name: () => 'THE PIER', pict: () => ({ kind: 'pier' }),
       blurb: (st) => st.day >= 8 ? 'Nobody fishes here anymore.'
         : st.day >= 4 ? 'The gulls sit on the rail and watch you eat.'
           : 'Good for fishing and watching boats. Blue shells wash up on the beach.',
     },
     {
-      id: 'church', rect: [-76, -46, -58, -26], maps: ['church'], cond: (st) => st.day < 8,
+      id: 'church', rect: [-76, -46, -58, -26], maps: ['church', 'belltower'], cond: (st) => st.day < 8,
       name: () => 'COMMUNITY CHURCH', sign: () => 'sign_church',
       status: (st) => shut(st) ? TAG.closed : TAG.open,
       blurb: (st) => st.day >= 4 ? 'Sunday service at 10 AM. The candles by the memorial board are always lit.' : 'Sunday service at 10 AM. All welcome.',
@@ -77,7 +77,7 @@ const TownMap = (() => {
       blurb: (st) => st.day >= 8 ? 'One dryer is still turning.' : 'Coin laundry. There is a lost & found box by the door.',
     },
     {
-      id: 'rosas', rect: [26, -40, 38, -26], maps: [],
+      id: 'rosas', rect: [26, -40, 38, -26], maps: ['rosas'],
       name: () => "ROSA'S", sign: () => 'sign_rosas',
       status: () => tag('BACK AT 2'),
       blurb: (st) => st.day >= 8 ? 'It has been two o\'clock for a very long time.'
@@ -107,7 +107,7 @@ const TownMap = (() => {
         : st.day >= 4 ? 'Her cat, Marmalade, is missing. There are posters on the lamp posts.' : '14 Maple St. Mrs. Miller knows everyone on the street.',
     },
     {
-      id: 'home', rect: [10, -6, 24, 12], maps: ['house', 'evanroom'],
+      id: 'home', rect: [10, -6, 24, 12], maps: ['house', 'evanroom', 'attic'],
       name: (st) => st.day >= 8 ? "EVAN'S HOUSE" : 'HOME', pict: () => house('#8ab0d8', '#6a7078', { home: true }),
       blurb: (st) => st.day >= 8 ? '12 Maple St. It was never yours.'
         : st.day === 7 ? '12 Maple St. The Vanes lived here before you did.'
@@ -131,7 +131,7 @@ const TownMap = (() => {
       blurb: (st) => st.day >= 8 ? 'You knock. The door swings open onto a wall.' : 'Mrs. Okafor teaches at the elementary school.',
     },
     {
-      id: 'pond', rect: [-62, 34, -42, 48], maps: [],
+      id: 'pond', rect: [-62, 34, -42, 48], maps: ['treehouse'],
       name: () => 'DUCK POND', pict: () => ({ kind: 'pond' }),
       blurb: (st) => st.day >= 8 ? "The pond is very still. You can't see the bottom." : 'There are coins at the bottom. Make a wish.',
     },
@@ -167,7 +167,7 @@ const TownMap = (() => {
 
   const visible = (st) => PLACES.filter((p) => !p.cond || p.cond(st));
   const center = (p) => [(p.rect[0] + p.rect[2]) / 2, (p.rect[1] + p.rect[3]) / 2];
-  function mode(st) { return st.map === 'whiteroom' ? 'white' : st.map === 'underneath' ? 'under' : /^dream/.test(st.map) ? 'dream' : 'town'; }
+  function mode(st) { return st.map === 'whiteroom' ? 'white' : (st.map === 'underneath' || st.map === 'drain') ? 'under' : /^dream/.test(st.map) ? 'dream' : 'town'; }
   // which place the player is in (or nearest to, outdoors)
   function herePlace(st) {
     const list = visible(st);

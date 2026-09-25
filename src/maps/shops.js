@@ -13,10 +13,30 @@ MAPS.miller = {
   music(st) { return st.day >= 7 ? null : 'home'; },
   amb() { return ['room']; },
   build(M, st) {
-    M.room(-6, -4, 6, 5, 3, { floor: 'carpet_green', wall: 'wall_green', trim: 'wood_dark' });
+    M.room(-6, -4, 6, 5, 3, { floor: 'carpet_green', wall: 'wall_green', trim: 'wood_dark', gaps: [{ side: 'n', at: -5, w: 1.4, h: 2.4 }, { side: 'n', at: 1.8, w: 1.4, h: 2.4 }] });
     M.light(0, 2.8, 0, 8, '#ffe0b0', 0.4);
     M.armchair(-3.2, -1.2, 's', 'fabric_grey'); M.armchair(1.2, -1.2, 's', 'fabric_grey');
-    M.shelf(-4.6, -3.7, 1.8, 2.2, 's', 'bookshelf'); M.shelf(4.2, -3.7, 1.8, 2.2, 's', 'bookshelf');
+    M.shelf(-3, -3.7, 1.6, 2.2, 's', 'bookshelf'); M.shelf(4.4, -3.7, 1.6, 2.2, 's', 'bookshelf');
+    M.cam(-6, -4, 6, 5, shopCam({ pitch: 48, dist: 7.5, clamp: [-5.5, -3.6, 5.5, 9] }));
+    // the kitchen
+    M.room(-6, -11, 0, -4, 3, { floor: 'lino_checker', wall: 'wall_yellow', trim: 'wood_dark', gaps: [{ side: 's', at: -5, w: 1.4, h: 2.4 }] });
+    M.fridge(-5.3, -10.3, 's'); M.decal('fridge_art', -5.3, 1.3, -9.83, 0.5, 0.4, 's', { off: 0.02 });
+    M.look(-5.3, -9.4, (s) => ['A crayon drawing on the fridge: a fish, a sun, and a lady with a watering can. FOR MRS M. FROM EVAN.', s.day >= 5 ? 'The magnet holding it up is a little plastic octopus. The paper underneath is much less faded than the rest.' : 'It\'s held up with a magnet shaped like an octopus.'], { r: 1.1 });
+    M.stove(-3.6, -10.4, 's'); M.sink(-1.6, -10.4, 's');
+    M.table(-2.6, -6.8, 1.4, 1.0, 0.75, 'wood_light'); M.chair(-3.4, -6.8, 'e', 'wood'); M.chair(-1.8, -6.8, 'w', 'wood');
+    M.look(-2.6, -6, (s) => s.day >= 7 ? 'The kitchen table, set for two. She hasn\'t had anybody over in years. The second place has a glass of milk, and a straw.' : 'The kitchen table. A cookie jar shaped like a cat, a pile of coupons, and a single cup of tea gone cold.', { r: 1.2 });
+    M.light(-3, 2.8, -7.5, 6, '#fff0c8', 0.5);
+    M.cam(-6, -11, 0, -4, shopCam({ pitch: 55, dist: 6, clamp: [-5.6, -10.6, -0.4, -3] }));
+    // the sewing room
+    M.room(0, -11, 6, -4, 3, { floor: 'carpet_beige', wall: 'wallpaper_floral', trim: 'wood_dark', gaps: [{ side: 's', at: 1.8, w: 1.4, h: 2.4 }] });
+    M.table(3.4, -8, 2.6, 1.8, 0.8, 'wood'); M.floorDecal('quilt', 3.4, -8, 2.6, 1.8, { y: 0.83 });
+    M.inter(3.4, -6.8, { r: 1.5, y: 1.2, use: async (S) => Story.millerQuilt(S) });
+    M.box(0.8, 0, -10.4, 1.0, 0.8, 0.6, 'wood_dark'); M.box(0.8, 0.8, -10.4, 0.5, 0.35, 0.3, 'plastic_white', { solid: false });
+    M.look(0.8, -9.6, 'A sewing machine, with a basket of children\'s clothes next to it. Every shirt has a square cut out of the back.', { r: 1.1 });
+    M.billboard('dummy', 5.3, -10.4, 0.6, 1.4, { y: 0, solidR: 0.3 });
+    M.look(5.3, -9.6, 'A dress form wearing a half-finished cardigan in orange yarn. It\'s small. Child-sized.', { r: 1.0 });
+    M.light(3, 2.8, -7.5, 6, '#ffe8d0', 0.5);
+    M.cam(0, -11, 6, -4, shopCam({ pitch: 55, dist: 6, clamp: [0.4, -10.6, 5.6, -3] }));
     M.table(-1, 1, 1.0, 1.0, 0.5, 'wood_dark');
     M.look(-1, 1.8, 'A plate of oatmeal cookies under a little glass dome. And a newspaper crossword, finished in pen.', { r: 1.1 });
     M.decal('ph_family', -1, 1.5, -4, 0.7, 0.55, 's');
@@ -167,7 +187,10 @@ MAPS.church = {
     M.box(-4.8, 0, -10, 0.8, 0.9, 0.5, 'wood_dark');
     M.look(-4.8, -9.3, (s) => Story.candles(s), { r: 1.1 });
     M.door(0, 6, 'n', { tex: 'door_red', w: 2, to: 'town', spawn: 'church' });
+    M.door(6, 3.8, 'w', { tex: 'door_int', w: 1.0, h: 2.2, use: async (S) => Story.towerDoor(S) });
+    M.decal('sign_tower', 5.97, 2.4, 3.8, 1.1, 0.3, 'w', { off: 0.03 });
     M.spawn('front', 0, 4.8, 'n');
+    M.spawn('tower', 5.0, 3.8, 'w');
   },
 };
 
@@ -179,7 +202,8 @@ MAPS.kessler = {
   music() { return null; },
   amb() { return ['wind', 'drips']; },
   build(M, st) {
-    M.room(-6, -3, 6, 5, 3, { floor: 'wood_floor_dark', wall: 'wallpaper_green', gaps: [{ side: 'n', at: 3.5, w: 1.6, h: 2.4 }], trim: 'wood_dark' });
+    M.room(-6, -3, 6, 5, 3, { floor: 'wood_floor_dark', wall: 'wallpaper_green', gaps: [{ side: 'n', at: 3.5, w: 1.6, h: 2.4 }, { side: 'n', at: -2.5, w: 1.6, h: 2.4 }], trim: 'wood_dark' });
+    M.cam(-6, -3, 6, 5, shopCam({ pitch: 50, dist: 7.5, clamp: [-5.5, -2.6, 5.5, 9] }));
     M.light(0, 2.6, 1, 7, '#c8c0b0', 0.3);
     // furniture under sheets
     M.box(-3, 0, 0, 2.6, 0.9, 1.1, 'sheet'); M.box(2, 0, 1.5, 1.2, 1.0, 1.2, 'sheet'); M.box(-4.8, 0, 3.5, 1.0, 1.8, 0.8, 'sheet');
@@ -197,5 +221,36 @@ MAPS.kessler = {
     M.cam(1.5, -10, 6, -3, shopCam({ pitch: 55, dist: 6, clamp: [1.8, -10, 5.7, -3.4] }));
     M.door(0, 5, 'n', { tex: 'door_old', to: 'town', spawn: 'kessler' });
     M.spawn('front', 0, 3.8, 'n');
+    // the kitchen: half the ceiling has come down
+    M.room(-6, -10, 1.5, -3, 3, { floor: 'lino_green', wall: 'wall_yellow', trim: 'wood_dark', gaps: [{ side: 's', at: -2.5, w: 1.6, h: 2.4 }] });
+    M.at(-4.4, -8.4, 0.5, () => M.box(0, 0, 0, 2.2, 0.25, 1.4, 'ceiling_tile', { solid: true }), 0);
+    M.at(-3.6, -7.2, -0.3, () => M.box(0, 0.2, 0, 1.4, 0.2, 0.9, 'wood', { solid: false }), 0);
+    M.look(-4.2, -7, 'Part of the ceiling has come down. Up through the hole you can see the upstairs bathroom, and the bottom of a bathtub.', { r: 1.4 });
+    M.table(-0.6, -6.6, 1.6, 1.0, 0.75, 'wood_light');
+    for (const [x, z] of [[-1.1, -6.6], [-0.1, -6.6], [-0.6, -6.2]]) M.cyl(x, 0.75, z, 0.18, 0.02, 'plastic_white', { sides: 8, solid: false });
+    M.look(-0.6, -5.8, 'The table is set for three, under a quarter inch of dust. Three plates. Three glasses. Somebody meant to come back and eat.', { r: 1.2 });
+    M.decal('flat_calendar', 1.48, 1.4, -8, 0.5, 0.6, 'w');
+    M.look(0.8, -8, 'A calendar from the feed store: SEPTEMBER 1991. The Kesslers left in a hurry, three weeks after Evan went missing.', { r: 1.1 });
+    M.floorDecal('door_hatch', -4.6, -4.4, 1.2, 1.1, { y: 0.02 });
+    M.inter(-4.6, -4.4, { r: 1.1, y: 0.4, exit: true, use: async (S) => { await S.say(null, 'A trapdoor in the floor, standing open. Steep steps go down into the cellar.'); await S.go('kessler', 'cellar', { sfx: 'step' }); } });
+    M.light(-2, 2.6, -6.5, 6, '#c8c0b0', 0.3);
+    M.cam(-6, -10, 1.5, -3, shopCam({ pitch: 55, dist: 6, clamp: [-5.6, -9.6, 1.1, -2] }));
+    M.spawn('kitchen', -4.6, -5.4, 's');
+    // the cellar (and the hole the boys knocked through into the storm drain)
+    const CX = 20;
+    M.room(CX - 5, -8, CX + 5, 0, 2.4, { floor: 'concrete_dark', wall: 'brick_old', trim: 'wood_dark' });
+    M.door(CX + 3.5, 0, 'n', { tex: 'door_up', w: 1.2, h: 2.2, to: 'kessler', spawn: 'kitchen', sfx: 'step', locked: (s) => !s.inv.includes('kessler_key'), lockedMsg: 'The steps go up to a trapdoor. It\'s bolted from the kitchen side. Whoever lives up there doesn\'t want visitors coming up from the cellar.' });
+    M.decal('wall_hole', CX - 4.98, 0, -4, 1.6, 1.9, 'e', { off: 0.02 });
+    M.door(CX - 5, -4, 'e', { tex: false, w: 1.4, to: 'drain', spawn: 'kessler', sfx: 'scrub' });
+    M.decal('chalk_hs', CX - 4.96, 1.7, -6.3, 1.1, 0.55, 'e', { off: 0.02 });
+    M.look(CX - 4.2, -6.3, 'Chalk on the bricks next to the hole: TOBY + EVAN SECRET WAY. An arrow points into the dark.', { r: 1.1 });
+    for (const z of [-7.6]) M.decal('jar_row', CX, 0.6, z - 0.38, 4.4, 0.8, 's', { off: 0.02 });
+    M.box(CX, 0, -7.7, 5, 1.6, 0.5, { top: 'wood', sides: 'wood', s: '@jar_row' }, { fit: { s: true } });
+    M.look(CX, -6.8, 'Shelves of preserves: peaches, beans, something dark. The lids have all rusted. One jar is empty and clean, like somebody drank it.', { r: 1.3 });
+    M.cyl(CX + 3.4, 0, -6.4, 0.5, 1.2, 'rust', { sides: 8 });
+    M.look(CX + 3.4, -5.4, 'An old furnace, cold. Inside it: two flashlights, a bag of marbles, and a comic with the cover torn off. A stash.', { r: 1.2 });
+    M.light(CX, 2.2, -4, 6, '#c8b890', 0.35);
+    M.cam(CX - 5, -8, CX + 5, 0, shopCam({ pitch: 50, dist: 6.5, clamp: [CX - 4.6, -7.6, CX + 4.6, 3] }));
+    M.spawn('cellar', CX - 3.8, -4, 'e');
   },
 };
