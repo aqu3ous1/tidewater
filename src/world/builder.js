@@ -310,6 +310,19 @@ class MapBuilder {
     const fv = { s: [0, 1], n: [0, -1], e: [1, 0], w: [-1, 0] }[face];
     const d = { x: p[0] + fv[0] * 0.45, z: p[2] + fv[1] * 0.45, fx: fv[0], fz: fv[1], w, face };
     this.doors.push(Object.assign(d, o));
+    // indoors, the way out is on the wall the camera looks through (so it's cut away): mark it on the floor
+    if (face === 'n' && this.id !== 'town' && o.tex !== false && (o.to || o.use) && !o.noCue) this.exitCue(x, z, w, o);
+    return this;
+  }
+  // a doormat on the threshold and daylight (or lamplight) spilling in from the doorway
+  exitCue(x, z, w, o) {
+    const st = this.st || {}, tod = st.tod;
+    const mat = o.mat !== undefined ? o.mat : ['house', 'miller', 'kessler'].includes(this.id) ? (this.id === 'kessler' ? 'mat_dirty' : 'mat_welcome') : this.id === 'evanroom' ? null : 'mat_exit';
+    if (mat) this.floorDecal(mat, x, z - 0.72, w + 0.35, (w + 0.35) * 0.5, { y: 0.028 });
+    const light = o.spill || (this.id === 'evanroom' ? ['#f4dca0', 0.22] : tod === 'night' ? ['#9ab0e0', 0.2] : tod === 'evening' ? ['#ffb070', 0.34] : ['#fff2c8', 0.36]);
+    const [c, a] = light, v = hexf(c), depth = o.spillDepth || 3.2, spread = 0.9;
+    this.quad('light_white', [[x - w / 2, 0.035, z], [x + w / 2, 0.035, z], [x + w / 2 + spread, 0.035, z - depth], [x - w / 2 - spread, 0.035, z - depth]],
+      [[0, 0], [1, 0], [1, 1], [0, 1]], { blend: true, lit: false, vcols: [v.concat([a]), v.concat([a]), v.concat([0]), v.concat([0])] });
     return this;
   }
   cam(x0, z0, x1, z1, cfg) { this.cams.push(Object.assign({ x0, z0, x1, z1 }, cfg)); return this; }

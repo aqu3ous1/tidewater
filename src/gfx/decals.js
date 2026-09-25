@@ -509,8 +509,24 @@ const Decals = (() => {
     }));
   }
 
+  // ---------------------------------------------------------------- doormats: plain rugs at the way out, no text
+  function mats() {
+    const mat = (name, base, edge, weave, seed, o) => add(name, P(32, 16, (p) => {
+      o = o || {};
+      p.fill(base);
+      for (let y = 3; y < 13; y++) for (let x = 3; x < 29; x++) if ((x + y) % 4 === 0) p.set(x, y, weave);
+      p.speckle(makeRng(seed), [shade(base, 0.9), shade(base, 1.08)], 0.18, 2, 2, 28, 12);
+      p.frame(0, 0, 32, 16, edge); p.frame(1, 1, 30, 14, shade(edge, 1.25));
+      for (let x = 2; x < 30; x++) p.set(x, 14, shade(base, 0.7));
+      if (o.worn) { p.ellipse(22, 9, 5, 3, shade(base, 0.82)); p.rect(26, 2, 4, 3, shade(base, 0.7)); }
+    }));
+    mat('mat_welcome', '#9a6a3e', '#5a3a1e', '#b88a58', 41);
+    mat('mat_dirty', '#6e604a', '#3e3426', '#7e7058', 42, { worn: true });
+    mat('mat_exit', '#4a4e5a', '#2a2c34', '#5e6474', 43);
+  }
+
   function build() {
-    windows(); signs(); props(); photos(); drawings(); icons(); pool();
+    windows(); signs(); props(); photos(); drawings(); icons(); pool(); mats();
     // things painted by the story at runtime can use sign() too
   }
   return { build, sign, paperNote, crayonLine };

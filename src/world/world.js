@@ -27,6 +27,7 @@ const World = (() => {
     const M = new MapBuilder(id);
     const env = Object.assign({ fog: '#9ab8d0', fogNear: 25, fogFar: 70, sky: null, ambient: [1, 1, 1], clear: null }, def.env ? def.env(st) : {});
     M.ambient = env.ambient;
+    M.st = st;
     if (env.sub) M.sub = env.sub;
     def.build(M, st);
     const mesh = M.bake(env);

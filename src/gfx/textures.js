@@ -257,6 +257,7 @@ const Tex = (() => {
     reg('plastic_blue', noiseTex(16, '#3a7ad0', ['#346ec0'], 0.1, 121));
     reg('plastic_yellow', noiseTex(16, '#e8c43a', ['#dab634'], 0.1, 122));
     reg('plastic_red', noiseTex(16, '#d04a3a', ['#c04234'], 0.1, 123));
+    reg('light_white', new Pix(8, 8).fill('#ffffff'));
     { const b = new Pix(16, 16).fill('#e8742a'); b.rect(0, 3, 16, 3, '#f4f2ea'); b.rect(0, 10, 16, 3, '#f4f2ea'); b.speckle(makeRng(124), ['#d86a26'], 0.06, 0, 0, 16, 3); reg('barrel_stripes', b); }
     reg('plastic_green', noiseTex(16, '#4aa04a', ['#429042'], 0.1, 124));
     reg('plastic_pink', noiseTex(16, '#e89ab8', ['#dc8eac'], 0.1, 125));
