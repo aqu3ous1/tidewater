@@ -30,6 +30,30 @@ const CHAR_DEFS = {
   toby: { h: 36, headW: 18, headH: 18, bodyW: 10, bodyH: 8, legH: 6, skin: '#f0d0b0', hair: '#d8b870', hairStyle: 'short', glasses: true, top: '#d88a3a', topStyle: 'plain', bottom: '#4a5a3a', shoes: '#6a4a2a', blush: true },
 };
 
+// faces: eyes / brows / noseStyle / mouth / extras / glasses / facial hair (see paintHead)
+const FACES = {
+  walter: { eyes: 'open', iris: '#4a6a8a', brows: 'bushy', browC: '#e4e4dc', noseStyle: 'round', mouth: 'soft', mustacheStyle: 'walrus', extras: ['wrinkles', 'bags', 'bigears'], jaw: 'jowly', glasses: 'round', frameC: '#6a5a3a' },
+  dana: { eyes: 'open', iris: '#5a3a20', brows: 'arched', noseStyle: 'small', mouth: 'gap', extras: ['freckles', 'bandaid'], bangs: true },
+  miller: { eyes: 'lashes', iris: '#6a5a8a', brows: 'thin', browC: '#9a8aa8', noseStyle: 'hook', mouth: 'pursed', lips: '#c0587a', extras: ['wrinkles', 'earrings', 'blush', 'mole'], blushC: '#e8a8b8', earringC: '#f4f0f0', glasses: 'cat', frameC: '#7a3a7a', chain: '#e8c040' },
+  hal: { eyes: 'happy', brows: 'thick', browC: '#2a1a10', noseStyle: 'round', mouth: 'grin', mustacheStyle: 'thick', extras: ['stubble'], jaw: 'square', hairStyle: 'papercap', paper: '#f4f4ee', paperStripe: '#c84a3a' },
+  donna: { eyes: 'lashes', iris: '#2a6aa8', brows: 'arched', browC: '#b08a40', noseStyle: 'small', mouth: 'lips', lips: '#d83a4a', extras: ['mole', 'earrings', 'pencil'], shadowC: '#7aa8e0', earringC: '#e84a8a', hairStyle: 'beehive' },
+  priya: { eyes: 'lashes', iris: '#3a2418', brows: 'thick', browC: '#1a1414', noseStyle: 'long', mouth: 'soft', lips: '#9a4a52', extras: ['stud', 'earrings'], earringC: '#e8c040', part: 'middle' },
+  gus: { eyes: 'narrow', iris: '#3a2a1a', brows: 'angry', browsR: 'raised', noseStyle: 'wide', mouth: 'smirk', beardStyle: 'full', extras: ['smudge', 'bags'], capMark: '#f4f0e0', jaw: 'square' },
+  okafor: { eyes: 'open', iris: '#2a1a14', brows: 'arched', browC: '#1a1414', noseStyle: 'wide', mouth: 'grin', extras: ['earrings'], earringC: '#e8c040', glasses: 'square', frameC: '#c83a3a', hairStyle: 'afro' },
+  ray: { eyes: 'narrow', iris: '#5a7a8a', brows: 'bushy', browC: '#e0e0d8', noseStyle: 'round', noseC: '#d87a6a', mouth: 'flat', beardStyle: 'long', mustache: '#dcdcd4', mustacheStyle: 'walrus', extras: ['wrinkles'], lure: '#e8503a' },
+  lou: { eyes: 'open', iris: '#4a3020', brows: 'thick', browsR: 'raised', noseStyle: 'long', mouth: 'smile', mustache: '#3a2a1a', mustacheStyle: 'thin', extras: ['dimple'], capMark: '#e8c040' },
+  ellis: { eyes: 'tired', iris: '#4a5a6a', brows: 'worried', browC: '#9a9a98', noseStyle: 'long', mouth: 'flat', extras: ['bags', 'wrinkles'], glasses: 'half', frameC: '#8a8a90', hairStyle: 'slick', part: 'side', jaw: 'long' },
+  mae: { eyes: 'lashes', iris: '#3a7a4a', brows: 'arched', browC: '#a84a2a', noseStyle: 'button', mouth: 'smile', lips: '#e0705a', extras: ['freckles', 'blush', 'earrings'], earringC: '#4ab0a8' },
+  bea: { eyes: 'kid', brows: 'thin', noseStyle: 'small', mouth: 'gap', extras: ['blush'], ribbon: '#e83a6a' },
+  tommy: { eyes: 'kid', brows: 'flat', noseStyle: 'button', mouth: 'tongue', extras: ['bandaidHead', 'blush', 'freckles'], hairStyle: 'buzz' },
+  evan: { eyes: 'kid', iris: '#3a2418', brows: 'worried', noseStyle: 'button', mouth: 'small', extras: ['blush', 'cowlick'] },
+  visitor1: { eyes: 'lashes', iris: '#3a5a2a', brows: 'arched', noseStyle: 'small', mouth: 'lips', lips: '#d05a7a', extras: ['sunglassesUp', 'earrings'], part: 'side' },
+  visitor2: { eyes: 'kid', brows: 'flat', noseStyle: 'small', mouth: 'braces', extras: ['blush', 'freckles'] },
+  visitor3: { eyes: 'open', iris: '#4a3a2a', brows: 'flat', noseStyle: 'long', mouth: 'flat', extras: ['stubble'], glasses: 'square', hairStyle: 'receding' },
+  toby: { eyes: 'kid', iris: '#3a5a8a', brows: 'worried', noseStyle: 'button', mouth: 'teeth', extras: ['freckles', 'blush'], glasses: 'thick', frameC: '#3a3a4a', hairStyle: 'bowl' },
+};
+for (const k in FACES) Object.assign(CHAR_DEFS[k], FACES[k]);
+
 const HELMETS = {
   player: { brass: '#d9b85a', rim: '#a4843a', light: '#f2dc94', suit: '#3b62b5', sleeve: '#e6e2d4', boot: '#6a4a2a' },
   kaylee: { brass: '#e08ab0', rim: '#b0607e', light: '#f4bcd4', suit: '#8a4a9a', sleeve: '#f0e0e8', boot: '#5a3a4a' },
@@ -127,93 +151,8 @@ const Sprites = (() => {
       p.rect(bx - 2, bodyTop + 1 + a1, 2, armLen - 1, shade(armC, 0.9)); p.rect(bx - 2, bodyTop + armLen + a1, 2, 2, P.skin);
       p.rect(bx + bw, bodyTop + 1 + a2, 2, armLen - 1, shade(armC, 0.9)); p.rect(bx + bw, bodyTop + armLen + a2, 2, 2, P.skin);
     }
-    // --- head
-    const rx = hw / 2, ry = hh / 2, hcx = cx + (dir === 'e' ? 1 : 0);
-    const hair = P.hair;
-    const style = P.hairStyle;
-    // hair behind head
-    if (style === 'long' && dir !== 'e') p.rect(hcx - rx, headCy, hw, ry + 3, hair);
-    if (style === 'long' && dir === 'e') p.rect(hcx - rx, headCy - 2, rx, ry + 5, hair);
-    if (style === 'pony' && dir === 'e') p.ellipse(hcx - rx - 1, headCy + 2, 2.5, 4, hair);
-    if (style === 'pony' && dir === 'n') p.rect(hcx - 1, headCy + ry - 2, 3, 5, hair);
-    if (style === 'pigtails') { if (dir !== 'e') { p.ellipse(hcx - rx - 1, headCy + 1, 2.5, 3.5, hair); p.ellipse(hcx + rx + 1, headCy + 1, 2.5, 3.5, hair); } else p.ellipse(hcx - rx, headCy + 1, 2.5, 3.5, hair); }
-    if (style === 'bun') p.ellipse(hcx + (dir === 'e' ? -3 : 0), headCy - ry - 1, 4, 3, hair);
-    p.ellipse(hcx, headCy, rx, ry, P.skin);
-    // hair on head
-    const hairCap = (topFrac) => {
-      for (let y = Math.floor(headCy - ry); y < headCy - ry + hh * topFrac; y++) {
-        for (let x = Math.floor(hcx - rx); x <= Math.ceil(hcx + rx); x++) {
-          const dx = (x + 0.5 - hcx) / rx, dy = (y + 0.5 - headCy) / ry;
-          if (dx * dx + dy * dy <= 1) p.set(x, y, hair);
-        }
-      }
-    };
-    if (dir === 'n') {
-      if (style === 'bald') { p.ellipse(hcx, headCy + 3, rx, ry - 4, hair); p.ellipse(hcx, headCy - 2, rx - 2, ry - 3, P.skin); }
-      else if (style === 'cap' || style === 'hat') { p.ellipse(hcx, headCy, rx, ry, hair); }
-      else p.ellipse(hcx, headCy, rx, ry, hair);
-    } else if (dir === 's') {
-      switch (style) {
-        case 'bald':
-          p.ellipse(hcx - rx + 1.5, headCy + 1, 2.5, 4, hair); p.ellipse(hcx + rx - 1.5, headCy + 1, 2.5, 4, hair);
-          break;
-        case 'short': case 'pony': case 'pigtails': case 'bun': hairCap(0.32); p.rect(hcx - rx, headCy - 2, 2, 4, hair); p.rect(hcx + rx - 2, headCy - 2, 2, 4, hair); break;
-        case 'messy': hairCap(0.34); p.set(hcx - 3, headCy - ry + hh * 0.34, hair); p.set(hcx + 2, headCy - ry + hh * 0.34, hair); p.set(hcx, headCy - ry - 1, hair); p.set(hcx + 3, headCy - ry, hair); break;
-        case 'long': hairCap(0.3); p.rect(hcx - rx, headCy - 3, 3, ry + 5, hair); p.rect(hcx + rx - 3, headCy - 3, 3, ry + 5, hair); break;
-        case 'curly': p.ellipse(hcx, headCy - 3, rx + 2, ry - 2, hair); p.ellipse(hcx, headCy + 3, rx - 2.5, ry - 4, P.skin); break;
-        default: break;
-      }
-    } else { // side
-      switch (style) {
-        case 'bald': p.ellipse(hcx - rx + 3, headCy + 1, 3, 4, hair); break;
-        case 'short': case 'pony': case 'pigtails': case 'bun': case 'messy': hairCap(0.3); p.ellipse(hcx - rx + 3, headCy, 4, ry - 2, hair); break;
-        case 'long': hairCap(0.3); p.ellipse(hcx - rx + 3, headCy + 1, 4.5, ry, hair); break;
-        case 'curly': p.ellipse(hcx - 2, headCy - 2, rx + 1, ry - 1, hair); p.ellipse(hcx + 3, headCy + 3, rx - 4, ry - 4.5, P.skin); break;
-        default: break;
-      }
-    }
-    if (style === 'cap') {
-      const cc = P.cap;
-      for (let y = Math.floor(headCy - ry - 1); y < headCy - ry + hh * 0.36; y++) for (let x = Math.floor(hcx - rx); x <= Math.ceil(hcx + rx); x++) {
-        const dx = (x + 0.5 - hcx) / rx, dy = (y + 0.5 - headCy) / (ry + 1);
-        if (dx * dx + dy * dy <= 1) p.set(x, y, cc);
-      }
-      const brimY = Math.round(headCy - ry + hh * 0.36);
-      if (dir === 's') p.rect(hcx - rx + 2, brimY, hw - 4, 2, shade(cc, 0.75));
-      if (dir === 'e') p.rect(hcx, brimY, rx + 4, 2, shade(cc, 0.75));
-    }
-    if (style === 'hat') {
-      const cc = P.hat;
-      p.rect(hcx - rx + 3, headCy - ry - 2, hw - 6, 7, cc);
-      p.rect(hcx - rx - 2, headCy - ry + 5, hw + 4, 2, shade(cc, 0.8));
-    }
-    // --- face
-    if (dir === 's') {
-      const ey = Math.round(headCy + hh * 0.08), ex = Math.round(hw * 0.21);
-      if (P.glasses) { p.ring(hcx - ex - 0.5 + 0.5, ey + 0.5, 3, 3, '#3a3040'); p.ring(hcx + ex + 0.5, ey + 0.5, 3, 3, '#3a3040'); p.set(hcx, ey, '#3a3040'); }
-      if (!opts.faceless) {
-        p.rect(hcx - ex - 1, ey - 1, 2, 2, eyeCol); p.rect(hcx + ex, ey - 1, 2, 2, eyeCol);
-        if (!opts.ghost) { p.set(hcx - ex - 1, ey - 1, '#ffffff'); p.set(hcx + ex, ey - 1, '#ffffff'); }
-        if (P.nose) p.rect(hcx - 1, ey + 2, 2, 1, shade(P.skin, 0.8));
-        if (P.mustache) p.rect(hcx - 3, ey + 3, 6, 2, P.mustache);
-        if (P.beard) { p.rect(hcx - rx + 3, ey + 3, hw - 6, 5, P.beard); p.rect(hcx - 1, ey + 5, 3, 1, '#7a3a3a'); }
-        else if (opts.ghost) { p.rect(hcx - 2, ey + 6, 4, 1, shade(P.skin, 0.55)); }
-        else { p.rect(hcx - 2, ey + 6, 4, 1, '#8a3a3a'); p.set(hcx - 3, ey + 5, '#8a3a3a'); p.set(hcx + 2, ey + 5, '#8a3a3a'); }
-        if (P.blush) { p.set(hcx - ex - 3, ey + 3, '#e88a8a'); p.set(hcx + ex + 2, ey + 3, '#e88a8a'); }
-      }
-    } else if (dir === 'e') {
-      const ey = Math.round(headCy + hh * 0.08), ex = Math.round(hcx + rx * 0.5);
-      if (!opts.faceless) {
-        p.rect(ex, ey - 1, 2, 2, eyeCol);
-        if (P.glasses) { p.ring(ex + 1, ey + 0.5, 3, 3, '#3a3040'); p.line(ex - 2, ey, hcx - 2, ey - 1, '#3a3040'); }
-        if (P.nose || true) p.rect(Math.round(hcx + rx) - 1, ey + 1, 2, 2, P.skin);
-        if (P.mustache) p.rect(Math.round(hcx + rx) - 4, ey + 3, 4, 2, P.mustache);
-        if (P.beard) p.rect(hcx, ey + 3, rx, 5, P.beard);
-        else p.rect(Math.round(hcx + rx) - 3, ey + 6, 2, 1, opts.ghost ? shade(P.skin, 0.55) : '#8a3a3a');
-      }
-      // ear
-      p.rect(hcx - 1, ey, 2, 3, shade(P.skin, 0.85));
-    }
+    // --- head (see paintHead)
+    paintHead(p, P, dir, opts, { cx, hw, hh, headCy, eyeCol });
     // --- shading: darken right edge, lighten top edge
     const src = p.clone();
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
@@ -223,6 +162,306 @@ const Sprites = (() => {
     p.outline(opts.outline || OUTLINE);
     if (opts.ghost) ghostify(p);
     return p;
+  }
+
+
+  // ---------------------------------------------------------------- heads & faces
+  // Every face is built from a small spec on the character (eyes, brows, nose,
+  // mouth, extras, glasses, facial hair, hair style) so nobody looks alike.
+  // Features are drawn for the left half and mirrored, so faces stay symmetric.
+  const EYES = { // left eye, 3 wide (col 0 = outer, col 2 = inner), rows start at ey-1
+    dot: ['.II', '.II'], kid: ['.II', '.II', '.II'], open: ['LLL', 'WIW'], lashes: ['LLL', 'WIW'],
+    narrow: ['LLL', '.I.'], squint: ['...', 'LLL'], tired: ['SSS', 'LLL', 'WIW'], wide: ['.L.', 'WIW', '.W.'],
+    happy: ['.L.', 'L.L'], sleepy: ['SSS', 'LIL'],
+  };
+  const BROWS = { // left brow, rows end at ey-3 (inner end is the last column)
+    flat: ['BBB'], thick: ['BBB', 'BBB'], bushy: ['.BBB', 'BBBB'], arched: ['.BB', 'B..'], worried: ['..B', 'BB.'],
+    angry: ['B..', '.BB'], thin: ['.bb'], raised: ['BBB', '...'], none: [],
+  };
+  const NOSES = { // 4 wide centered, rows start at ey
+    none: [], button: ['....', '....', '.SS.'], small: ['....', '....', '..S.'], long: ['....', '.S..', '.S..', 'sSS.'],
+    wide: ['....', '....', 'S..S', '.SS.'], round: ['....', '.RR.', 'RRRR', '.rr.'], hook: ['....', '..S.', '.S..', '.SSs'],
+  };
+  const MOUTHS = { // 6 wide centered, rows start at my-1
+    smile: ['M....M', '.MMMM.'], soft: ['.M..M.', '..MM..'], grin: ['.MMMM.', '.MTTM.', '..MM..'], gap: ['.MMMM.', '.TMMT.', '..MM..'],
+    flat: ['......', '.MMMM.'], small: ['......', '..MM..'], frown: ['..MM..', '.M..M.'], smirk: ['....M.', '.MMM..'],
+    open: ['..MM..', '..dd..', '..MM..'], lips: ['.LLLL.', '..ll..'], pursed: ['..LL..', '..ll..'], teeth: ['.MMMM.', '..TT..'],
+    tongue: ['.MMMM.', '..tt..'], braces: ['.MMMM.', '.TgTg.', '..MM..'],
+  };
+
+  function paintHead(p, P, dir, opts, g) {
+    const { cx, hw, hh, headCy, eyeCol } = g;
+    const rx = hw / 2, ry = hh / 2 + (P.jaw === 'long' ? 0.6 : 0), hcx = cx + (dir === 'e' ? 1 : 0);
+    const hair = P.hair, style = P.hairStyle;
+    const skin = P.skin, skinD = shade(skin, 0.86), skinDD = shade(skin, 0.72);
+    const mir = (x) => 2 * hcx - 1 - x;
+    const both = (x, y, c) => { p.set(x, y, c); p.set(mir(x), y, c); };
+    const isC = (x, y, c) => { const a = p.get(x, y), b = hex(c); return a[3] && a[0] === b[0] && a[1] === b[1] && a[2] === b[2]; };
+    const dark = (skin && (hex(skin)[0] + hex(skin)[1] + hex(skin)[2]) < 420);
+    const mouthC = P.mouthC || (dark ? shade(skin, 0.55) : '#7a2e2e');
+    const lipC = P.lips || mouthC;
+    const ex = P.extras || [];
+    const has = (e) => ex.includes(e);
+
+    // hair behind the head
+    if (style === 'long' && dir !== 'e') p.rect(hcx - rx, headCy, hw, ry + 3, hair);
+    if (style === 'long' && dir === 'e') p.rect(hcx - rx, headCy - 2, rx, ry + 5, hair);
+    if (style === 'bob' && dir !== 'e') p.rect(hcx - rx - 1, headCy - 2, hw + 2, ry + 1, hair);
+    if (style === 'bob' && dir === 'e') p.rect(hcx - rx - 1, headCy - 3, rx + 1, ry + 2, hair);
+    if (style === 'pony' && dir === 'e') p.ellipse(hcx - rx - 1, headCy + 2, 2.5, 4, hair);
+    if (style === 'pony' && dir === 'n') p.rect(hcx - 1, headCy + ry - 2, 3, 5, hair);
+    if (style === 'pigtails') {
+      if (dir !== 'e') { p.ellipse(hcx - rx - 1, headCy + 1, 2.5, 3.5, hair); p.ellipse(hcx + rx + 1, headCy + 1, 2.5, 3.5, hair); if (P.ribbon) { p.rect(hcx - rx - 1, headCy - 3, 2, 2, P.ribbon); p.rect(hcx + rx, headCy - 3, 2, 2, P.ribbon); } }
+      else { p.ellipse(hcx - rx, headCy + 1, 2.5, 3.5, hair); if (P.ribbon) p.rect(hcx - rx, headCy - 3, 2, 2, P.ribbon); }
+    }
+    if (style === 'bun') p.ellipse(hcx + (dir === 'e' ? -3 : 0), headCy - ry - 1, 4, 3, hair);
+    if (style === 'beehive') { p.ellipse(hcx + (dir === 'e' ? -1 : 0), headCy - ry - 2, rx - 1, 5, hair); }
+    if (style === 'afro') p.ellipse(hcx - (dir === 'e' ? 1 : 0), headCy - 2, rx + 2.5, ry + 0.5, hair);
+
+    // head + jaw
+    p.ellipse(hcx, headCy, rx, ry, skin);
+    if (P.jaw === 'square') p.rect(Math.round(hcx - rx + 1), Math.round(headCy + 1), Math.round(hw - 2), Math.round(ry - 1.5), skin);
+    if (P.jaw === 'jowly' && dir !== 'n') { p.ellipse(hcx - rx + 2.5, headCy + ry - 3, 2.5, 2.5, skin); if (dir === 's') p.ellipse(hcx + rx - 2.5, headCy + ry - 3, 2.5, 2.5, skin); }
+    const ey = Math.round(headCy + hh * 0.08);
+    // ears
+    if (dir === 's' || dir === 'n') {
+      const big = has('bigears') ? 1 : 0;
+      const ex0 = Math.round(hcx - rx) - 1 - big;
+      p.rect(ex0, ey - 1, 1 + big, 3 + big, skin); p.rect(mir(ex0) - big, ey - 1, 1 + big, 3 + big, skin);
+      if (dir === 's') { p.set(ex0 + big, ey, skinD); p.set(mir(ex0 + big), ey, skinD); }
+      if (has('earrings') && dir === 's') { const ec = P.earringC || '#e8c040'; p.set(ex0, ey + 2 + big, ec); p.set(mir(ex0), ey + 2 + big, ec); }
+    }
+
+    // hair on the head
+    const capTo = (frac, dy) => {
+      for (let y = Math.floor(headCy - ry - (dy || 0)); y < headCy - ry + hh * frac; y++) for (let x = Math.floor(hcx - rx); x <= Math.ceil(hcx + rx); x++) {
+        const qx = (x + 0.5 - hcx) / rx, qy = (y + 0.5 - headCy) / (ry + (dy || 0));
+        if (qx * qx + qy * qy <= 1) p.set(x, y, hair);
+      }
+    };
+    if (dir === 'n') {
+      if (style === 'bald' || style === 'receding') { p.ellipse(hcx, headCy + 3, rx, ry - 4, hair); p.ellipse(hcx, headCy - 2, rx - 2, ry - 3, style === 'bald' ? skin : hair); if (style === 'bald') p.set(hcx - 3, headCy - 5, shade(skin, 1.12)); }
+      else if (style === 'buzz') { p.ellipse(hcx, headCy - 1, rx, ry - 1, hair); }
+      else if (style !== 'afro' && style !== 'beehive') p.ellipse(hcx, headCy, rx, ry, hair);
+      if (style === 'beehive') p.ellipse(hcx, headCy, rx, ry, hair);
+      if (style === 'afro') p.ellipse(hcx, headCy - 1, rx + 2, ry + 1, hair);
+    } else if (dir === 's') {
+      const side = (h) => { p.rect(Math.round(hcx - rx), ey - 3, 2, h, hair); p.rect(mir(Math.round(hcx - rx)) - 1, ey - 3, 2, h, hair); };
+      switch (style) {
+        case 'bald': p.ellipse(hcx - rx + 1.5, headCy + 1, 2.5, 4, hair); p.ellipse(hcx + rx - 1.5, headCy + 1, 2.5, 4, hair); p.set(hcx - 3, headCy - ry + 2, shade(skin, 1.12)); p.set(hcx - 2, headCy - ry + 2, shade(skin, 1.12)); break;
+        case 'receding': capTo(0.2); side(4); p.ellipse(hcx - rx + 2, headCy - 3, 2, 2.5, hair); p.ellipse(hcx + rx - 2, headCy - 3, 2, 2.5, hair); break;
+        case 'short': case 'pony': case 'pigtails': case 'bun': capTo(0.32); side(4); break;
+        case 'slick': capTo(0.3); side(3); for (let x = -3; x < 4; x += 2) p.set(hcx + x, headCy - ry + 2, shade(hair, 1.3)); break;
+        case 'buzz': capTo(0.24); for (let x = -rx + 2; x < rx - 1; x += 2) p.set(Math.round(hcx + x), Math.round(headCy - ry + hh * 0.24), hair); break;
+        case 'messy': capTo(0.34); p.set(hcx - 3, Math.round(headCy - ry + hh * 0.34), hair); p.set(hcx + 2, Math.round(headCy - ry + hh * 0.34), hair); p.set(hcx, Math.round(headCy - ry - 1), hair); p.set(hcx + 1, Math.round(headCy - ry - 2), hair); p.set(hcx + 3, Math.round(headCy - ry), hair); break;
+        case 'bowl': capTo(0.42); side(3); for (let x = Math.round(hcx - rx + 1); x < hcx + rx - 1; x++) p.set(x, Math.round(headCy - ry + hh * 0.42), hair); break;
+        case 'long': capTo(0.3); p.rect(Math.round(hcx - rx), ey - 3, 3, ry + 5, hair); p.rect(mir(Math.round(hcx - rx)) - 2, ey - 3, 3, ry + 5, hair); break;
+        case 'bob': capTo(0.36); p.rect(Math.round(hcx - rx) - 1, ey - 3, 3, ry, hair); p.rect(mir(Math.round(hcx - rx)) - 1, ey - 3, 3, ry, hair); break;
+        case 'curly': p.ellipse(hcx, headCy - 3, rx + 2, ry - 2, hair); p.ellipse(hcx, headCy + 3, rx - 2.5, ry - 4, skin); for (let i = -2; i <= 2; i++) p.set(hcx + i * 3, Math.round(headCy - ry - 2 + (i % 2 ? 1 : 0)), shade(hair, 1.25)); break;
+        case 'afro': p.ellipse(hcx, headCy + 3, rx - 2, ry - 4, skin); break;
+        case 'beehive': capTo(0.3); side(3); break;
+        case 'papercap': capTo(0.3); side(4); break;
+        default: break;
+      }
+      if (P.part === 'middle' && (style === 'long' || style === 'bob')) { p.set(hcx - 1, Math.round(headCy - ry + 1), skinD); p.set(hcx - 1, Math.round(headCy - ry + 2), skinD); }
+      if (P.part === 'side') { p.set(hcx - 3, Math.round(headCy - ry + 1), skinD); p.set(hcx - 3, Math.round(headCy - ry + 2), skinD); }
+      if (P.bangs) for (let x = Math.round(hcx - rx + 2); x < hcx + rx - 2; x++) { const yb = Math.round(headCy - ry + hh * 0.32) + ((x * 7) % 3 === 0 ? 1 : 0); p.set(x, yb, hair); }
+      if (has('cowlick')) { p.set(hcx + 2, Math.round(headCy - ry - 2), hair); p.set(hcx + 3, Math.round(headCy - ry - 3), hair); }
+    } else { // side view
+      switch (style) {
+        case 'bald': p.ellipse(hcx - rx + 3, headCy + 1, 3, 4, hair); p.set(hcx, Math.round(headCy - ry + 2), shade(skin, 1.12)); break;
+        case 'receding': capTo(0.18); p.ellipse(hcx - rx + 3, headCy, 4, ry - 2, hair); break;
+        case 'short': case 'pony': case 'pigtails': case 'bun': case 'messy': case 'slick': case 'bowl': case 'beehive': case 'papercap': case 'bob':
+          capTo(style === 'bowl' ? 0.42 : 0.3); p.ellipse(hcx - rx + 3, headCy, 4, ry - 2, hair); if (style === 'bowl') p.rect(Math.round(hcx), Math.round(headCy - ry + hh * 0.3), Math.round(rx), 2, hair); break;
+        case 'buzz': capTo(0.22); p.ellipse(hcx - rx + 3, headCy - 1, 3.5, ry - 3, hair); break;
+        case 'long': capTo(0.3); p.ellipse(hcx - rx + 3, headCy + 1, 4.5, ry, hair); break;
+        case 'curly': p.ellipse(hcx - 2, headCy - 2, rx + 1, ry - 1, hair); p.ellipse(hcx + 3, headCy + 3, rx - 4, ry - 4.5, skin); break;
+        case 'afro': p.ellipse(hcx - 3, headCy - 1, rx, ry, hair); p.ellipse(hcx + 3, headCy + 3, rx - 4, ry - 4.5, skin); break;
+        default: break;
+      }
+      if (has('cowlick')) p.set(hcx, Math.round(headCy - ry - 2), hair);
+      // ear
+      p.rect(hcx - 1, ey, 2, 3, shade(skin, 0.85));
+      if (has('earrings')) p.set(hcx - 1, ey + 3, P.earringC || '#e8c040');
+    }
+    // hats
+    if (style === 'cap') {
+      const cc = P.cap;
+      for (let y = Math.floor(headCy - ry - 1); y < headCy - ry + hh * 0.36; y++) for (let x = Math.floor(hcx - rx); x <= Math.ceil(hcx + rx); x++) {
+        const qx = (x + 0.5 - hcx) / rx, qy = (y + 0.5 - headCy) / (ry + 1);
+        if (qx * qx + qy * qy <= 1) p.set(x, y, cc);
+      }
+      const brimY = Math.round(headCy - ry + hh * 0.36);
+      if (dir === 's') { p.rect(Math.round(hcx - rx + 2), brimY, Math.round(hw - 4), 2, shade(cc, 0.75)); if (P.capMark) p.rect(hcx - 1, brimY - 3, 2, 2, P.capMark); }
+      if (dir === 'e') { p.rect(hcx, brimY, Math.round(rx + 4), 2, shade(cc, 0.75)); if (P.capMark) p.set(hcx + 2, brimY - 2, P.capMark); }
+      if (dir === 's' || dir === 'e') for (let x = Math.round(hcx - rx + 3); x < hcx + rx - 3; x += 3) p.set(x, Math.round(headCy - ry + 1), shade(cc, 1.15));
+    }
+    if (style === 'hat') {
+      const cc = P.hat;
+      p.rect(Math.round(hcx - rx + 3), Math.round(headCy - ry - 2), Math.round(hw - 6), 7, cc);
+      p.rect(Math.round(hcx - rx + 3), Math.round(headCy - ry + 2), Math.round(hw - 6), 1, shade(cc, 0.7));
+      p.rect(Math.round(hcx - rx - 2), Math.round(headCy - ry + 5), Math.round(hw + 4), 2, shade(cc, 0.8));
+      if (P.lure && dir !== 'n') { p.set(Math.round(hcx + rx - 4), Math.round(headCy - ry), P.lure); p.set(Math.round(hcx + rx - 4), Math.round(headCy - ry + 1), '#e8e8e0'); }
+    }
+    if (style === 'papercap') {
+      const cc = P.paper || '#f4f4ee';
+      p.rect(Math.round(hcx - rx + 2), Math.round(headCy - ry - 3), Math.round(hw - 4), 5, cc);
+      p.rect(Math.round(hcx - rx + 2), Math.round(headCy - ry + 1), Math.round(hw - 4), 1, shade(cc, 0.82));
+      if (P.paperStripe && dir !== 'n') p.rect(Math.round(hcx - rx + 2), Math.round(headCy - ry - 1), Math.round(hw - 4), 1, P.paperStripe);
+    }
+
+    // --- face
+    if (!opts.faceless && dir === 's') {
+      const x0 = Math.round(hcx - hw * 0.21) - 2; // left eye's outer column
+      const my = ey + (hh >= 20 ? 6 : 5);
+      const iris = opts.ghost ? eyeCol : (P.iris || eyeCol);
+      const colOf = (ch) => ({ L: P.lashC || eyeCol, W: opts.ghost ? '#dfe8f8' : '#f4f2ea', I: iris, S: skinD, s: skinDD, B: P.browC || shade(hair, 0.82), b: P.browC ? shade(P.browC, 1.15) : shade(hair, 0.95), R: P.noseC || mixc(skin, '#d8605a', 0.35), r: shade(P.noseC || mixc(skin, '#d8605a', 0.35), 0.82), M: mouthC, T: '#f8f6ee', d: '#3a1418', L2: lipC, l: shade(lipC, 0.8), t: '#e0606a', g: '#9aa0a8' }[ch]);
+      const stamp = (rows, xL, yT, mirror, map) => rows.forEach((row, j) => { for (let i = 0; i < row.length; i++) { const ch = row[i]; if (ch === '.') continue; const c = map ? map(ch) : colOf(ch); if (!c) continue; p.set(xL + i, yT + j, c); if (mirror) p.set(mir(xL + i), yT + j, c); } });
+      // extras under the features
+      if (has('wrinkles')) {
+        for (let x = hcx - 3; x < hcx + 3; x++) { const y1 = Math.round(headCy - ry * 0.42); if (isC(x, y1, skin)) p.set(x, y1, skinD); if (x > hcx - 3 && x < hcx + 2 && isC(x, y1 + 2, skin)) p.set(x, y1 + 2, skinD); }
+        both(x0 - 1, ey, skinD); both(x0 - 1, ey + 1, skinD);
+        both(hcx - 4, my - 2, skinD); both(hcx - 4, my - 1, skinD);
+      }
+      if (has('stubble')) for (let y = my - 2; y < headCy + ry + 1; y++) for (let x = Math.floor(hcx - rx); x < hcx + rx; x++) if (isC(x, y, skin) && (x * 5 + y * 3) % 4 === 0) p.set(x, y, skinDD);
+      if (P.jaw === 'jowly' || has('jowls')) { both(Math.round(hcx - rx + 1), my, skinD); both(Math.round(hcx - rx + 2), my + 1, skinD); }
+      if (has('freckles')) { const fc = mixc(skin, '#a0502a', 0.45); both(x0, ey + 2, fc); both(x0 + 2, ey + 2, fc); both(x0 + 1, ey + 3, fc); }
+      if (P.blush || has('blush')) { const bc = P.blushC || '#e88a8a'; both(x0, ey + 3, bc); both(x0 + 1, ey + 3, bc); }
+      if (has('bags')) { both(x0, ey + 1, skinD); both(x0 + 1, ey + 1, skinD); both(x0 + 2, ey + 1, skinD); }
+      if (P.shadowC) { both(x0, ey - 2, P.shadowC); both(x0 + 1, ey - 2, P.shadowC); both(x0 + 2, ey - 2, P.shadowC); }
+      // eyes (behind glasses: a light lens with the pupil inside, so frames don't read as a mask)
+      const eyeStyle = P.eyes || 'dot';
+      const gl0 = P.glasses === true ? 'round' : P.glasses;
+      if (gl0 && gl0 !== 'half' && !opts.ghost) {
+        const lens = P.lens || mixc(skin, '#e8f0f4', 0.55);
+        stamp(['LLL', 'WWW', 'WWW'].map((r) => r.replace(/[LW]/g, 'X')), x0, ey - 1, true, () => lens);
+        const pc = P.iris && gl0 !== 'thick' ? P.iris : eyeCol;
+        both(x0 + 1, ey - 1, pc); both(x0 + 1, ey, pc);
+        if (eyeStyle === 'narrow' || eyeStyle === 'happy') { both(x0, ey - 1, eyeCol); both(x0 + 2, ey - 1, eyeCol); }
+        if (!opts.ghost) p.set(x0 + 1, ey - 1, '#ffffff');
+      } else {
+        const erows = EYES[eyeStyle] || EYES.dot;
+        stamp(erows, x0, eyeStyle === 'tired' || eyeStyle === 'sleepy' ? ey - 2 : ey - 1, true);
+      }
+      if (eyeStyle === 'lashes' || has('lashes')) { both(x0 - 1, ey - 2, P.lashC || eyeCol); }
+      if ((eyeStyle === 'dot' || eyeStyle === 'kid') && !opts.ghost) { p.set(x0 + 1, ey - 1, '#ffffff'); p.set(mir(x0 + 2), ey - 1, '#ffffff'); }
+      // brows
+      const brL = BROWS[P.brows || 'flat'] || BROWS.flat, brR = P.browsR ? BROWS[P.browsR] : null;
+      const bTop = (rows) => (eyeStyle === 'tired' || eyeStyle === 'sleepy' ? ey - 4 : ey - 3) - rows.length + 1;
+      const bx0 = brL[0] && brL[0].length === 4 ? x0 - 1 : x0;
+      if (!brR) stamp(brL, bx0, bTop(brL), true);
+      else {
+        stamp(brL, bx0, bTop(brL), false);
+        const flip = brR.map((r) => r.split('').reverse().join('')), rw = flip[0] ? flip[0].length : 3;
+        const bxR = rw === 4 ? x0 - 1 : x0;
+        stamp(flip, mir(bxR + rw - 1), bTop(brR) - (P.browsR === 'raised' ? 1 : 0), false);
+      }
+      // nose
+      stamp(NOSES[P.noseStyle || (P.nose ? 'button' : 'small')] || NOSES.small, hcx - 2, ey, false);
+      // facial hair, mouth
+      const mouthRows = MOUTHS[P.mouth || 'soft'] || MOUTHS.soft;
+      const mcol = (ch) => (ch === 'L' ? lipC : ch === 'l' ? shade(lipC, 0.8) : colOf(ch));
+      if (P.beard) {
+        const bst = P.beardStyle || 'full';
+        for (let y = my - 2; y < headCy + ry + (bst === 'long' ? 6 : 1); y++) for (let x = Math.floor(hcx - rx + 2); x < hcx + rx - 2; x++) {
+          const inside = y <= headCy + ry || Math.abs(x + 0.5 - hcx) < (headCy + ry + 6 - y) * 0.9;
+          if (inside) p.set(x, y, (x + y) % 3 === 0 ? shade(P.beard, 0.88) : P.beard);
+        }
+        p.rect(hcx - 1, my, 2, 1, dark ? shade(skin, 0.5) : '#6a2a2a');
+      } else stamp(mouthRows, hcx - 3, my - 1, false, mcol);
+      if (P.mustache) {
+        const ms = P.mustacheStyle || 'thick', mc = P.mustache;
+        if (ms === 'walrus') { p.rect(hcx - 4, my - 2, 8, 2, mc); both(hcx - 4, my, mc); p.set(hcx - 1, my - 2, shade(mc, 0.85)); p.set(hcx, my - 2, shade(mc, 0.85)); }
+        else if (ms === 'thin') p.rect(hcx - 3, my - 2, 6, 1, mc);
+        else { p.rect(hcx - 3, my - 2, 6, 2, mc); both(hcx - 4, my - 1, mc); }
+      }
+      // extras over the top
+      if (has('mole')) p.set(hcx + 3, my - 1, '#4a2a1a');
+      if (has('dimple')) p.set(hcx - 1, Math.round(headCy + ry - 1), skinD);
+      if (has('smudge')) { p.set(mir(x0), ey + 3, '#3a3430'); p.set(mir(x0) - 1, ey + 3, '#4a4440'); p.set(mir(x0), ey + 4, '#4a4440'); }
+      if (has('bandaid')) { p.rect(mir(x0 + 2), ey + 2, 3, 2, '#e8c890'); p.set(mir(x0 + 1), ey + 2, '#d8b070'); }
+      if (has('bandaidHead')) { p.rect(hcx - 4, Math.round(headCy - ry * 0.45), 4, 2, '#e8c890'); p.set(hcx - 3, Math.round(headCy - ry * 0.45), '#d8b070'); }
+      if (has('stud')) p.set(hcx + 1, ey + 2, '#e8e8f0');
+      if (has('pencil')) { p.line(Math.round(hcx + rx - 1), ey - 4, Math.round(hcx + rx + 1), ey - 1, '#e8c040'); p.set(Math.round(hcx + rx + 1), ey - 1, '#3a3a3a'); }
+      if (has('sunglassesUp')) { p.rect(hcx - 5, Math.round(headCy - ry + 2), 4, 2, '#1a1a1e'); p.rect(hcx + 1, Math.round(headCy - ry + 2), 4, 2, '#1a1a1e'); p.set(hcx - 1, Math.round(headCy - ry + 2), '#1a1a1e'); p.set(hcx, Math.round(headCy - ry + 2), '#1a1a1e'); }
+      // glasses
+      const gl = P.glasses === true ? 'round' : P.glasses;
+      if (gl) {
+        const fc = P.frameC || '#3a3040';
+        if (gl === 'round' || gl === 'thick') {
+          p.ring(x0 + 1.5, ey + 0.5, 2.8, 2.6, fc); p.ring(mir(x0 + 1) + 0.5, ey + 0.5, 2.8, 2.6, fc);
+          if (gl === 'thick') { p.ring(x0 + 1.5, ey + 0.5, 3.4, 3.2, fc); p.ring(mir(x0 + 1) + 0.5, ey + 0.5, 3.4, 3.2, fc); }
+        } else if (gl === 'square' || gl === 'cat') {
+          p.frame(x0 - 1, ey - 2, 5, 5, fc); p.frame(mir(x0 + 3), ey - 2, 5, 5, fc);
+          if (gl === 'cat') { both(x0 - 2, ey - 3, fc); both(x0 - 1, ey - 3, fc); }
+        } else if (gl === 'half') {
+          for (let i = -1; i < 4; i++) both(x0 + i, ey + 1, fc); both(x0 - 1, ey, fc); both(x0 + 3, ey, fc);
+        }
+        both(hcx - 1, ey - 1, fc);
+        both(Math.round(hcx - rx), ey - 1, fc);
+        if (P.chain) { for (let y = ey + 1; y < headCy + ry + 3; y += 2) both(Math.round(hcx - rx) + ((y >> 1) % 2), y, P.chain); }
+      }
+    } else if (!opts.faceless && dir === 'e') {
+      const exx = Math.round(hcx + rx * 0.5), front = Math.round(hcx + rx);
+      const my = ey + (hh >= 20 ? 6 : 5);
+      const eyeStyle = P.eyes || 'dot';
+      const iris = opts.ghost ? eyeCol : (P.iris || eyeCol);
+      if (has('wrinkles')) { p.set(exx - 2, ey, skinD); p.set(exx - 2, ey + 1, skinD); }
+      if (has('stubble')) for (let y = my - 2; y < headCy + ry + 1; y++) for (let x = hcx; x < front; x++) if (isC(x, y, skin) && (x * 5 + y * 3) % 4 === 0) p.set(x, y, skinDD);
+      if (has('freckles')) { const fc = mixc(skin, '#a0502a', 0.45); p.set(exx - 1, ey + 2, fc); p.set(exx + 1, ey + 3, fc); }
+      if (P.blush || has('blush')) { const bc = P.blushC || '#e88a8a'; p.set(exx - 1, ey + 3, bc); p.set(exx, ey + 3, bc); }
+      if (eyeStyle === 'happy') { p.set(exx, ey - 1, eyeCol); p.set(exx + 1, ey, eyeCol); p.set(exx - 1, ey, eyeCol); }
+      else if (eyeStyle === 'narrow' || eyeStyle === 'squint') { p.rect(exx - 1, ey, 3, 1, eyeCol); if (eyeStyle === 'narrow') p.set(exx, ey + 1, iris); }
+      else if (eyeStyle === 'open' || eyeStyle === 'lashes' || eyeStyle === 'tired' || eyeStyle === 'wide' || eyeStyle === 'sleepy') {
+        p.rect(exx - 1, ey - 1, 3, 1, P.lashC || eyeCol); p.set(exx - 1, ey, opts.ghost ? '#dfe8f8' : '#f4f2ea'); p.set(exx, ey, iris); p.set(exx + 1, ey, iris);
+        if (eyeStyle === 'lashes' || has('lashes')) p.set(exx + 2, ey - 2, P.lashC || eyeCol);
+        if (eyeStyle === 'tired' || eyeStyle === 'sleepy') p.rect(exx - 1, ey - 2, 3, 1, skinD);
+      } else { p.rect(exx, ey - 1, 2, eyeStyle === 'kid' ? 3 : 2, iris); if (!opts.ghost) p.set(exx, ey - 1, '#ffffff'); }
+      if (has('bags')) p.rect(exx - 1, ey + 1, 3, 1, skinD);
+      if (P.shadowC) p.rect(exx - 1, ey - 2, 3, 1, P.shadowC);
+      const bs = P.brows || 'flat';
+      if (bs !== 'none') { const bc = P.browC || shade(hair, 0.82); const by = eyeStyle === 'tired' ? ey - 4 : ey - 3; p.rect(exx - 1, by, bs === 'bushy' ? 4 : 3, bs === 'thick' || bs === 'bushy' ? 2 : 1, bc); if (bs === 'worried') p.set(exx + 2, by - 1, bc); if (bs === 'angry') p.set(exx + 2, by + 1, bc); }
+      // nose
+      const ns = P.noseStyle || (P.nose ? 'button' : 'small');
+      if (ns === 'long' || ns === 'hook') { p.rect(front - 1, ey, 2, 3, skin); p.set(front + 1, ey + 2, skin); if (ns === 'hook') p.set(front + 1, ey + 3, skinD); p.set(front - 1, ey + 3, skinD); }
+      else if (ns === 'round') { p.rect(front - 1, ey + 1, 3, 2, P.noseC || mixc(skin, '#d8605a', 0.35)); }
+      else if (ns === 'wide') { p.rect(front - 1, ey + 1, 3, 2, skin); p.set(front, ey + 2, skinD); }
+      else p.rect(front - 1, ey + 1, 2, 2, skin);
+      if (has('stud')) p.set(front - 1, ey + 2, '#e8e8f0');
+      // mouth / facial hair
+      if (P.beard) { p.rect(hcx, my - 2, Math.round(rx), P.beardStyle === 'long' ? 8 : 5, P.beard); p.set(front - 2, my, dark ? shade(skin, 0.5) : '#6a2a2a'); }
+      else {
+        const m = P.mouth || 'soft', mc = m === 'lips' || m === 'pursed' ? lipC : mouthC;
+        if (m === 'grin' || m === 'gap' || m === 'teeth' || m === 'braces' || m === 'tongue') { p.rect(front - 3, my - 1, 3, 1, mc); p.set(front - 2, my, m === 'tongue' ? '#e0606a' : '#f8f6ee'); }
+        else if (m === 'open') { p.rect(front - 2, my - 1, 2, 2, mc); }
+        else if (m === 'frown') { p.rect(front - 3, my, 2, 1, mc); p.set(front - 1, my - 1, mc); }
+        else if (m === 'smile' || m === 'soft') { p.rect(front - 3, my, 2, 1, mc); p.set(front - 1, my - 1, mc); }
+        else p.rect(front - 3, my, 2, 1, mc);
+      }
+      if (P.mustache) p.rect(front - 4, my - 2, 4, P.mustacheStyle === 'thin' ? 1 : 2, P.mustache);
+      if (has('smudge')) p.set(exx - 1, ey + 3, '#3a3430');
+      if (has('bandaidHead')) p.rect(exx - 1, Math.round(headCy - ry * 0.45), 3, 2, '#e8c890');
+      if (has('pencil')) p.line(hcx - 2, ey - 3, hcx + 1, ey - 1, '#e8c040');
+      if (has('sunglassesUp')) p.rect(exx - 1, Math.round(headCy - ry + 2), 4, 2, '#1a1a1e');
+      const gl = P.glasses === true ? 'round' : P.glasses;
+      if (gl) {
+        const fc = P.frameC || '#3a3040';
+        if (gl === 'square' || gl === 'cat') p.frame(exx - 1, ey - 2, 4, 4, fc); else if (gl === 'half') p.rect(exx - 1, ey + 1, 4, 1, fc); else p.ring(exx + 0.5, ey + 0.5, 2.6, 2.6, fc);
+        p.line(exx - 2, ey - 1, hcx - 1, ey - 1, fc);
+        if (P.chain) for (let y = ey + 1; y < headCy + ry + 3; y += 2) p.set(hcx - 1, y, P.chain);
+      }
+    }
+
+    // hair shading: a shadow line where hair meets skin, and a few highlight strands
+    const hl = shade(hair, 1.28), hd = shade(hair, 0.72);
+    const x0h = Math.floor(hcx - rx - 3), x1h = Math.ceil(hcx + rx + 3), y0h = Math.floor(headCy - ry - 6), y1h = Math.ceil(headCy + ry + 6);
+    const src = p.clone();
+    const same = (x, y, c) => { const a = src.get(x, y), b = hex(c); return a[3] && a[0] === b[0] && a[1] === b[1] && a[2] === b[2]; };
+    for (let y = y0h; y <= y1h; y++) for (let x = x0h; x <= x1h; x++) {
+      if (!same(x, y, hair)) continue;
+      if (same(x, y + 1, skin)) p.set(x, y, hd);
+      else if (y < headCy - ry * 0.35 && x < hcx && (x * 3 + y * 5) % 7 === 0) p.set(x, y, hl);
+    }
   }
 
   function ghostify(p) {

@@ -332,7 +332,7 @@ const Decals = (() => {
     Atlas.replace('ph_family', (() => {
       const p = photoBase(W, H, bgPorch);
       put(p, 'walter', 16, 47, 0.8);
-      const ruth = Object.assign({}, CHAR_DEFS.miller, { hair: '#6a4a2a', glasses: false, top: '#4a8a9a', inner: '#f4f0e8', skirt: '#3a5a6a', skin: '#f0d0b0' });
+      const ruth = Object.assign({}, CHAR_DEFS.miller, { hair: '#6a4a2a', glasses: false, top: '#4a8a9a', inner: '#f4f0e8', skirt: '#3a5a6a', skin: '#f0d0b0', eyes: 'lashes', iris: '#5a3a2a', brows: 'arched', browC: '#4a3020', noseStyle: 'small', mouth: 'smile', lips: '#c86a6a', extras: ['earrings'], earringC: '#e8e8f0', chain: null, blushC: null });
       const rp = Sprites.paintHuman(ruth, 's', 0).resized(25, 39); p.blit(rp, 48 - 12, 47 - 39);
       put(p, 'evan', 32, 47, 0.7);
       p.ellipse(32, 37, 3.5, 2.2, '#e8943a'); p.set(30, 35, '#e8943a'); p.set(34, 35, '#e8943a'); p.set(31, 36, '#111'); p.set(33, 36, '#111');
@@ -342,13 +342,13 @@ const Decals = (() => {
     add('ph_family_you', (() => {
       const p = photoBase(W, H, bgPorch);
       put(p, 'walter', 16, 47, 0.8);
-      const ruth = Object.assign({}, CHAR_DEFS.miller, { hair: '#6a4a2a', glasses: false, top: '#4a8a9a', inner: '#f4f0e8', skirt: '#3a5a6a', skin: '#f0d0b0' });
+      const ruth = Object.assign({}, CHAR_DEFS.miller, { hair: '#6a4a2a', glasses: false, top: '#4a8a9a', inner: '#f4f0e8', skirt: '#3a5a6a', skin: '#f0d0b0', eyes: 'lashes', iris: '#5a3a2a', brows: 'arched', browC: '#4a3020', noseStyle: 'small', mouth: 'smile', lips: '#c86a6a', extras: ['earrings'], earringC: '#e8e8f0', chain: null, blushC: null });
       const rp = Sprites.paintHuman(ruth, 's', 0).resized(25, 39); p.blit(rp, 48 - 12, 47 - 39);
       put(p, 'player', 32, 47, 0.72);
       p.ellipse(32, 38, 3.5, 2.2, '#e8943a'); p.set(30, 36, '#e8943a'); p.set(34, 36, '#e8943a');
       return finishPhoto(p, { old: true });
     })());
-    const ruthDef = Object.assign({}, CHAR_DEFS.miller, { hair: '#6a4a2a', glasses: false, top: '#4a8a9a', inner: '#f4f0e8', skirt: '#3a5a6a', skin: '#f0d0b0' });
+    const ruthDef = Object.assign({}, CHAR_DEFS.miller, { hair: '#6a4a2a', glasses: false, top: '#4a8a9a', inner: '#f4f0e8', skirt: '#3a5a6a', skin: '#f0d0b0', eyes: 'lashes', iris: '#5a3a2a', brows: 'arched', browC: '#4a3020', noseStyle: 'small', mouth: 'smile', lips: '#c86a6a', extras: ['earrings'], earringC: '#e8e8f0', chain: null, blushC: null });
     CHAR_DEFS.ruth = ruthDef;
 
     // Photo A: Walter and YOU in front of the aquarium
