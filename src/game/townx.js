@@ -157,6 +157,55 @@ Object.assign(Story, {
     await S.say(null, 'A round window, like a porthole. You can see all the way to the aquarium from here. That must be why it was put in.');
   },
 
+  // ---------------------------------------------------------------- the pond, and the reflection under it
+  async pondLean(S) {
+    const st = S.st;
+    if (st.day < 5) { await S.say(null, 'You lean over the pond. Your reflection leans over too, the way it should.'); return; }
+    await S.say(null, 'You lean over the pond. Your reflection leans over too.');
+    await S.say(null, st.day >= 7 ? 'Then it leans a little further than you do.' : 'It\'s wearing a striped shirt. You aren\'t.');
+    const c = await S.ask(null, 'Lean closer?', ['CLOSER', 'STEP BACK']);
+    if (c !== 0) return;
+    S.sfx('splash', { vol: 0.5 });
+    await S.go('reflection', 'in', { color: '#ffffff', fadeOut: 0.8, hold: 0.6, fadeIn: 1.0 });
+  },
+  async meetReflection(S) {
+    const n = S.get('reflectionMet') || 0;
+    S.flag('reflectionMet', n + 1);
+    S.face('player', [-World.player.x * 2 - 0.01, World.player.z]);
+    const E = (t) => S.say('evan', t);
+    if (n === 0) {
+      await E('Hi.');
+      await E('You\'re standing on the wrong side of the water. Everybody does, the first time.');
+      await E('It\'s nice down here. Nobody\'s looking for anybody.');
+    } else if (n === 1) {
+      await E('You came back.');
+      await E('When you go up, don\'t let him tell you what happened. Make him remember it himself.');
+    } else await E('Go on. They\'re waiting for you up there.');
+    await S.go('town', 'pond', { color: '#ffffff', fadeOut: 1.0, hold: 0.5, fadeIn: 1.0 });
+    await S.say(null, 'You\'re kneeling at the edge of the pond. Your sleeves are dry.');
+  },
+  // ---------------------------------------------------------------- the hallway mirror
+  async hallMirror(S) {
+    const st = S.st;
+    if (st.day >= 8 && st.tod === 'night') { await S.say(null, 'In the mirror, the hallway is shorter.'); return; }
+    if (st.day < 5 || !(st.tod === 'night' || st.tod === 'evening')) { await S.say(null, 'A mirror. The helmet takes up most of it.'); return; }
+    await S.say(null, 'A mirror. The helmet takes up most of it.');
+    await S.say(null, 'Behind you in the mirror, the hallway goes back much further than it does in real life. There are more doors.');
+    const c = await S.ask(null, 'Step into the mirror?', ['STEP IN', 'NO']);
+    if (c !== 0) return;
+    S.flag('mirrorLoops', 0);
+    await S.go('mirrorhall', 'in', { sfx: 'flicker', fadeOut: 0.6, fadeIn: 0.8 });
+  },
+  async mirrorLoop(S) {
+    const n = (S.get('mirrorLoops') || 0) + 1;
+    S.flag('mirrorLoops', n);
+    await S.fade(1, 0.3);
+    S.reload();
+    World.player.x = 0; World.player.z = -1.6; World.player.face = 0;
+    await S.fade(0, 0.5);
+    await S.say(null, ['The hallway starts over. You\'re back at the mirror.', 'The hallway starts over again. The wallpaper is different.', 'Again. It\'s darker this time. There\'s a door at the end now.'][Math.min(n, 3) - 1]);
+  },
+
   // ---------------------------------------------------------------- Mrs. Miller's quilt
   async millerQuilt(S) {
     const st = S.st;
@@ -177,6 +226,9 @@ const TownX = {
     sign('sign_club', ['TIDE CLUB', 'MEMBERS ONLY'], { bg: '#8a6a3a', fg: ['#f4f0d0', '#c83a3a'], border: '#4a3a1a' });
     sign('club_rules', ['TIDE CLUB RULES', '1. NO GROWNUPS', '2. NO TELLING', '3. IF YOU SEE', '   THE DEEP YOU', '   HAVE TO SAY'], { bg: '#f4f0dc', fg: ['#c83a3a', '#2a3a8a', '#2a3a8a', '#2a3a8a', '#2a3a8a', '#2a3a8a'], border: '#b8b098', w: 96 });
     sign('rosa_menu', ['TODAY', 'SOUP OF THE DAY', 'SOUP OF THE DAY', 'SOUP OF THE DAY'], { bg: '#1a2a1a', fg: ['#f4e070', '#e8e8e0', '#e8e8e0', '#e8e8e0'], border: '#8a6a3a', w: 96 });
+    // the pond sign, the way it reads from underneath
+    const rev = sign('sign_pond_rev', 'DUCK POND', { bg: '#f4f0e0', fg: '#3a6ab8', border: '#3a6ab8', double: true });
+    if (rev && rev.pix) { const src = rev.pix, q = new Pix(src.w, src.h); for (let y = 0; y < src.h; y++) for (let x = 0; x < src.w; x++) q.set(src.w - 1 - x, y, src.get(x, y)); Atlas.replace('sign_pond_rev', q); }
     sign('grafitti_te', ['T + E', 'TIDE CLUB', '4 EVER'], { bg: '#6a6a66', fg: ['#e84a3a', '#f4e070', '#4ab8e8'], border: false });
     // the manhole, pushed aside
     add('manhole_open', P(32, 32, (p) => {

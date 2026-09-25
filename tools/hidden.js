@@ -99,6 +99,31 @@ const path = require('path');
   await run(() => { World.player.x = 23.5; World.player.z = -0.8; T.doorAt(23.5, 0); });
   s = await st(); check(s.map === 'kessler' && s.x < 2, 'with the key, the cellar stairs go up to the kitchen', s);
 
+  // ---- under the pond: meet your reflection in the middle
+  await run(() => { Game.enterMap('town', 'pond'); });
+  await run(() => T.useAt(-41.3, 41));
+  s = await st(); check(s.map === 'reflection', 'lean over the pond -> the reflection (day 5)', s);
+  await run(() => { World.player.x = 0.4; World.player.z = -6; });
+  await p.waitForTimeout(600); await idle(); await p.waitForTimeout(400); await idle();
+  s = await st(); check(s.map === 'town' && s.flags.reflectionMet === 1, 'meet your reflection in the middle -> back at the pond', s);
+
+  // ---- the hallway mirror: the hall starts over three times, then there's a door
+  await run(() => { Game.st.tod = 'evening'; Game.enterMap('house', 'front'); });
+  await run(() => T.useAt(1.4, -1.8));
+  s = await st(); check(s.map === 'mirrorhall', 'step into the hallway mirror (day 5, evening)', s);
+  for (let i = 1; i <= 3; i++) {
+    await run(() => { World.player.x = 0; World.player.z = -44.5; });
+    await p.waitForTimeout(500); await idle();
+    s = await st(); check(s.flags.mirrorLoops === i && s.z > -4, 'the hallway starts over (' + i + ')', s);
+  }
+  const endDoor = await p.evaluate(() => World.map.doors.some((d) => d.spawn === 'room'));
+  check(endDoor, 'after three times, a door at the end', endDoor);
+  await run(() => T.door('mirrorhall', 'room'));
+  s = await st(); check(s.map === 'mirrorhall' && s.x > 25, 'Evan\'s room, backwards', s);
+  await run(() => T.door('house', 'mirror'));
+  s = await st(); check(s.map === 'house', 'out through the door, back at the mirror', s);
+  await run(() => { Game.st.tod = 'morning'; });
+
   // ---- before day 3 the manhole is shut
   await run(() => { Game.st.day = 2; Game.enterMap('town', 'house'); });
   await run(() => T.useAt(1.5, 4));

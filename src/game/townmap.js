@@ -107,7 +107,7 @@ const TownMap = (() => {
         : st.day >= 4 ? 'Her cat, Marmalade, is missing. There are posters on the lamp posts.' : '14 Maple St. Mrs. Miller knows everyone on the street.',
     },
     {
-      id: 'home', rect: [10, -6, 24, 12], maps: ['house', 'evanroom', 'attic'],
+      id: 'home', rect: [10, -6, 24, 12], maps: ['house', 'evanroom', 'attic', 'mirrorhall'],
       name: (st) => st.day >= 8 ? "EVAN'S HOUSE" : 'HOME', pict: () => house('#8ab0d8', '#6a7078', { home: true }),
       blurb: (st) => st.day >= 8 ? '12 Maple St. It was never yours.'
         : st.day === 7 ? '12 Maple St. The Vanes lived here before you did.'
@@ -131,7 +131,7 @@ const TownMap = (() => {
       blurb: (st) => st.day >= 8 ? 'You knock. The door swings open onto a wall.' : 'Mrs. Okafor teaches at the elementary school.',
     },
     {
-      id: 'pond', rect: [-62, 34, -42, 48], maps: ['treehouse'],
+      id: 'pond', rect: [-62, 34, -42, 48], maps: ['treehouse', 'reflection'],
       name: () => 'DUCK POND', pict: () => ({ kind: 'pond' }),
       blurb: (st) => st.day >= 8 ? "The pond is very still. You can't see the bottom." : 'There are coins at the bottom. Make a wish.',
     },

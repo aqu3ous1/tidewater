@@ -70,6 +70,11 @@ WebGL is required. Sound starts after your first key press. Headphones help.
 - **Hidden places** off the streets: the storm drain under the whole town (the
   manhole opens on day 3), the Tide Club treehouse in the park (it wants a
   password), under the pier, the church bell tower, and the back of Rosa's.
+- **Places that shouldn't exist**, awake and in daylight: a warm living room
+  in the storm drain, a café where it is always nearly two o'clock, a bedroom
+  inside a dead tree, the pink backwards park under the duck pond (your
+  reflection walks when you walk), and a hallway inside the hall mirror that
+  keeps starting over.
 - **Past the edge of town**: the woods trail off Oak Street (the chain comes down
   on day 4) winds past a creek, an abandoned search camp, a hunting stand and a
   ring of stones. Keep going north and you end up back at the stones, until day 6,
@@ -168,7 +173,7 @@ node tools/follow.js   # plays the day-1 aquarium tour by keyboard: follow Walte
 node tools/office.js   # day 6: leaving Walter's office never shuts you in
 node tools/loadday.js  # loading a start-of-day save replays the morning
 node tools/aqx.js      # the upper floor and both basement levels: stairs, keys, elevator, crawlspace
-node tools/hidden.js   # the storm drain, treehouse, pier, bell tower, Rosa's, attic, Miller and Kessler rooms
+node tools/hidden.js   # storm drain, treehouse, pier, bell tower, Rosa's, attic, the pond, the hall mirror
 node tools/outer.js    # the woods trail (day 4), the loop north of the stones, the cannery (day 6)
 node tools/playthrough.js dreams out/   # sleeps through all seven nights and finishes each dream
 ```

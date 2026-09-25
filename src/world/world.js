@@ -449,7 +449,7 @@ const World = (() => {
       R.sprite(e.x, e.y || 0, e.z, e.w, e.h, reg, e.flip, e.col || COL, e.face != null ? { face: e.face } : null);
       if (e.sparkle && ((time * 0.7 + e.x * 0.37 + e.z * 0.21) % 2.2) < 0.22) R.sprite(e.x + 0.12, (e.y || 0) + e.h + 0.05, e.z, 0.22, 0.22, Atlas.get('sparkle'), false, COL);
     } else if (e.type === 'char') {
-      drawChar(e.set, e.x, e.z, e.face, false, 0, { col: e.col, y: e.y, scale: e.scale, noShadow: e.noShadow });
+      drawChar(e.set, e.x, e.z, e.face, !!e.moving, e.anim || 0, { col: e.col, y: e.y, scale: e.scale, noShadow: e.noShadow });
     }
   }
 

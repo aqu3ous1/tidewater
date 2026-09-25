@@ -113,7 +113,8 @@ MAPS.house = {
       M.box(-1.5, 0, -5.2, 0.06, 2.8, 0.06, 'wood', { solid: false }); M.box(-0.9, 0, -5.2, 0.06, 2.8, 0.06, 'wood', { solid: false });
     }
     M.spawn('attic', -1.2, -4.2, 's');
-    M.look(1.4, -1.8, (s) => (s.day >= 8 && s.tod === 'night') ? 'In the mirror, the hallway is shorter.' : 'A mirror. The helmet takes up most of it.', { r: 1 });
+    M.inter(1.4, -1.8, { r: 1, y: 1.2, exit: true, use: async (S) => Story.hallMirror(S) });
+    M.spawn('mirror', 1.0, -1.8, 'w');
     M.door(0, -9, 's', { tex: 'door_evan', w: 1.3, to: 'evanroom', use: async (S) => Story.evanDoor(S) });
     if (d >= 4 && !f.tookDrawingCat && !st.found.drawing_cat) {
       M.floorDecal('dr_cat', 0, -8.4, 0.7, 0.5, { y: 0.03 });

@@ -335,6 +335,8 @@ MAPS.town = {
     M.pickup(-45, 49.2, 'shell3', { cond: (s) => s.flags.shellQuest || s.day >= 2 });
     M.look(-52, 49.5, (s) => memory(s) ? 'The pond is very still. You can\'t see the bottom.' : 'A little pond. There are coins at the bottom.', { r: 2 });
     M.bench(-66, 42, 'e'); M.bench(-38, 50, 'n');
+    M.inter(-41.3, 41, { r: 1.2, y: 0.5, exit: true, use: async (S) => Story.pondLean(S) });
+    M.spawn('pond', -40.4, 41, 'w');
     M.tree(-70, 32); M.tree(-70, 54, 'tree_pine'); M.tree(-40, 31); M.tree(-10, 34, 'tree_pine'); M.tree(-12, 55); M.tree(-66, 50, 'bush');
     // playground
     M.floor(-36, 36, -14, 54, 'sand', { y: 0.02, tile: 3 });
