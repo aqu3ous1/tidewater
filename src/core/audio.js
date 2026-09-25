@@ -167,6 +167,32 @@ const Sound = (() => {
   const AQ_MEL = 'A5:4 C6:4 E6:8 D6:4 B5:4 G5:8 F5:4 A5:4 C6:6 A5:2 G5:12 r:4 F5:4 A5:4 D6:8 C6:4 E5:4 G5:8 Bb5:4 A5:4 G5:4 F5:4 G5:8 r:8';
 
   const SONGS = {
+    // ---- dreams
+    dream1: { // a lullaby in a cardboard box
+      bpm: 66, len: 96,
+      tracks: [
+        mel('E5:6 D5:2 C5:4 E5:4 G5:8 E5:4 r:4 F5:6 E5:2 D5:4 F5:4 A5:8 G5:8 E5:6 D5:2 C5:4 E5:4 D5:4 B4:4 C5:8', 'musicbox', 0.07),
+        mel('C3:16 A2:16 F2:16 G2:16 C3:16 G2:8 C3:8', 'bass', 0.06),
+        arp(['C4 E4 G4', 'A3 C4 E4', 'F3 A3 C4', 'G3 B3 D4', 'C4 E4 G4', 'G3 B3 D4'], [0, -1, 1, -1, 2, -1, 1, -1], 2, 16, 'glass', 0.022, 2),
+      ],
+    },
+    dream4: { // a parade, slowed down
+      bpm: 76, len: 64,
+      tracks: [
+        mel('A2:4 E2:4 A2:4 E2:4 F2:4 C3:4 F2:4 C3:4 D3:4 A2:4 D3:4 A2:4 E2:4 B2:4 E2:4 E2:4', 'bass', 0.11),
+        mel('A4:6 C5:2 E5:4 A4:4 F4:6 A4:2 C5:8 D5:6 C5:2 A4:4 F4:4 E4:8 G#4:4 E4:4', 'organ', 0.045),
+        mel('r:2 A5:2 r:6 E5:2 r:4 r:2 F5:2 r:6 C5:2 r:4 r:2 D5:2 r:6 A4:2 r:4 r:2 E5:2 r:6 G#4:2 r:4', 'bell', 0.03),
+        hits(64, 8, [0], 'kick', 0.06), hits(64, 8, [4], 'snare', 0.025), hits(64, 16, [14], 'snare', 0.018),
+      ],
+    },
+    dream5: { // the town at the bottom of the sea
+      bpm: 58, len: 128,
+      tracks: [
+        arp(['D4 F4 A4 C5', 'Bb3 D4 F4 A4', 'G3 Bb3 D4 F4', 'A3 C#4 E4 G4'], [0, 2, 1, 3], 4, 32, 'glass', 0.035, 3),
+        mel('D2:32 Bb1:32 G1:32 A1:32', 'bass', 0.07),
+        mel('A5:16 G5:8 F5:8 E5:16 D5:16 F5:16 E5:8 D5:8 C#5:32', 'soft', 0.04),
+      ],
+    },
     aquarium: {
       bpm: 80, len: 128,
       tracks: [

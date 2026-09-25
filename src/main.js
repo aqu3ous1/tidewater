@@ -14,6 +14,7 @@
   Closeups.build();
   Props.atlas();
   if (typeof Story !== 'undefined' && Story.atlas) Story.atlas();
+  if (typeof Dreams !== 'undefined') Dreams.atlas();
   Atlas.upload();
   const meta = State.getMeta();
   meta.boots = (meta.boots || 0) + 1;

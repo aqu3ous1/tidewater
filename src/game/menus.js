@@ -181,16 +181,19 @@ const Menus = (() => {
 
   // ------------------------------------------------------------------ pause / options
   function pause() { return openMenu({ kind: 'pause', sel: 0, opt: null }); }
+  function pauseOpts() { return Game.st && Game.st.dreaming && !Script.busy ? ['RESUME', 'WAKE UP', 'OPTIONS', 'QUIT TO TITLE'] : ['RESUME', 'OPTIONS', 'QUIT TO TITLE']; }
   function updPause(m, dt) {
     if (m.opt) return updOptions(m, dt);
-    const opts = ['RESUME', 'OPTIONS', 'QUIT TO TITLE'];
+    const opts = pauseOpts();
     if (Input.repeat('up', dt)) { m.sel = (m.sel + opts.length - 1) % opts.length; Sound.sfx('move'); }
     if (Input.repeat('down', dt)) { m.sel = (m.sel + 1) % opts.length; Sound.sfx('move'); }
     if (Input.pressed('b') || Input.pressed('start')) { Input.eat('b'); Input.eat('start'); closeMenu(); return; }
     if (Input.pressed('a')) {
       Input.eat('a');
-      if (m.sel === 0) closeMenu();
-      else if (m.sel === 1) { m.opt = { sel: 0 }; Sound.sfx('select'); }
+      const pick = opts[m.sel];
+      if (pick === 'RESUME') closeMenu();
+      else if (pick === 'WAKE UP') { closeMenu(); Script.run(async (S) => { const c = await S.ask(null, 'Wake up?', ['NO', 'YES']); if (c === 1) await Story.dreamWake(S, []); }); }
+      else if (pick === 'OPTIONS') { m.opt = { sel: 0 }; Sound.sfx('select'); }
       else {
         closeMenu();
         Script.run(async (S) => {
@@ -227,11 +230,12 @@ const Menus = (() => {
       rows.forEach((r, i) => { if (i === m.opt.sel) Font.draw(ctx, '▶', 80, 86 + i * 14, c.hi); Font.draw(ctx, r, 90, 86 + i * 14, i === m.opt.sel ? c.hi : c.text); });
       return;
     }
-    UI.panel(ctx, 90, 70, 140, 76);
+    const po = pauseOpts();
+    UI.panel(ctx, 90, 70, 140, 62 + po.length * 14 - 28);
     Font.center(ctx, 'PAUSED', 160, 77, c.hi);
-    ['RESUME', 'OPTIONS', 'QUIT TO TITLE'].forEach((r, i) => { if (i === m.sel) Font.draw(ctx, '▶', 100, 96 + i * 14, c.hi); Font.draw(ctx, r, 110, 96 + i * 14, i === m.sel ? c.hi : c.text); });
+    po.forEach((r, i) => { if (i === m.sel) Font.draw(ctx, '▶', 100, 96 + i * 14, c.hi); Font.draw(ctx, r, 110, 96 + i * 14, i === m.sel ? c.hi : c.text); });
     const st = Game.st;
-    if (st) { Font.center(ctx, 'DAY ' + st.day + '   ' + fmtTime(st.playtime), 160, 156, c.dim); }
+    if (st) { Font.center(ctx, (st.dreaming ? 'NIGHT ' + st.dreaming : 'DAY ' + st.day) + '   ' + fmtTime(st.playtime), 160, 142 + po.length * 14 - 28, c.dim); }
   }
   const bar = (v) => '[' + '#'.repeat(Math.round(v * 10)) + '-'.repeat(10 - Math.round(v * 10)) + ']';
 

@@ -54,6 +54,8 @@ const path = require('path');
         (wk || []).forEach((r) => { add(r[0], r[1]); add(r[2], r[3]); });
         Object.values(m.spawns).forEach((s) => add(s.x, s.z));
         m.doors.forEach((d) => add(d.x, d.z)); m.inters.forEach((it) => add(it.x, it.z));
+        // include the colliders' extent so corridors at the edges of the map are part of the grid
+        for (const c of cols) { if (c.r != null) add(c.cx, c.cz); else if (Math.abs(c.x0) < 300 && Math.abs(c.x1) < 300 && Math.abs(c.z0) < 300 && Math.abs(c.z1) < 300) { add(c.x0, c.z0); add(c.x1, c.z1); } }
         const X0 = Math.min(...xs) - 2, Z0 = Math.min(...zs) - 2, W = Math.ceil((Math.max(...xs) + 2 - X0) / S), H = Math.ceil((Math.max(...zs) + 2 - Z0) / S);
         const union = new Uint8Array(W * H);
         const flood = (sx, sz) => {

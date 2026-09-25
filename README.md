@@ -36,6 +36,9 @@ WebGL is required. Sound starts after your first key press. Headphones help.
 - The **map** (Tab, then → to MAP) is a folded visitor's map of Bellwood. ↑/↓ picks
   a place and shows its sign, whether it's open, and a short note about it. A star
   marks where your current goal is.
+- Every night you **dream**: a small place of its own to wander around, from a maze of
+  moving boxes to a pink sea under a yellow sky. Find the way to wake up, or choose
+  WAKE UP from the pause menu.
 - Save by using your **bed**, or when asked after sleeping. The game also saves
   automatically at the start of every day.
 - **Options** (from the title screen or the pause menu) include a SOFT/SHARP
@@ -137,6 +140,9 @@ The playthroughs jump between doors, so two more checks cover walking:
 node tools/reach.js    # every map, every day: can each door and object be reached on foot?
 node tools/walk.js     # walks key routes with real arrow-key presses (front door -> aquarium, ...)
 node tools/follow.js   # plays the day-1 aquarium tour by keyboard: follow Walter, take the job
+node tools/office.js   # day 6: leaving Walter's office never shuts you in
+node tools/loadday.js  # loading a start-of-day save replays the morning
+node tools/playthrough.js dreams out/   # sleeps through all seven nights and finishes each dream
 ```
 
 Jump anywhere with the debug launcher, e.g.

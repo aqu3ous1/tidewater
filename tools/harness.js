@@ -67,6 +67,8 @@ window.T = {
   summary() { const st = Game.st; if (!st) return { day: 0, tod: '-', map: Game.mode, obj: null, side: [], money: 0, inv: [] }; return { day: st.day, tod: st.tod, map: st.map, obj: st.obj && st.obj.text, side: st.side.map((s) => s.text), money: st.money, inv: st.inv.slice() }; },
 };
 Game.hooks.push(T.hook);
+// scripted playthroughs go straight from night to morning; dreams have their own test (tools/dreams.js)
+T.skipDreams = true;
 window.addEventListener('error', (e) => T.errors.push(e.message));
 const _ce = console.error; console.error = function () { T.errors.push(Array.from(arguments).map(String).join(' ')); _ce.apply(console, arguments); };
 // keep the player next to whoever they are supposed to be following

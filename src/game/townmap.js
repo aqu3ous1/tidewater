@@ -167,7 +167,7 @@ const TownMap = (() => {
 
   const visible = (st) => PLACES.filter((p) => !p.cond || p.cond(st));
   const center = (p) => [(p.rect[0] + p.rect[2]) / 2, (p.rect[1] + p.rect[3]) / 2];
-  function mode(st) { return st.map === 'whiteroom' ? 'white' : st.map === 'underneath' ? 'under' : 'town'; }
+  function mode(st) { return st.map === 'whiteroom' ? 'white' : st.map === 'underneath' ? 'under' : /^dream/.test(st.map) ? 'dream' : 'town'; }
   // which place the player is in (or nearest to, outdoors)
   function herePlace(st) {
     const list = visible(st);
@@ -648,8 +648,16 @@ const TownMap = (() => {
   function drawSpecial(ctx, st, t) {
     const white = mode(st) === 'white';
     fill(ctx, PX + 2, PY + 2, PW, PH, 'rgba(0,0,0,0.45)');
-    fill(ctx, PX, PY, PW, PH, white ? '#ffffff' : '#f4f6f8');
-    if (!white) {
+    fill(ctx, PX, PY, PW, PH, white ? '#ffffff' : mode(st) === 'dream' ? '#1a1830' : '#f4f6f8');
+    if (mode(st) === 'dream') {
+      // a child's drawing of a map, in crayon, from memory
+      const cr = (c) => { ctx.fillStyle = c; };
+      const scr = (x0, y0, x1, y1, c) => { cr(c); const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)); for (let i = 0; i <= n; i++) { const w = Math.sin(i * 0.7 + x0) * 0.8; ctx.fillRect(Math.round(lerp(x0, x1, i / n) + w), Math.round(lerp(y0, y1, i / n) - w), 2, 1); } };
+      scr(VX + 20, VY + 30, VX + 60, VY + 28, '#6a8af0'); scr(VX + 20, VY + 30, VX + 22, VY + 60, '#6a8af0'); scr(VX + 60, VY + 28, VX + 58, VY + 60, '#6a8af0'); scr(VX + 22, VY + 60, VX + 58, VY + 60, '#6a8af0');
+      scr(VX + 10, VY + 100, VX + 150, VY + 104, '#e8e070'); scr(VX + 80, VY + 70, VX + 84, VY + 190, '#e8e070');
+      scr(VX + 100, VY + 130, VX + 130, VY + 128, '#e87070'); scr(VX + 100, VY + 130, VX + 104, VY + 150, '#e87070'); scr(VX + 130, VY + 128, VX + 128, VY + 150, '#e87070'); scr(VX + 104, VY + 150, VX + 128, VY + 150, '#e87070');
+      Font.draw(ctx, 'ME', VX + 106, VY + 136, '#e8e4d0', { wobble: 2 });
+    } else if (!white) {
       // graph paper and an unfinished pencil sketch: nobody finished drawing this part
       ctx.fillStyle = '#d4e0ee';
       for (let x = VX; x < VX + VW; x += 8) ctx.fillRect(x, VY, 1, VH);
@@ -669,11 +677,11 @@ const TownMap = (() => {
   function drawPanel(ctx, st, place, t) {
     const c = UI.C, mem = st.day >= 8, special = mode(st) !== 'town';
     UI.panel(ctx, SX, SY, SW, SH);
-    Font.center(ctx, mode(st) === 'white' ? '' : mode(st) === 'under' ? '?' : 'BELLWOOD', SC, SY + 7, mem ? '#d8c890' : '#9ac4f4', { scale: 2, shadow: '#05060c' });
+    Font.center(ctx, mode(st) === 'white' ? '' : mode(st) === 'under' ? '?' : mode(st) === 'dream' ? 'ZZZ' : 'BELLWOOD', SC, SY + 7, mem ? '#d8c890' : '#9ac4f4', { scale: 2, shadow: '#05060c' });
     Font.center(ctx, special ? '' : mem ? 'VISITOR MAP  POP.1,205' : 'VISITOR MAP', SC, SY + 25, c.dim);
     fill(ctx, SX + 8, SY + 36, SW - 16, 1, 'rgba(232,228,208,0.3)');
     if (special) {
-      const lines = mode(st) === 'under' ? ['THIS AREA IS NOT', 'ON THE MAP.'] : [];
+      const lines = mode(st) === 'under' ? ['THIS AREA IS NOT', 'ON THE MAP.'] : mode(st) === 'dream' ? ['YOU ARE ASLEEP.', '', 'THE MAP IS', 'IN THE OTHER ROOM.'] : [];
       lines.forEach((l, i) => Font.center(ctx, l, SC, SY + 60 + i * 11, c.text));
       legend(ctx, st, false);
       return;
