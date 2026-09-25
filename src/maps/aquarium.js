@@ -20,6 +20,13 @@ function aqDoorway(M, x, z, face, locked, msg, tex, onLocked) {
   if (locked) {
     M.door(x, z, face, { tex: tex || 'door_int', w: 1.5, locked: true, lockedMsg: msg, onLocked });
     if (face === 's' || face === 'n') M.solid(x - 0.9, z - 0.2, x + 0.9, z + 0.2); else M.solid(x - 0.2, z - 0.9, x + 0.2, z + 0.9);
+    // a locked door can always be opened from the inside, so nobody is ever shut in
+    const f = { s: [0, 1], n: [0, -1], e: [1, 0], w: [-1, 0] }[face];
+    M.inter(x - f[0] * 0.9, z - f[1] * 0.9, { r: 1.2, y: 1.2, use: async (S) => {
+      S.sfx('door', { vol: 0.6 });
+      World.player.x = x + f[0] * 1.2; World.player.z = z + f[1] * 1.2; World.player.face = Math.atan2(f[0], -f[1]);
+      await S.say(null, 'You let yourself out. The door locks again behind you.');
+    } });
   }
 }
 

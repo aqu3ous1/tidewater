@@ -732,8 +732,9 @@ Object.assign(Story, {
     // day 6: snooping in Walter's office
     if (st.day === 6 && map === 'aquarium' && f.snoopStart != null && f.walterSpot === 'asleep' && !Script.busy) {
       const inOffice = p.x > 27 && p.x < 36 && p.z < -28.2;
+      const outInCorridor = p.z > -27.2;
       const t = World.time - f.snoopStart;
-      if (!inOffice && st.obj && st.obj.id === 'leave6') Script.run((S) => Story.leaveOffice(S, false));
+      if (outInCorridor && st.obj && st.obj.id === 'leave6') Script.run((S) => Story.leaveOffice(S, false));
       else if (inOffice && t > 75) Script.run((S) => Story.leaveOffice(S, true));
       else if (inOffice && t > 55 && Math.random() < dt * 0.6) Sound.sfx('thud', { vol: 0.15 });
     }
@@ -803,6 +804,9 @@ Object.assign(Story, {
     S.done('leave6');
     Story.walterSpot(S, 'lobby');
     S.unflag('officeOpen');
+    // the office door is about to be solid again: make sure you're on the corridor side of it
+    const p = World.player;
+    if (p.x > 26.5 && p.x < 36.5 && p.z < -26.8) { p.x = 31.5; p.z = -26.0; p.face = Math.PI; }
     S.reload();
     await S.wait(0.5);
     await Story.confront(S, caught);
