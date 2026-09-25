@@ -478,8 +478,39 @@ const Decals = (() => {
     I('lockcode', (p) => { p.rect(3, 6, 10, 9, '#8a8a90'); p.ring(8, 6, 4, 5, '#8a8a90'); p.rect(0, 0, 16, 5, [0, 0, 0, 0]); p.rect(5, 1, 6, 1, '#8a8a90'); });
   }
 
+  // ---------------------------------------------------------------- touch pool residents (seen from above)
+  function pool() {
+    const star = (name, body, dark, spots) => add(name, P(16, 16, (p) => {
+      for (let i = 0; i < 5; i++) {
+        const a = -Math.PI / 2 + i * Math.PI * 2 / 5, b0 = a - 0.62, b1 = a + 0.62;
+        p.tri(8 + Math.cos(a) * 7.4, 8 + Math.sin(a) * 7.4, 8 + Math.cos(b0) * 2.6, 8 + Math.sin(b0) * 2.6, 8 + Math.cos(b1) * 2.6, 8 + Math.sin(b1) * 2.6, body);
+      }
+      p.ellipse(8, 8, 2.6, 2.6, body);
+      p.speckle(makeRng(name.length * 7), [spots], 0.12, 3, 3, 10, 10);
+      p.outline(dark);
+    }));
+    star('tp_star_orange', '#e8743a', '#7a3010', '#f8b070');
+    star('tp_star_purple', '#9a4ac0', '#3a1450', '#c890e0');
+    add('tp_urchin', P(16, 16, (p) => {
+      for (let i = 0; i < 16; i++) { const a = i * Math.PI / 8; p.line(8, 8, 8 + Math.cos(a) * 7, 8 + Math.sin(a) * 7, '#2a1030'); }
+      p.ellipse(8, 8, 3.6, 3.6, '#4a1a5a'); p.set(7, 6, '#8a5a9a'); p.set(6, 7, '#8a5a9a');
+    }));
+    add('tp_anemone', P(16, 16, (p) => {
+      p.ellipse(8, 8, 4.5, 4.5, '#c84a78');
+      for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; p.ellipse(8 + Math.cos(a) * 5.4, 8 + Math.sin(a) * 5.4, 1.2, 1.2, '#f4a0c0'); }
+      p.ellipse(8, 8, 1.8, 1.8, '#6a1a3a'); p.outline('#5a1a30');
+    }));
+    add('tp_snail', P(12, 12, (p) => {
+      p.ellipse(6, 6, 4.5, 4.5, '#8a6a4a'); p.ring(6, 6, 3.2, 3.2, '#c8a878'); p.ring(6, 6, 1.6, 1.6, '#c8a878'); p.rect(9, 8, 3, 2, '#a89070'); p.outline('#3a2a1a');
+    }));
+    add('tp_pebbles', P(24, 16, (p) => {
+      const r = makeRng(55);
+      for (let i = 0; i < 9; i++) { const x = 3 + r() * 18, y = 3 + r() * 10, s = 1.2 + r() * 1.8; p.ellipse(x, y, s * 1.2, s, r.pick(['#8a8a82', '#a8a49a', '#6e6c66', '#c8c0b0'])); }
+    }));
+  }
+
   function build() {
-    windows(); signs(); props(); photos(); drawings(); icons();
+    windows(); signs(); props(); photos(); drawings(); icons(); pool();
     // things painted by the story at runtime can use sign() too
   }
   return { build, sign, paperNote, crayonLine };

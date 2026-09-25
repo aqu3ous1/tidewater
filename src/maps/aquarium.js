@@ -129,10 +129,25 @@ MAPS.aquarium = {
       M.look(cx, cz + r + 0.9, (s) => s.day >= 8 ? 'The column tank. The fish are swimming in a circle, all in the same direction, perfectly spaced.' : 'The column tank goes all the way up to the ceiling. The fish go round and round. Kids press their faces against it.', { r: 1.5 });
     }
     // center: touch pool + kids' corner + benches
-    M.box(0, 0, -9, 4.2, 0.75, 3, { sides: 'rock', top: 'rubber' }, {});
-    M.plane('water_tank', [-1.9, 0.72, -7.7], [1, 0, 0], [0, 0, -1], 3.8, 2.6, { blend: true, alpha: 0.7, lit: false, scroll: [0.03, 0.01], sub: 99 });
-    M.floorDecal('crab', -0.8, -8.5, 0.5, 0.3, { y: 0.66 });
-    M.decal('sign_touch', 0, 0, -7.3, 2, 0.6, 's', { off: 0.2, y: 0 });
+    // touch pool: a low rock basin, open on top, with sea stars and things on a sandy bottom
+    {
+      const X0 = -2.1, X1 = 2.1, Z0 = -10.5, Z1 = -7.5, rim = 0.32, H = 0.75, rimTex = { sides: 'rock', top: 'rubber' };
+      M.box(0, 0, Z1 - rim / 2, X1 - X0, H, rim, rimTex, { solid: false });
+      M.box(0, 0, Z0 + rim / 2, X1 - X0, H, rim, rimTex, { solid: false });
+      M.box(X0 + rim / 2, 0, (Z0 + Z1) / 2, rim, H, Z1 - Z0 - rim * 2, rimTex, { solid: false });
+      M.box(X1 - rim / 2, 0, (Z0 + Z1) / 2, rim, H, Z1 - Z0 - rim * 2, rimTex, { solid: false });
+      M.solid(X0, Z0, X1, Z1);
+      M.floor(X0 + rim, Z0 + rim, X1 - rim, Z1 - rim, 'rock', { y: 0.26, tile: 1.4 });
+      if (!old) {
+        const live = [['tp_pebbles', -1.0, -9.8, 1.1, 0.75], ['tp_pebbles', 1.1, -8.2, 1.0, 0.7], ['tp_star_orange', -1.0, -8.35, 0.85, 0.85], ['tp_star_purple', 0.95, -9.55, 0.8, 0.8],
+          ['tp_star_orange', 1.4, -8.75, 0.55, 0.55], ['tp_urchin', -0.05, -9.85, 0.7, 0.7], ['tp_anemone', 0.15, -8.3, 0.72, 0.72], ['tp_anemone', -1.45, -9.35, 0.55, 0.55], ['tp_snail', 0.55, -9.0, 0.4, 0.4]];
+        for (const [r, x, z, w, d] of live) M.floorDecal(r, x, z, w, d, { y: 0.28 });
+        // a crab that goes about its business
+        M.ent({ type: 'sprite', region: 'crab', x: -0.5, y: 0.27, z: -9.3, w: 0.52, h: 0.3, t: 0, update(e, dt) { e.t += dt; e.x = -0.5 + Math.sin(e.t * 0.45) * 1.0 + Math.sin(e.t * 1.7) * 0.08; e.z = -9.3 + Math.sin(e.t * 0.23) * 0.4; } });
+      }
+      M.plane('water_tank', [X0 + rim, 0.6, Z1 - rim], [1, 0, 0], [0, 0, -1], X1 - X0 - rim * 2, Z1 - Z0 - rim * 2, { blend: true, alpha: old ? 0.75 : 0.26, lit: false, scroll: [0.03, 0.012], sub: 99, color: old ? '#4a6a7a' : '#a8e4f4' });
+      M.decal('sign_touch', 0, 0.12, Z1, 1.6, 0.48, 's', { off: 0.02 });
+    }
     M.look(0, -6.8, (s) => Story.touchPool(s), { r: 1.6 });
     M.floor(-10, -24, -3, -17, 'abc_carpet', { y: 0.02, tile: 3.5, surf: 'carpet' });
     M.tvCart(-9, -22.3, 'e', ph === 'dark' ? 'tv_you' : old ? 'tv_static' : 'tv_title');
