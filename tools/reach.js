@@ -22,6 +22,8 @@ const path = require('path');
       ['aquarium', 27, -40, 36, -28, (st) => st.day < 6, "Walter's office: OWNER ONLY until day 6"],
       ['aquarium', 17, -40, 53, -28, (st) => !st.flags.hired, 'staff rooms: until you are hired on day 1'],
       ['school', 2, -12, 9, 0, (st) => st.day < 8, 'records room: locked until day 8'],
+      ['aqb1', 14, -16, 20, -8, (st) => !st.flags.freezerOpen, 'walk-in freezer: until you find its key'],
+      ['aq2', 20, -22, 62, 7, (st) => !st.flags.hired && st.day < 8 && !(st.day === 7 && st.tod === 'night'), 'upper staff side: until you are hired'],
     ];
     const gated = (id, x, z, st) => GATED.find((g) => g[0] === id && x >= g[1] && x <= g[3] && z >= g[2] && z <= g[4] && g[5](st));
     for (const id of ids) {
@@ -88,11 +90,13 @@ const path = require('path');
         };
         const doorR = (d) => Math.max(0.9, d.w / 2 + 0.3) + 0.6;
         const activeDoors = m.doors.filter((d) => !d.cond || d.cond(st));
+        // ladders, hatches and the like: interactables that take you somewhere (marked exit: true)
+        const exits = activeDoors.concat(m.inters.filter((it) => it.exit && (!it.cond || it.cond(st))).map((it) => ({ x: it.x, z: it.z, w: it.r * 2 - 1.2 })));
         for (const [sn, s] of Object.entries(m.spawns)) {
           const seen = flood(s.x, s.z);
           for (let k = 0; k < seen.length; k++) if (seen[k] === 1) union[k] = 1;
           // every spawn must be able to walk to at least one way out
-          if (activeDoors.length && !activeDoors.some((d) => near(seen, d.x, d.z, doorR(d)))) (problems['spawn ' + sn + ' is boxed in (no door reachable)'] = problems['spawn ' + sn + ' is boxed in (no door reachable)'] || []).push(day + tod[0]);
+          if (exits.length && !exits.some((d) => near(seen, d.x, d.z, doorR(d)))) (problems['spawn ' + sn + ' is boxed in (no door reachable)'] = problems['spawn ' + sn + ' is boxed in (no door reachable)'] || []).push(day + tod[0]);
         }
         for (const d of activeDoors) if (!near(union, d.x, d.z, doorR(d))) { const k = 'door ' + (d.to || d.tex || '?') + ' @' + d.x.toFixed(1) + ',' + d.z.toFixed(1); (problems[k] = problems[k] || []).push(day + tod[0]); }
         for (const it of m.inters) {

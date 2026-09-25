@@ -484,5 +484,11 @@ const Closeups = (() => {
     if (st && VARIANT[id]) { const v = VARIANT[id](st); if (v !== painted[id]) { painted[id] = v; Atlas.add('cu_' + id, ART[id](st)); } }
     return 'cu_' + id;
   }
-  return { build, regionFor, tiny };
+  // other files paint their own items: fn(p, h), h = the helpers above
+  const HELP = { tiny, tinyC, tinyW, key, tag, paperSheet, scribble, rng };
+  function add(id, fn, o) {
+    ART[id] = () => P((p) => fn(p, HELP), o);
+    try { Atlas.add('cu_' + id, ART[id]()); painted[id] = ''; } catch (e) { console.error('closeup ' + id, e); }
+  }
+  return { build, regionFor, tiny, add };
 })();

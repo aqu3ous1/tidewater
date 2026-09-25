@@ -79,6 +79,10 @@ MAPS.aquarium = {
       M.billboard('lbl_sort', 7.8, 6.2, 1.0, 0.5, { y: 1.1 });
       M.inter(7.8, 7.1, { r: 1.3, y: 1.6, use: async (S) => Story.sortCart(S) });
     }
+    // stairs up to the upper level
+    M.door(-10, 6.4, 'e', { tex: 'door_up', w: 1.6, h: 2.6, to: 'aq2', spawn: 'stairs', locked: (s) => !!s.flags.lightsOut, lockedMsg: 'The stairwell is pitch black. Something on the landing is breathing, very slowly.' });
+    M.decal('sign_upper', -9.98, 2.9, 6.4, 1.8, 0.4, 'e', { off: 0.02 });
+    M.spawn('from2f', -8.6, 6.4, 'e');
     M.trashcan(-1.6, 14.5, 'plastic_blue');
     M.inter(-1.6, 14.5, { r: 1.1, y: 1.2, use: async (S) => Story.aqTrash(S) });
     M.pickup(-9.2, 5, 'ticket', { r: 1.0, cond: (s) => s.day >= 2, text: 'Something is stuck under the edge of the counter. An old ticket.' });
@@ -280,6 +284,10 @@ MAPS.aquarium = {
     M.movingBox(38.5, -31, 0.8); M.movingBox(39.2, -30.2, 0.6, 0.5);
     M.pickup(41.5, -36.2, 'brochure_old', { cond: (s) => s.flags.hired });
     M.cyl(44.2, 0, -29.5, 0.3, 0.6, 'plastic_yellow', { sides: 6 });
+    // stairs down to B1
+    M.door(45, -36, 'w', { tex: 'door_down', w: 1.4, h: 2.4, to: 'aqb1', spawn: 'stairs', locked: (s) => s.day < 3 || !!s.flags.lightsOut, lockedMsg: (s) => s.flags.lightsOut ? 'The stairwell door won\'t open. Something is leaning on it from the other side.' : 'STAIRS - B1 - MAINTENANCE. It\'s locked. Walter has the key.' });
+    M.decal('sign_b1', 44.98, 2.6, -36, 1.4, 0.55, 'w', { off: 0.02 });
+    M.spawn('fromb1', 43.8, -36, 'w');
     // --- staff room
     M.lockerRow(49.5, -39.6, 's');
     M.inter(49.5, -38.6, { r: 1.6, y: 2.2, use: async (S) => Story.locker(S) });

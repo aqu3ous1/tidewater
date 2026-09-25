@@ -12,6 +12,12 @@ const ROUTES = [
   { name: 'underneath: arrival -> exit platform', q: 'day=8&map=underneath&spawn=arrive&speed=2', pts: [[0, 0.1], [-15, 0.1]] },
   { name: 'underneath: arrival -> design desk', q: 'day=8&map=underneath&spawn=arrive&speed=2', pts: [[0, -11.5], [-8, -11.5]] },
   { name: 'underneath: arrival -> floating house', q: 'day=8&map=underneath&spawn=arrive&speed=2', pts: [[0, -10.8], [5, -10.8], [5, -13.5], [10, -13.5]] },
+  { name: 'aquarium lobby -> stairs up', q: 'day=2&flags=hired&map=aquarium&spawn=front&speed=2', pts: [[-2, 10.5], [-8.8, 10.5], [-8.8, 6.4], [-11, 6.4]], arrive: 'aq2' },
+  { name: 'upper floor: stairs -> dome ladder', q: 'day=5&flags=hired&map=aq2&spawn=stairs&speed=2', pts: [[-23, -6], [35, -6], [35, 3.2]] },
+  { name: 'upper floor: kelp tunnel -> balcony -> jellies', q: 'day=2&flags=hired&map=aq2&spawn=stairs&speed=2', pts: [[-23, -6], [-8, -6], [-8, 0], [-2, 0], [-8, 0], [-8, -6], [10, -6], [10, -2], [10, -6], [14, -6], [14, -14]] },
+  { name: 'B1: stairs -> freight elevator', q: 'day=5&flags=hired&map=aqb1&spawn=stairs&speed=2', pts: [[0, -5], [0, -48]] },
+  { name: 'B1: old exhibits -> chalk passage -> boiler', q: 'day=5&flags=hired&map=aqb1&spawn=stairs&speed=2', pts: [[0, -5], [0, -34], [-18, -34], [-18, -22], [-9, -22], [0, -22]] },
+  { name: 'B2: elevator -> life support, planning', q: 'day=6&flags=hired&map=aqb2&spawn=elevator&speed=2', pts: [[0, -6], [17, -10], [24, -10], [17, -10], [-11, -6], [-11, -2], [-13, -2], [-13, 3]] },
   { name: 'underneath: arrival -> hub', q: 'day=8&map=underneath&spawn=arrive&speed=2', pts: [[0, -30]] },
 ];
 

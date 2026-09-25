@@ -61,12 +61,26 @@ WebGL is required. Sound starts after your first key press. Headphones help.
 - **8 in-game days** in Bellwood, August 8–15. The slow burn goes from "weird old
   game" → "something happened here" → "Walter killed his son" → "Walter is inside
   the game" → "Walter knows I'm playing".
-- **A whole small town**: your house (the old Vane house), the Bellwood Aquarium
-  (lobby, gift shop, main hall with six tanks, Penguin Point, kitchen, the OWNER
-  ONLY office, storage, staff room, basement pump room, maintenance tunnel), Hal's
-  Diner, the market, Gus's gas station and garage, the laundromat, the church,
-  the school, the park and playground, the pier and beach, the abandoned Kessler
-  house, and the Underneath.
+- **A whole small town**: your house (the old Vane house), the Bellwood Aquarium,
+  Hal's Diner, the market, Gus's gas station and garage, the laundromat, the
+  church, the school, the park and playground, the pier and beach, the abandoned
+  Kessler house, and the Underneath.
+- **The aquarium is a building to get lost in**, with more of it opening as the
+  days go on:
+  - *Ground floor*: the lobby, gift shop, main hall with six tanks, Penguin Point,
+    the kitchen, the OWNER ONLY office, storage, the staff room, the basement pump
+    room and the maintenance tunnel.
+  - *Upper level*: the theater (find the film and thread the projector), the
+    learning room, the jellies, the kelp tunnel, and a balcony over the main hall.
+    The staff side has the tank tops, the projection booth and Walter's cot room,
+    plus a ladder up to the glass dome over the town. One night only, there is a
+    door that shouldn't be there.
+  - *B1, Maintenance* (from day 3): filtration, the boiler, a chalk-marked passage,
+    old exhibits, the fish kitchen and its walk-in freezer, quarantine, Walter's
+    workshop, and the freight elevator.
+  - *B2, The Deep* (from day 5, if you find the freight key): the viewing gallery
+    under Tank 6, the planning office, records, life support, a crawlspace to
+    somebody's hideout, and a bricked-up room.
 - **14 townspeople** with daily routines. Their accounts of the past contradict each other.
 - **Collectibles**: aquarium and neighborhood collections, 12 fish cards and 3 blue
   shells. There are also unmarked "secret" items that are never called collectibles.
@@ -142,6 +156,7 @@ node tools/walk.js     # walks key routes with real arrow-key presses (front doo
 node tools/follow.js   # plays the day-1 aquarium tour by keyboard: follow Walter, take the job
 node tools/office.js   # day 6: leaving Walter's office never shuts you in
 node tools/loadday.js  # loading a start-of-day save replays the morning
+node tools/aqx.js      # the upper floor and both basement levels: stairs, keys, elevator, crawlspace
 node tools/playthrough.js dreams out/   # sleeps through all seven nights and finishes each dream
 ```
 

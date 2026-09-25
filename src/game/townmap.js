@@ -29,7 +29,7 @@ const TownMap = (() => {
   const house = (siding, roof, o) => Object.assign({ kind: 'house', siding, roof }, o || {});
   const PLACES = [
     {
-      id: 'aquarium', rect: [-30, -88, 14, -68], maps: ['aquarium', 'basement'],
+      id: 'aquarium', rect: [-30, -88, 14, -68], maps: ['aquarium', 'basement', 'aq2', 'aqb1', 'aqb2'],
       name: (st) => st.flags.aquariumGone ? 'EMPTY LOT' : 'BELLWOOD AQUARIUM',
       sign: (st) => st.flags.aquariumGone ? null : st.day >= 8 ? 'aq_sign_old' : 'aq_sign',
       pict: () => ({ kind: 'fence' }),

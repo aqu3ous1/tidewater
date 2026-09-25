@@ -59,7 +59,7 @@ const TABLEAUX = [
   {
     id: 7, x: 11, z: -30, lie: 'I TOLD THEM THE TRUTH.', truth: 'YOU WAITED THREE DAYS.',
     walter: 'I told the sheriff the truth. He ran away. He had problems. He took his inhaler with him.',
-    accept: ['report', 'inhaler'],
+    accept: ['report', 'inhaler', 'timecard'],
     truthLines: [[null, 'Reported 8/17. "Last seen 8/13." "He took the bus." There was no bus.'], [null, 'His inhaler was in his backpack. In your locker. For ten years.']],
     lieProps: [['walter_s0', -0.3, 0, 1.1, 1.75, 's'], ['icon_report', 0.6, -0.2, 0.6, 0.6, 's', 0.8]],
     truthProps: [['walter_n1', -0.3, 0, 1.1, 1.75, 's'], ['flat_calendar', 0.6, -0.3, 0.6, 0.75, 's', 0.8]],
