@@ -43,7 +43,12 @@ const Story = {
     const m = State.getMeta();
     Game.enterMap(st.map || 'house', st.spawn || 'bed');
     if (st.pos && st.map === 'house' && st.spawn === 'bed') { /* spawn at bed is fine */ }
+    // a save made at the very start of a day (the autosave, or the save offered at bedtime) was
+    // taken before that morning's opening scene ran: run it now, or there'd be nothing to do
+    const opened = st.flags.openedDay;
+    const needsOpening = !st.checkpoint && !st.dreaming && (opened != null ? opened < st.day : (!st.obj && (st.map === 'house' || st.map === 'evanroom') && (st.spawn === 'bed' || st.tod === 'morning')));
     Script.run(async (S) => {
+      if (needsOpening) { await Story.startDay(S, st.day); return; }
       await S.fade(0, 0.8);
       if (st.checkpoint) await Story.resumeCheckpoint(S);
       else if (st.obj) await UI.banner(st.obj.text, st.obj.voice);
@@ -62,10 +67,12 @@ const Story = {
     Story.musicOverride = undefined;
     const spawn = st.flags.sleptEvanBed && n === 8 ? null : 'bed';
     if (spawn) Game.enterMap('house', 'bed'); else Game.enterMap('evanroom', 'front');
-    // autosave at the start of every day
+    // autosave at the start of every day (marked as not yet opened, so loading it replays the morning)
+    st.flags.openedDay = n - 1;
     Game.saveTo(st.slot);
     await S.card('DAY ' + n, n === 8 ? DATES[8] : DATES[n], { dur: 2.8, fg: n >= 8 ? '#c8c8b8' : '#e8e4d8' });
     await S.fade(0, 0.8);
+    st.flags.openedDay = n;
     const f = Story['day' + n];
     if (f) await f.call(Story, S);
   },
@@ -84,6 +91,9 @@ const Story = {
     if (st.obj && st.obj.id && st.obj.id.startsWith('sleep') || (st.obj && st.obj.id && st.obj.id.startsWith('home'))) S.done(st.obj.id);
     const c = await S.ask(null, 'Save your game?', ['YES', 'NO']);
     if (c === 0) { st.day = n + 1; st.tod = 'morning'; st.map = 'house'; st.spawn = 'bed'; await Menus.saveSlots('save', 'DAY ' + (n + 1)); }
+    // then you dream (the save above is already the next morning)
+    const skipDream = (typeof T !== 'undefined' && T.skipDreams) || !MAPS['dream' + n] || !Story.dreamStart;
+    if (!skipDream) { await Story.dreamStart(S, n); return; }
     await Story.startDay(S, n + 1);
   },
 
