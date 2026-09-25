@@ -41,7 +41,7 @@ MAPS.drain = {
     const arrow = (x, z, rot) => M.floorDecal('chalk_arrow', x, z, 0.6, 0.6, { y: 0.03, rot });
 
     // ---- the manhole
-    chamber(-3, -3, 3, 3, [{ side: 'w', at: 0, w: 2.4 }, { side: 'n', at: 0, w: 2.4 }]);
+    chamber(-3, -3, 3, 3, [{ side: 'w', at: 0, w: 2.6 }, { side: 'n', at: 0, w: 2.6 }]);
     for (let y = 0.3; y < H; y += 0.45) M.box(0, y, 2.85, 0.9, 0.06, 0.1, 'rust', { solid: false });
     M.quad('light_white', [[-0.9, 0.02, 2.9], [0.9, 0.02, 2.9], [0.9, 0.02, 0.8], [-0.9, 0.02, 0.8]], [[0, 0], [1, 0], [1, 1], [0, 1]], { blend: true, lit: false, vcols: [[1, 1, 0.9, 0.35], [1, 1, 0.9, 0.35], [1, 1, 0.9, 0.05], [1, 1, 0.9, 0.05]] });
     M.door(0, 3, 'n', { tex: false, w: 1.2, to: 'town', spawn: 'manhole', sfx: 'step', noCue: true });
@@ -51,20 +51,20 @@ MAPS.drain = {
     M.spawn('manhole', 0, 1.6, 'n');
 
     // ---- west, toward Maple Street (the Kessler house)
-    tunnel(-40, -1.5, -3, 1.5, [{ side: 'e', at: 0, w: 2.4 }, { side: 'w', at: 0, w: 2.4 }, { side: 's', at: -20, w: 2.2 }]);
+    tunnel(-40, -1.5, -3, 1.5, [{ side: 'e', at: 0, w: 2.6 }, { side: 'w', at: 0, w: 2.6 }, { side: 's', at: -20, w: 2.6 }]);
     for (const x of [-8, -16, -28, -35]) arrow(x, -0.9, Math.PI / 2);
     M.light(-12, 2.4, 0, 6, '#c8c0a0', lk); M.light(-30, 2.4, 0, 6, '#c8c0a0', lk * 0.8);
     // a dead end under somebody's backyard
-    tunnel(-22, 1.5, -18, 12, [{ side: 'n', at: -20, w: 2.2 }]);
+    tunnel(-22, 1.5, -18, 12, [{ side: 'n', at: -20, w: 2.6 }]);
     M.floorDecal('drain_grate', -20, 10.6, 1.8, 1.8, { y: 0.03 });
     M.quad('light_white', [[-21, 0.03, 11.5], [-19, 0.03, 11.5], [-19, 0.03, 9.5], [-21, 0.03, 9.5]], [[0, 0], [1, 0], [1, 1], [0, 1]], { blend: true, lit: false, vcols: [[1, 1, 0.8, 0.3], [1, 1, 0.8, 0.3], [1, 1, 0.8, 0.3], [1, 1, 0.8, 0.3]] });
     M.look(-20, 10, (s) => s.tod === 'night' ? ['A grate, high up. Through it: a dark backyard, a porch light, a swing moving by itself.'] : ['A grate, high up. Through it: somebody\'s backyard. A sprinkler. A dog puts its nose to the grate and looks down at you.', 'It doesn\'t bark. It just watches you go.'], { r: 1.5 });
-    chamber(-46, -3, -40, 3, [{ side: 'e', at: 0, w: 2.4 }, { side: 'n', at: -43, w: 2.2 }]);
+    chamber(-46, -3, -40, 3, [{ side: 'e', at: 0, w: 2.6 }, { side: 'n', at: -43, w: 2.6 }]);
     M.look(-45, 2, 'A junction. Somebody has drawn a map on the wall in chalk: the tunnels, the streets above them, and a big X under one of the houses on Maple Street.', { r: 1.2 });
     M.light(-43, 2.6, 0, 6, '#c8c0a0', lk);
-    tunnel(-44.5, -14, -41.5, -3, [{ side: 's', at: -43, w: 2.2 }, { side: 'n', at: -43, w: 2.2 }]);
+    tunnel(-44.5, -14, -41.5, -3, [{ side: 's', at: -43, w: 2.6 }, { side: 'n', at: -43, w: 2.6 }]);
     arrow(-43, -8, 0);
-    chamber(-47, -20, -39, -14, [{ side: 's', at: -43, w: 2.2 }]);
+    chamber(-47, -20, -39, -14, [{ side: 's', at: -43, w: 2.6 }]);
     M.decal('wall_hole', -43, 0, -19.98, 1.8, 2.0, 's', { off: 0.02 });
     M.door(-43, -20, 's', { tex: false, w: 1.6, to: 'kessler', spawn: 'cellar', sfx: 'scrub' });
     M.floorDecal('stain', -42, -18, 2, 1.4, { y: 0.03, blend: true });
@@ -74,12 +74,12 @@ MAPS.drain = {
     M.spawn('kessler', -43, -18.4, 's');
 
     // ---- north, toward the river
-    tunnel(-1.5, -40, 1.5, -3, [{ side: 's', at: 0, w: 2.4 }, { side: 'n', at: 0, w: 2.4 }, { side: 'w', at: -20, w: 2.2 }]);
+    tunnel(-1.5, -40, 1.5, -3, [{ side: 's', at: 0, w: 2.6 }, { side: 'n', at: 0, w: 2.6 }, { side: 'w', at: -20, w: 2.6 }]);
     for (const z of [-8, -15, -30, -36]) arrow(-0.9, z, 0);
     M.light(0, 2.4, -12, 6, '#c8c0a0', lk); M.light(0, 2.4, -30, 6, '#c8c0a0', lk * 0.8);
     M.look(0.8, -24, (s) => s.day >= 6 ? 'Your footsteps echo. Then a second set, a little behind, a little lighter. When you stop, they stop a moment later.' : 'Your footsteps echo down the tunnel and come back sounding smaller.', { r: 1.4 });
     // the living room that shouldn't be here
-    tunnel(-16, -21.5, -1.5, -18.5, [{ side: 'e', at: -20, w: 2.2 }, { side: 'w', at: -20, w: 1.4 }]);
+    tunnel(-16, -21.5, -1.5, -18.5, [{ side: 'e', at: -20, w: 2.6 }, { side: 'w', at: -20, w: 1.4 }]);
     M.floorDecal('mat_welcome', -14.6, -20, 1.2, 0.7, { y: 0.03, rot: Math.PI / 2 });
     M.box(-16, 0, -20.9, 0.2, 2.4, 0.2, 'wood', { solid: false }); M.box(-16, 0, -19.1, 0.2, 2.4, 0.2, 'wood', { solid: false }); M.box(-16, 2.4, -20, 0.2, 0.2, 2, 'wood', { solid: false });
     M.look(-14.4, -20.8, 'A doorway in the tunnel wall, with a doormat. WELCOME. A little brass number: 12½.', { r: 1.0 });
@@ -99,32 +99,32 @@ MAPS.drain = {
     M.light(-24, 2.4, -20, 8, '#ffd8a0', 0.9);
     M.cam(-28, -26, -16, -14, hidCam(-28, -26, -16, -14, { pitch: 50 }));
     M.look(-27.2, -24.8, (s) => s.day >= 8 ? 'The lamp. There is no cord. It\'s lit anyway, the way things are lit in dreams.' : 'A floor lamp with a fringed shade. It isn\'t plugged into anything.', { r: 1.0 });
-    chamber(-3, -46, 3, -40, [{ side: 's', at: 0, w: 2.4 }, { side: 'e', at: -43, w: 2.4 }]);
+    chamber(-3, -46, 3, -40, [{ side: 's', at: 0, w: 2.6 }, { side: 'e', at: -43, w: 2.6 }]);
     M.light(0, 2.6, -43, 6, '#c8c0a0', lk);
 
     // ---- east, toward the beach
-    tunnel(3, -44.5, 30, -41.5, [{ side: 'w', at: -43, w: 2.4 }, { side: 'e', at: -43, w: 2.4 }, { side: 'n', at: 16, w: 2.2 }]);
+    tunnel(3, -44.5, 30, -41.5, [{ side: 'w', at: -43, w: 2.6 }, { side: 'e', at: -43, w: 2.6 }, { side: 'n', at: 16, w: 2.6 }]);
     M.decal('grafitti_te', 9, 0.8, -44.48, 1.8, 1.0, 's', { off: 0.02 });
     M.look(9, -43.6, 'Spray paint on the tunnel wall: T + E. TIDE CLUB 4 EVER. The paint ran before it dried.', { r: 1.2 });
     for (const x of [6, 21, 27]) arrow(x, -42.2, -Math.PI / 2);
     M.light(10, 2.4, -43, 6, '#c8c0a0', lk); M.light(24, 2.4, -43, 6, '#c8c0a0', lk * 0.8);
     // the cistern
-    M.room(8, -60, 24, -44.5, 4.4, { floor: 'concrete_dark', wall: 'concrete', trim: 'rust', gaps: [{ side: 's', at: 16, w: 2.2 }] });
+    M.room(8, -60, 24, -44.5, 4.4, { floor: 'concrete_dark', wall: 'concrete', trim: 'rust', gaps: [{ side: 's', at: 16, w: 2.6 }] });
     M.floor(10, -58, 22, -50, 'water_dark', { y: 0.02, tile: 3, scroll: [0.01, 0.005], lit: false, bright: 0.7, surface: false });
     M.solid(10, -58, 22, -50);
     for (const [x, z] of [[12, -48], [20, -48], [12, -58.5], [20, -58.5]]) M.cyl(x, 0, z, 0.5, 4.4, 'concrete', { sides: 8 });
     M.look(16, -49, (s) => s.day >= 6 ? ['A big still pool under the street. You drop a pebble in. It doesn\'t make a sound.', 'The ripples go out, and come back, and go out again, and don\'t stop.'] : ['A big still pool under the street. You drop a pebble in. The echo goes on for a long time.', 'When it finally stops, it sounds a little like somebody saying your name.'], { r: 1.8 });
     M.light(16, 3.8, -52, 12, '#6a8ab0', 0.6);
     M.cam(8, -60, 24, -44.5, hidCam(8, -60, 24, -44.5, { pitch: 38, dist: 9, clamp: [9, -46, 23, -40] }));
-    chamber(30, -46, 36, -40, [{ side: 'w', at: -43, w: 2.4 }, { side: 'n', at: 33, w: 2.2 }, { side: 's', at: 33, w: 2.2 }]);
+    chamber(30, -46, 36, -40, [{ side: 'w', at: -43, w: 2.6 }, { side: 'n', at: 33, w: 2.6 }, { side: 's', at: 33, w: 2.6 }]);
     M.light(33, 2.6, -43, 6, '#c8c0a0', lk);
     // a dead end under the school
-    tunnel(31.5, -40, 34.5, -24, [{ side: 'n', at: 33, w: 2.2 }]);
+    tunnel(31.5, -40, 34.5, -24, [{ side: 'n', at: 33, w: 2.6 }]);
     M.floorDecal('drain_grate', 33, -25.2, 1.6, 1.6, { y: 0.03 });
     M.look(33, -25.8, ['A grate overhead. Kids\' voices up there, counting. ...ninety-eight. Ninety-nine. A hundred.', '"Ready or not, here I come."', 'Then nothing. Nobody comes.'], { r: 1.4 });
     // the outfall
-    tunnel(31.5, -62, 34.5, -46, [{ side: 's', at: 33, w: 2.2 }, { side: 'n', at: 33, w: 2.2 }]);
-    chamber(29, -70, 37, -62, [{ side: 's', at: 33, w: 2.2 }]);
+    tunnel(31.5, -62, 34.5, -46, [{ side: 's', at: 33, w: 2.6 }, { side: 'n', at: 33, w: 2.6 }]);
+    chamber(29, -70, 37, -62, [{ side: 's', at: 33, w: 2.6 }]);
     M.decal('drain_grate', 33, 0, -69.98, 2.6, 2.6, 's', { off: 0.02, lit: false, bright: 1.3 });
     M.door(33, -70, 's', { tex: false, w: 2.4, use: async (S) => Story.outfallFromInside(S) });
     M.quad('light_white', [[31.6, 0.03, -69.8], [34.4, 0.03, -69.8], [35, 0.03, -65.5], [31, 0.03, -65.5]], [[0, 0], [1, 0], [1, 1], [0, 1]], { blend: true, lit: false, vcols: [[1, 1, 0.9, 0.4], [1, 1, 0.9, 0.4], [1, 1, 0.9, 0.02], [1, 1, 0.9, 0.02]] });

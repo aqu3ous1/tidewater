@@ -17,6 +17,7 @@
   if (typeof Dreams !== 'undefined') Dreams.atlas();
   if (typeof AqX !== 'undefined') AqX.atlas();
   if (typeof TownX !== 'undefined') TownX.atlas();
+  if (typeof OuterX !== 'undefined') OuterX.atlas();
   Atlas.upload();
   const meta = State.getMeta();
   meta.boots = (meta.boots || 0) + 1;

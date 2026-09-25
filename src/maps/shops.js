@@ -13,7 +13,7 @@ MAPS.miller = {
   music(st) { return st.day >= 7 ? null : 'home'; },
   amb() { return ['room']; },
   build(M, st) {
-    M.room(-6, -4, 6, 5, 3, { floor: 'carpet_green', wall: 'wall_green', trim: 'wood_dark', gaps: [{ side: 'n', at: -5, w: 1.4, h: 2.4 }, { side: 'n', at: 1.8, w: 1.4, h: 2.4 }] });
+    M.room(-6, -4, 6, 5, 3, { floor: 'carpet_green', wall: 'wall_green', trim: 'wood_dark', gaps: [{ side: 'n', at: -5, w: 1.4, h: 2.4 }, { side: 'n', at: 2.8, w: 1.4, h: 2.4 }] });
     M.light(0, 2.8, 0, 8, '#ffe0b0', 0.4);
     M.armchair(-3.2, -1.2, 's', 'fabric_grey'); M.armchair(1.2, -1.2, 's', 'fabric_grey');
     M.shelf(-3, -3.7, 1.6, 2.2, 's', 'bookshelf'); M.shelf(4.4, -3.7, 1.6, 2.2, 's', 'bookshelf');
@@ -28,7 +28,7 @@ MAPS.miller = {
     M.light(-3, 2.8, -7.5, 6, '#fff0c8', 0.5);
     M.cam(-6, -11, 0, -4, shopCam({ pitch: 55, dist: 6, clamp: [-5.6, -10.6, -0.4, -3] }));
     // the sewing room
-    M.room(0, -11, 6, -4, 3, { floor: 'carpet_beige', wall: 'wallpaper_floral', trim: 'wood_dark', gaps: [{ side: 's', at: 1.8, w: 1.4, h: 2.4 }] });
+    M.room(0, -11, 6, -4, 3, { floor: 'carpet_beige', wall: 'wallpaper_floral', trim: 'wood_dark', gaps: [{ side: 's', at: 2.8, w: 1.4, h: 2.4 }] });
     M.table(3.4, -8, 2.6, 1.8, 0.8, 'wood'); M.floorDecal('quilt', 3.4, -8, 2.6, 1.8, { y: 0.83 });
     M.inter(3.4, -6.8, { r: 1.5, y: 1.2, use: async (S) => Story.millerQuilt(S) });
     M.box(0.8, 0, -10.4, 1.0, 0.8, 0.6, 'wood_dark'); M.box(0.8, 0.8, -10.4, 0.5, 0.35, 0.3, 'plastic_white', { solid: false });
@@ -41,7 +41,7 @@ MAPS.miller = {
     M.look(-1, 1.8, 'A plate of oatmeal cookies under a little glass dome. And a newspaper crossword, finished in pen.', { r: 1.1 });
     M.decal('ph_family', -1, 1.5, -4, 0.7, 0.55, 's');
     M.look(-1, -3.2, (s) => s.flags.metEvan ? ['An old photo on the wall: Walter, Ruth, and Evan with a kitten. Mrs. Miller has the same photo Walter has.'] : ['A photo on the wall. A man and a woman and a little boy holding a kitten. The man looks like a younger Walter.'], { r: 1.3, y: 2 });
-    M.decal('clock', 3, 2.1, -4, 0.5, 0.5, 's');
+    M.decal('clock', 0.4, 2.1, -4, 0.5, 0.5, 's');
     M.cyl(4.8, 0, 3.8, 0.3, 0.1, 'plastic_blue', { sides: 8, solid: false });
     M.look(4.8, 3.2, (s) => s.day >= 4 ? 'A cat food bowl by the door. It\'s full. It has been full for days.' : 'A cat food bowl by the door. Licked clean.', { r: 1.0 });
     M.door(0, 5, 'n', { tex: 'door_wood', to: 'town', spawn: 'miller' });

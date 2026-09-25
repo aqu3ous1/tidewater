@@ -20,7 +20,10 @@ const ROUTES = [
   { name: 'B2: elevator -> life support, planning', q: 'day=6&flags=hired&map=aqb2&spawn=elevator&speed=2', pts: [[0, -6], [17, -10], [24, -10], [17, -10], [-11, -6], [-11, -2], [-13, -2], [-13, 3]] },
   { name: 'storm drain: manhole -> Kessler hole', q: 'day=5&map=drain&spawn=manhole&speed=2', pts: [[0, 0], [-43, 0], [-43, -17]] },
   { name: 'storm drain: manhole -> living room -> outfall', q: 'day=5&map=drain&spawn=manhole&speed=2', pts: [[0, -1], [0, -20], [-19, -20], [-19, -17], [-25, -17], [-19, -17], [-19, -20], [0, -20], [0, -43], [33, -43], [33, -67]] },
-  { name: 'Mrs. Miller: living room -> kitchen -> sewing room', q: 'day=2&map=miller&spawn=front&speed=2', pts: [[-4.8, 3.6], [-5, 1], [-5, -6], [-3, -8.5], [-5, -5], [-5, 3.6], [2.6, 3.6], [1.8, 1.5], [1.8, -6], [2.5, -9.5]] },
+  { name: 'Mrs. Miller: living room -> kitchen -> sewing room', q: 'day=2&map=miller&spawn=front&speed=2', pts: [[-4.8, 3.6], [-5, 1], [-5, -6], [-3, -8.5], [-5, -5], [-5, 3.6], [2.8, 3.6], [2.8, -6], [1.2, -6.4], [1.2, -9.4]] },
+  { name: 'front door -> woods trail (day 4)', q: 'day=4&map=town&spawn=house&speed=2', pts: [[17, 21.5], [0, 21.5], [0, 64], [-40, 64], [-40, 73]], arrive: 'woods' },
+  { name: 'woods: trailhead -> creek bridge -> search camp', q: 'day=4&map=woods&spawn=trail&speed=2', pts: [[0, -32], [-38, -32], [-50, -32], [-66, -32]] },
+  { name: 'woods: trailhead -> stones -> dead tree', q: 'day=4&map=woods&spawn=trail&speed=2', pts: [[0, -67], [-3, -68.2], [-3, -70], [-20, -70], [-35, -69]] },
   { name: 'underneath: arrival -> hub', q: 'day=8&map=underneath&spawn=arrive&speed=2', pts: [[0, -30]] },
 ];
 

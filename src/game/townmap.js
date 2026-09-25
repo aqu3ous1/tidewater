@@ -149,6 +149,14 @@ const TownMap = (() => {
         : st.day >= 3 ? 'Mrs. Okafor is getting the classrooms ready for September.' : 'Closed for summer. SEE YOU IN SEPTEMBER!',
     },
     {
+      id: 'trail', rect: [-43, 67, -37, 73], maps: ['woods', 'cannery'],
+      name: () => 'WOODS TRAIL', pict: () => ({ kind: 'lot' }),
+      status: (st) => st.day < 4 ? tag('CLOSED', '#7a2a2a', '#f8dcd8') : tag('OPEN', '#2e6a3e', '#dcf4d8'),
+      blurb: (st) => st.day >= 8 ? 'The trees have come right up to the end of Oak Street.'
+        : st.day >= 6 ? 'The trail goes a long way. Past the stones there is an old factory.'
+          : st.day >= 4 ? 'The chain is down. The trail goes into the woods south of town.' : 'TRAIL CLOSED - SEARCH IN PROGRESS. The sign is very old.',
+    },
+    {
       id: 'sign', rect: [6, 69, 12, 73], maps: [],
       name: () => 'WELCOME SIGN', sign: (st) => st.day >= 8 ? 'town_sign2' : 'town_sign',
       blurb: (st) => st.day >= 8 ? 'WELCOME TO BELLWOOD. POP. 1,205.' : 'WELCOME TO BELLWOOD. POP. 1,204.',
@@ -380,6 +388,9 @@ const TownMap = (() => {
     bld(12, 32, 50, 50, { roof: '#bca888', wall: '#d8b888', face: 4, door: 31, doorC: '#6a4a8a', vents: [[6, 4], [28, 4], [17, 8]], dark: mem || night });
     for (let x = mx(50); x < VW; x += 2) p.set(x, mz(50), '#8a8478');
     p.line(mx(20), mz(51), mx(20), mz(54), INK); p.rect(mx(20) + 1, mz(51), 3, 2, '#c83a3a'); p.set(mx(20) + 1, mz(51), '#3a5ab8');
+    // the woods trail and the treehouse
+    for (let z = 68; z < 84; z++) { p.set(mx(-40), mz(z), '#b08a5a'); if (z % 3) p.set(mx(-40) + 1, mz(z), '#c09a6a'); }
+    tree(-73, 42); p.rect(mx(-73) - 1, mz(42) - 2, 3, 2, '#8a5a2a');
     // welcome sign
     p.rect(mx(7), mz(70), 5, 3, '#f0ece0'); p.frame(mx(7), mz(70), 5, 3, INK); p.set(mx(9), mz(71), '#2a58b8');
     // moving truck on the first day

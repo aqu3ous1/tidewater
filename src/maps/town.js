@@ -143,7 +143,14 @@ MAPS.town = {
       M.billboard('bush', -78.3, z, 2.2, 1.35);
       M.billboard('bush', 78.3, z, 2.2, 1.35);
     }
-    for (let x = -77; x < 78; x += 2.6) { if (Math.abs(x) < 6.5) continue; M.billboard('bush', x, 73, 2.2, 1.35); }
+    for (let x = -77; x < 78; x += 2.6) { if (Math.abs(x) < 6.5 || Math.abs(x + 40) < 2.6) continue; M.billboard('bush', x, 73, 2.2, 1.35); }
+    // the woods trail, off the end of Oak Street (the chain comes down on day 4)
+    M.floor(-41.6, 68, -38.4, 80, 'dirt', { y: 0.03, tile: 3 });
+    M.postSign(-43.4, 70.6, 'sign_trail', 1.6, 0.8, 's', { y: 0.9 });
+    if (d < 4) { M.box(-40, 0.6, 71.6, 3.4, 0.08, 0.08, 'rust', { solid: false }); M.postSign(-40, 71.6, 'sign_roadclosed', 1.0, 0.5, 's', { y: 0.3 }); }
+    else M.floorDecal('stain', -42.2, 71.2, 0.9, 0.6, { y: 0.04, color: '#6a4a2a' });
+    M.door(-40, 71.8, 'n', { tex: false, w: 3, use: async (S) => Story.trailGate(S) });
+    M.spawn('trail', -40, 70.4, 'n');
     for (const [a, b] of roadsZ) { M.roadBlock(-76.7, a + 0.6, -76.7, b - 0.6, { signX: -75.6 }); M.roadBlock(76.7, a + 0.6, 76.7, b - 0.6, { signX: 75.6 }); }
     M.roadBlock(-3.4, 71.4, 3.4, 71.4, { signX: 0, signZ: 70.9 });
 
