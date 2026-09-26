@@ -127,10 +127,11 @@ const Main = (() => {
     else { Menus.update(dt); Game.update(dt); }
     if (Atlas.dirty) Atlas.upload();
     Game.draw();
-    const ctx = R.ui;
-    if (Game.mode === 'title' || Game.mode === 'boot' || Game.mode === 'name') { ctx.clearRect(0, 0, 320, 240); Title.draw(ctx); UI.draw(ctx, true); }
-    else if (Menus.open) { ctx.clearRect(0, 0, 320, 240); Menus.draw(ctx); }
-    else UI.draw(ctx);
+    const ctx = R.ui, top = R.top;
+    top.clearRect(0, 0, 320, 240);
+    if (Game.mode === 'title' || Game.mode === 'boot' || Game.mode === 'name') { ctx.clearRect(0, 0, 320, 240); Title.draw(ctx); UI.draw(ctx, true, false, top); }
+    else if (Menus.open) { ctx.clearRect(0, 0, 320, 240); Menus.draw(top); }
+    else UI.draw(ctx, false, false, top);
     R.endFrame();
   }
   function start() {

@@ -13,7 +13,7 @@ const R = (() => {
   let gl, canvas;
   let fbo, fboTex, depthRb;
   let progWorld, progPost, progSky;
-  let uiTex, uiCanvas, uiCtx;
+  let uiTex, uiCanvas, uiCtx, topTex, topCanvas, topCtx;
   let postBuf, skyBuf;
   let spriteBuf, spriteData, spriteCount = 0;
   const SPRITE_MAX = 6000; // quads
@@ -86,7 +86,7 @@ void main(){ vUV = aPos * 0.5 + 0.5; gl_Position = vec4(aPos, 0.0, 1.0); }`;
 
   const FS_POST = `
 precision mediump float;
-uniform sampler2D uScene, uUI; uniform vec2 uRes; uniform float uSoft; uniform vec3 uFade; uniform float uFadeA;
+uniform sampler2D uScene, uUI, uTop; uniform vec2 uRes; uniform float uSoft; uniform vec3 uFade; uniform float uFadeA;
 uniform float uSat; uniform vec3 uGrade;
 varying vec2 vUV;
 float bayer(vec2 f){ vec2 p = mod(floor(f), 4.0); vec2 a = mod(p, 2.0); vec2 b = floor(p / 2.0);
@@ -113,6 +113,9 @@ void main(){
   vec4 ui = texture2D(uUI, vec2(vUV.x, 1.0 - vUV.y));
   c = mix(c, ui.rgb, ui.a);
   c = mix(c, uFade, uFadeA);
+  // dialogs, menus and cards sit above the fade, so text shown in the dark can still be read
+  vec4 top = texture2D(uTop, vec2(vUV.x, 1.0 - vUV.y));
+  c = mix(c, top.rgb, top.a);
   gl_FragColor = vec4(c, 1.0);
 }`;
 
@@ -174,6 +177,13 @@ void main(){ float t = smoothstep(uHorizon - 0.05, 1.0, vY); gl_FragColor = vec4
     uiCtx.imageSmoothingEnabled = false;
     uiTex = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, uiTex);
+    setTexParams(false, false);
+    topCanvas = document.createElement('canvas');
+    topCanvas.width = W; topCanvas.height = H;
+    topCtx = topCanvas.getContext('2d');
+    topCtx.imageSmoothingEnabled = false;
+    topTex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, topTex);
     setTexParams(false, false);
 
     postBuf = gl.createBuffer();
@@ -409,6 +419,9 @@ void main(){ float t = smoothstep(uHorizon - 0.05, 1.0, vY); gl_FragColor = vec4
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_2D, uiTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, uiCanvas);
+    gl.activeTexture(gl.TEXTURE2);
+    gl.bindTexture(gl.TEXTURE_2D, topTex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, topCanvas);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, fboTex);
     const lin = settings.soft ? gl.LINEAR : gl.NEAREST;
@@ -416,7 +429,7 @@ void main(){ float t = smoothstep(uHorizon - 0.05, 1.0, vY); gl_FragColor = vec4
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, lin);
     gl.useProgram(progPost.p);
     const u = progPost.u;
-    gl.uniform1i(u.uScene, 0); gl.uniform1i(u.uUI, 1);
+    gl.uniform1i(u.uScene, 0); gl.uniform1i(u.uUI, 1); gl.uniform1i(u.uTop, 2);
     gl.uniform2f(u.uRes, W, H);
     gl.uniform1f(u.uSoft, settings.soft ? 1 : 0);
     gl.uniform3fv(u.uFade, settings.fadeColor);
@@ -445,7 +458,7 @@ void main(){ float t = smoothstep(uHorizon - 0.05, 1.0, vY); gl_FragColor = vec4
 
   return {
     W, H, init, resize, addTexture, createMesh, destroyMesh, setCamera, beginFrame, drawMesh, sprite, spriteFlat, flushSprites, endFrame,
-    project, settings, textures, get ui() { return uiCtx; }, get uiCanvas() { return uiCanvas; }, get gl() { return gl; },
+    project, settings, textures, get ui() { return uiCtx; }, get top() { return topCtx; }, get uiCanvas() { return uiCanvas; }, get topCanvas() { return topCanvas; }, get gl() { return gl; },
     get camPos() { return camPos; }, VSTRIDE,
   };
 })();

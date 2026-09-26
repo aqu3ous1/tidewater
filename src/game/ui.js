@@ -343,13 +343,17 @@ const UI = (() => {
       default: if (m.update) m.update(m, dt); break;
     }
   }
-  function draw(ctx, keep, modalsOnly) {
+  // the HUD goes on ctx, under the screen fade; anything meant to be read
+  // (banners, subtitles, dialogs, cards) goes on top, above the fade
+  function draw(ctx, keep, modalsOnly, top) {
     if (!keep) ctx.clearRect(0, 0, W, H);
+    const T = top || ctx;
     if ((Game.mode === 'play' || Game.mode === 'ending') && !modalsOnly) {
       if (Game.drawHud) Game.drawHud(ctx);
-      drawBanner(ctx);
-      if (subtitle) Font.center(ctx, subtitle, 160, 222, '#e8e4d8', { shadow: '#000' });
+      drawBanner(T);
+      if (subtitle) Font.center(T, subtitle, 160, 222, '#e8e4d8', { shadow: '#000' });
     }
+    ctx = T;
     for (const m of modals) {
       switch (m.type) {
         case 'dialog': drawDialog(ctx, m); break;
