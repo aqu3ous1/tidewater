@@ -84,7 +84,7 @@ MAPS.woods = {
     M.look(3.4, -32.8, 'A signpost. CREEK to the left. STONES straight ahead. STAND to the right. Somebody has carved a fourth arrow, pointing back the way you came: HOME?', { r: 1.1 });
 
     // ---- the creek
-    M.floor(-40, -46, -36, -18, 'water', { y: -0.2, tile: 2, scroll: [0, -0.15], lit: false, bright: night ? 0.3 : 0.8, surface: false });
+    M.floor(-40, -46, -36, -18, 'water', { y: 0.05, tile: 2, scroll: [0, -0.15], lit: false, bright: night ? 0.3 : 0.9, color: late ? '#9aa0a0' : '#9ad8f0', surface: false });
     M.box(-38, 0, -32, 5, 0.25, 2, { top: 'wood', sides: 'wood_dark' }, { solid: false });
     for (const z of [-33.1, -30.9]) M.fence(-40.3, z, -35.7, z, { region: 'rail_wood', h: 0.9 });
     M.look(-33, -26, ['A creek, fast and clear. You watch a leaf float by.', 'It\'s floating uphill.'], { r: 1.6 });

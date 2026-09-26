@@ -109,7 +109,9 @@ MAPS.town = {
     M.floor(-78, 26, -6, 28, 'sidewalk', { tile: 2, y: 0.04 });
     M.floor(6, 26, 78, 28, 'sidewalk', { tile: 2, y: 0.04 });
     // park / school block
-    M.floor(-78, 28, -6, 58, grass, { tile: 4 });
+    // (the park grass goes round the duck pond, so the water can sit below it)
+    M.floor(-78, 28, -62, 58, grass, { tile: 4 }); M.floor(-42, 28, -6, 58, grass, { tile: 4 });
+    M.floor(-62, 28, -42, 34, grass, { tile: 4 }); M.floor(-62, 48, -42, 58, grass, { tile: 4 });
     M.floor(6, 28, 78, 58, grass, { tile: 4 });
     // Oak Street + south edge
     M.floor(-78, 58, -6, 60, 'sidewalk', { tile: 2, y: 0.04 });
@@ -329,7 +331,12 @@ MAPS.town = {
     if (d >= 4 && d <= 7) for (const x of [10, -30, 40]) { M.decal('poster_cat_small', x, 1.4, 17.3 + 0.1, 0.45, 0.6, 's', { off: 0.02 }); M.look(x, 18.1, 'MISSING: MARMALADE. Orange tabby. Red collar with a bell.', { r: 0.9, y: 1.8 }); }
 
     // ---------------------------------------------------------------- park & playground (z 30..56)
-    M.floor(-62, 34, -42, 48, 'water', { y: -0.1, tile: 4, scroll: [0.02, 0], lit: false, bright: night ? 0.35 : 0.95, surface: false });
+    // the duck pond: water a little below the grass, muddy banks, a ring of stones
+    M.floor(-62, 34, -42, 48, 'water', { y: -0.3, tile: 4, scroll: [0.02, 0], lit: false, bright: night ? 0.35 : 0.95, color: mem ? '#6a7a7a' : '#8ad0e8', surface: false });
+    M.wall(-62, 34, -42, 34, 0.7, 'dirt', { face: 's', y0: -0.7, solid: false }); M.wall(-62, 48, -42, 48, 0.7, 'dirt', { face: 'n', y0: -0.7, solid: false });
+    M.wall(-62, 34, -62, 48, 0.7, 'dirt', { face: 'e', y0: -0.7, solid: false }); M.wall(-42, 34, -42, 48, 0.7, 'dirt', { face: 'w', y0: -0.7, solid: false });
+    for (const [x0, z0, x1, z1] of [[-62.3, 33.7, -41.7, 34.1], [-62.3, 47.9, -41.7, 48.3], [-62.3, 34.1, -61.9, 47.9], [-42.1, 34.1, -41.7, 47.9]]) M.box((x0 + x1) / 2, 0, (z0 + z1) / 2, x1 - x0, 0.14, z1 - z0, 'rock', { solid: false });
+    for (const [x, z, s] of [[-58, 38, 0.9], [-49, 44.5, 0.7], [-45, 37, 0.8]]) M.cyl(x, -0.29, z, s, 0.01, 'grass', { sides: 7, solid: false, color: '#4a8a3a' });
     M.solid(-62, 34, -42, 48);
     for (let x = -62; x < -42; x += 3.3) { M.billboard('reeds', x, 48.4, 1.1, 1.3); M.billboard('reeds', x + 1.5, 33.6, 1.1, 1.3); }
     M.pickup(-45, 49.2, 'shell3', { cond: (s) => s.flags.shellQuest || s.day >= 2 });
