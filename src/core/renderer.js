@@ -17,7 +17,9 @@ const R = (() => {
   let postBuf, skyBuf;
   let spriteBuf, spriteData, spriteCount = 0;
   const SPRITE_MAX = 6000; // quads
-  const VSTRIDE = 9; // x y z u v r g b a
+  const VSTRIDE = 9; // x y z u v r g b a  (plus, for meshes, a second buffer: the surface plane nx ny nz d)
+  let trueDepth = false;
+  const camR = [1, 0, 0], camU = [0, 1, 0], camF = [0, 0, -1], projZ = [0, 0];
   const textures = {};
   const view = Mat4.create(), proj = Mat4.create(), vp = Mat4.create(), ident = Mat4.create();
   const camPos = [0, 0, 0];
@@ -39,12 +41,15 @@ const R = (() => {
 
   const VS_WORLD = `
 precision highp float;
-attribute vec3 aPos; attribute vec2 aUV; attribute vec4 aCol;
+attribute vec3 aPos; attribute vec2 aUV; attribute vec4 aCol; attribute vec4 aPlane;
 uniform mat4 uVP, uModel, uView;
 uniform vec2 uSnap; uniform vec2 uUVOff; uniform float uWobble; uniform float uTime;
-varying vec4 vCol; varying vec3 vUVA; varying vec2 vUVP; varying float vDepth;
+varying vec4 vCol; varying vec3 vUVA; varying vec2 vUVP; varying float vDepth; varying vec4 vPlane;
 void main(){
   vec4 wp = uModel * vec4(aPos, 1.0);
+  // the surface this vertex belongs to (normal, distance), in world space
+  vec3 pw = (uModel * vec4(aPlane.xyz, 0.0)).xyz; float pl = length(pw);
+  vPlane = pl > 0.0001 ? vec4(pw / pl, aPlane.w * pl + dot(pw / pl, uModel[3].xyz)) : vec4(0.0);
   if (uWobble > 0.0) {
     wp.xyz += uWobble * vec3(sin(uTime*1.3 + wp.y*2.1 + wp.z*0.7), sin(uTime*1.7 + wp.x*1.3)*0.4, cos(uTime*1.1 + wp.x*0.9 + wp.y));
   }
@@ -65,7 +70,24 @@ precision highp float;
 precision mediump float;
 #endif
 uniform sampler2D uTex; uniform vec3 uFogCol; uniform vec2 uFog; uniform float uAffine; uniform vec4 uTint; uniform float uBlend;
-varying vec4 vCol; varying vec3 vUVA; varying vec2 vUVP; varying float vDepth;
+uniform vec3 uCamPos, uCamR, uCamU, uCamF; uniform vec2 uProjZ, uVpSize;
+varying vec4 vCol; varying vec3 vUVA; varying vec2 vUVP; varying float vDepth; varying vec4 vPlane;
+// Vertices are snapped to the pixel grid (the wobbly look), which tilts each triangle's depth a
+// little. Surfaces laid over each other then fight. So the depth is worked out exactly: the ray
+// through this pixel, hitting the true (unsnapped) surface.
+float trueDepth(){
+  float dz = gl_FragCoord.z;
+  if (dot(vPlane.xyz, vPlane.xyz) > 0.25) {
+    vec2 ndc = gl_FragCoord.xy / uVpSize * 2.0 - 1.0;
+    vec3 dir = uCamF + ndc.x * uCamR + ndc.y * uCamU;
+    float den = dot(vPlane.xyz, dir);
+    if (abs(den) > 0.00001) {
+      float t = (vPlane.w - dot(vPlane.xyz, uCamPos)) / den;
+      if (t > 0.0) dz = clamp((uProjZ.y / t - uProjZ.x) * 0.5 + 0.5, 0.0, 1.0);
+    }
+  }
+  return dz;
+}
 float bayer(vec2 f){ vec2 p = mod(floor(f), 4.0); vec2 a = mod(p, 2.0); vec2 b = floor(p / 2.0);
   float b1 = mod(2.0*a.x + 3.0*a.y, 4.0); float b2 = mod(2.0*b.x + 3.0*b.y, 4.0); return (b1*4.0 + b2 + 0.5) / 16.0; }
 void main(){
@@ -78,6 +100,9 @@ void main(){
   float f = clamp((vDepth - uFog.x) / max(uFog.y - uFog.x, 0.001), 0.0, 1.0);
   c.rgb = mix(c.rgb, uFogCol, f);
   gl_FragColor = c;
+#ifdef TRUE_DEPTH
+  gl_FragDepthEXT = trueDepth();
+#endif
 }`;
 
   const VS_POST = `
@@ -149,7 +174,9 @@ void main(){ float t = smoothstep(uHorizon - 0.05, 1.0, vY); gl_FragColor = vec4
     canvas = cv;
     gl = cv.getContext('webgl', { antialias: false, alpha: false, depth: true, preserveDrawingBuffer: false, powerPreference: 'default' });
     if (!gl) return false;
-    progWorld = compile(VS_WORLD, FS_WORLD);
+    const hp = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
+    trueDepth = !!(gl.getExtension('EXT_frag_depth') && hp && hp.precision > 0);
+    progWorld = compile(VS_WORLD, (trueDepth ? '#extension GL_EXT_frag_depth : enable\n#define TRUE_DEPTH 1\n' : '') + FS_WORLD);
     progPost = compile(VS_POST, FS_POST);
     progSky = compile(VS_SKY, FS_SKY);
 
@@ -247,13 +274,15 @@ void main(){ float t = smoothstep(uHorizon - 0.05, 1.0, vY); gl_FragColor = vec4
       gl.bindBuffer(gl.ARRAY_BUFFER, buf);
       const arr = p.data instanceof Float32Array ? p.data : new Float32Array(p.data);
       gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
-      mesh.parts.push({ tex: p.tex, blend: !!p.blend, buf, count: arr.length / VSTRIDE, scroll: p.scroll || null, cx: p.cx || 0, cz: p.cz || 0, untex: false, key: p.key });
+      let pbuf = null;
+      if (p.planes) { pbuf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, pbuf); gl.bufferData(gl.ARRAY_BUFFER, p.planes, gl.STATIC_DRAW); }
+      mesh.parts.push({ tex: p.tex, blend: !!p.blend, buf, pbuf, count: arr.length / VSTRIDE, scroll: p.scroll || null, cx: p.cx || 0, cz: p.cz || 0, untex: false, key: p.key });
     }
     return mesh;
   }
   function destroyMesh(mesh) {
     if (!mesh) return;
-    for (const p of mesh.parts) gl.deleteBuffer(p.buf);
+    for (const p of mesh.parts) { gl.deleteBuffer(p.buf); if (p.pbuf) gl.deleteBuffer(p.pbuf); }
     mesh.parts = [];
   }
 
@@ -264,6 +293,11 @@ void main(){ float t = smoothstep(uHorizon - 0.05, 1.0, vY); gl_FragColor = vec4
     Mat4.perspective(proj, camFov * Math.PI / 180, W / H, near || 0.2, far || 200);
     Mat4.lookAt(view, eye, target, [0, 1, 0]);
     Mat4.multiply(vp, proj, view);
+    const ty = Math.tan(camFov * Math.PI / 360), tx = ty * W / H;
+    camR[0] = view[0] * tx; camR[1] = view[4] * tx; camR[2] = view[8] * tx;
+    camU[0] = view[1] * ty; camU[1] = view[5] * ty; camU[2] = view[9] * ty;
+    camF[0] = -view[2]; camF[1] = -view[6]; camF[2] = -view[10];
+    projZ[0] = proj[10]; projZ[1] = proj[14];
     camPos[0] = eye[0]; camPos[1] = eye[1]; camPos[2] = eye[2];
     // camera right vector on the XZ plane (for cylindrical billboards)
     const fx = target[0] - eye[0], fz = target[2] - eye[2];
@@ -271,12 +305,15 @@ void main(){ float t = smoothstep(uHorizon - 0.05, 1.0, vY); gl_FragColor = vec4
     camRight = [-fz / l, 0, fx / l];
   }
 
-  function bindWorldAttribs(buf) {
+  function bindWorldAttribs(buf, pbuf) {
     const a = progWorld.a;
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.enableVertexAttribArray(a.aPos); gl.vertexAttribPointer(a.aPos, 3, gl.FLOAT, false, VSTRIDE * 4, 0);
     gl.enableVertexAttribArray(a.aUV); gl.vertexAttribPointer(a.aUV, 2, gl.FLOAT, false, VSTRIDE * 4, 12);
     gl.enableVertexAttribArray(a.aCol); gl.vertexAttribPointer(a.aCol, 4, gl.FLOAT, false, VSTRIDE * 4, 20);
+    if (a.aPlane == null) return;
+    if (pbuf) { gl.bindBuffer(gl.ARRAY_BUFFER, pbuf); gl.enableVertexAttribArray(a.aPlane); gl.vertexAttribPointer(a.aPlane, 4, gl.FLOAT, false, 16, 0); }
+    else { gl.disableVertexAttribArray(a.aPlane); gl.vertexAttrib4f(a.aPlane, 0, 0, 0, 0); } // sprites: plain depth
   }
 
   function beginFrame(clearColor) {
@@ -296,6 +333,7 @@ void main(){ float t = smoothstep(uHorizon - 0.05, 1.0, vY); gl_FragColor = vec4
     gl.uniformMatrix4fv(u.uVP, false, vp);
     gl.uniformMatrix4fv(u.uView, false, view);
     gl.uniformMatrix4fv(u.uModel, false, ident);
+    if (u.uCamPos) { gl.uniform3fv(u.uCamPos, camPos); gl.uniform3fv(u.uCamR, camR); gl.uniform3fv(u.uCamU, camU); gl.uniform3fv(u.uCamF, camF); gl.uniform2fv(u.uProjZ, projZ); gl.uniform2f(u.uVpSize, W, H); }
     const s = 1 / settings.snap;
     gl.uniform2f(u.uSnap, 160 * s, 120 * s);
     gl.uniform1f(u.uAffine, settings.affine);
@@ -342,13 +380,14 @@ void main(){ float t = smoothstep(uHorizon - 0.05, 1.0, vY); gl_FragColor = vec4
       const untex = opts.untex || p.untex;
       gl.bindTexture(gl.TEXTURE_2D, untex ? textures.white.tex : texOf(p.tex).tex);
       if (p.scroll) gl.uniform2f(u.uUVOff, p.scroll[0] * settings.uvTime, p.scroll[1] * settings.uvTime);
-      bindWorldAttribs(p.buf);
+      bindWorldAttribs(p.buf, p.pbuf);
       gl.drawArrays(gl.TRIANGLES, 0, p.count);
       if (p.scroll) gl.uniform2f(u.uUVOff, 0, 0);
       if (p.blend) { gl.disable(gl.BLEND); gl.depthMask(true); }
     }
     if (opts.tint) gl.uniform4f(u.uTint, 1, 1, 1, 1);
     if (opts.model) gl.uniformMatrix4fv(u.uModel, false, ident);
+    if (progWorld.a.aPlane != null) { gl.disableVertexAttribArray(progWorld.a.aPlane); gl.vertexAttrib4f(progWorld.a.aPlane, 0, 0, 0, 0); }
   }
 
   // ---- Sprites (camera-facing, anchored at bottom center) -----------------

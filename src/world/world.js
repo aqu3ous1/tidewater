@@ -143,6 +143,12 @@ const World = (() => {
     return [x, z];
   }
 
+  // how high the floor is here (the pier deck, a sandbox...): characters stand on it, not in it
+  function groundAt(x, z) {
+    let y = 0;
+    for (const f of map.surfaces) if (f.y > y && f.y <= 0.6 && x >= f.x0 && x <= f.x1 && z >= f.z0 && z <= f.z1) y = f.y;
+    return y;
+  }
   function surfaceAt(x, z) {
     let s = 'hard';
     for (const f of map.surfaces) if (x >= f.x0 && x <= f.x1 && z >= f.z0 && z <= f.z1) s = f.surf;
@@ -388,9 +394,9 @@ const World = (() => {
       if (!n.visible) continue;
       if (n.flicker && Math.random() < n.flicker) continue;
       const col = n.alpha < 1 ? [0.5, 0.5, 0.5, n.alpha] : (n.col || COL);
-      drawChar(n.set, n.x, n.z, n.face, n.moving && !n.slide, n.anim, { col, wrong: n.wrongFace, scale: n.scale, y: n.y, noShadow: n.noShadow });
+      drawChar(n.set, n.x, n.z, n.face, n.moving && !n.slide, n.anim, { col, wrong: n.wrongFace, scale: n.scale, y: n.y != null ? n.y : groundAt(n.x, n.z), noShadow: n.noShadow });
     }
-    if (!player.hidden) drawChar(player.set, player.x, player.z, player.face, player.moving, player.anim, { col: player.col, y: player.y });
+    if (!player.hidden) drawChar(player.set, player.x, player.z, player.face, player.moving, player.anim, { col: player.col, y: player.y != null ? player.y : groundAt(player.x, player.z) });
     if (target && !Script.busy && Game.showIndicator) {
       const o = target.o;
       const bob = Math.sin(time * 6) * 0.06;

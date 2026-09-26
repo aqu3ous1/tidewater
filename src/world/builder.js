@@ -193,7 +193,8 @@ class MapBuilder {
   // box centered at x,z with bottom at y. tex: spec or {top,bottom,n,s,e,w,sides}
   box(x, y, z, w, h, d, tex, opts) {
     opts = opts || {};
-    const t = (f) => (typeof tex === 'object' ? (tex[f] || tex.sides || tex.all) : tex);
+    // a face set to false in the texture object is left off (e.g. { sides: 'wood', top: false })
+    const t = (f) => (typeof tex === 'object' ? (tex[f] === false ? null : (tex[f] || tex.sides || tex.all)) : tex);
     const x0 = x - w / 2, x1 = x + w / 2, z0 = z - d / 2, z1 = z + d / 2, y1 = y + h;
     const fit = opts.fit;
     const fo = (f) => Object.assign({}, opts, { fit: fit === true || (fit && fit[f]), tile: opts.tile || 2, uOff: 0, vOff: 0, sub: opts.sub || 99 });
@@ -366,7 +367,10 @@ class MapBuilder {
       // centre for transparent sorting
       let cx = 0, cz = 0; const nv = b.lit.length;
       for (const v of b.lit) { cx += v.p[0]; cz += v.p[2]; }
-      parts.push({ tex: b.tex, blend: b.blend, data: out, scroll: b.scroll, cx: cx / Math.max(1, nv), cz: cz / Math.max(1, nv), key: b.key });
+      // each vertex also carries its surface's plane, so the renderer can give it exact depth
+      const planes = new Float32Array(nv * 4);
+      for (let i = 0; i < nv; i++) { const v = b.lit[i], n = v.n; planes[i * 4] = n[0]; planes[i * 4 + 1] = n[1]; planes[i * 4 + 2] = n[2]; planes[i * 4 + 3] = n[0] * v.p[0] + n[1] * v.p[1] + n[2] * v.p[2]; }
+      parts.push({ tex: b.tex, blend: b.blend, data: out, planes, scroll: b.scroll, cx: cx / Math.max(1, nv), cz: cz / Math.max(1, nv), key: b.key });
     }
     return R.createMesh(parts);
   }
