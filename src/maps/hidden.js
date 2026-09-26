@@ -235,7 +235,7 @@ MAPS.belltower = {
     M.spawn('mid', 20, 2.6, 'n');
     M.spawn('midDown', 20, -2.6, 's');
     // ---- the bell loft
-    const LX = 41, LZ = 0;
+    const LX = 120, LZ = 0; // far from the stairs: the panorama around the loft is a big ring
     M.floor(LX - 5, LZ - 5, LX + 5, LZ + 5, 'wood_dark', { tile: 2 });
     for (const [x, z] of [[-5, -5], [5, -5], [-5, 5], [5, 5], [0, -5], [-5, 0], [5, 0]]) M.box(LX + x, 0, LZ + z, 0.8, 4.4, 0.8, 'stone', { solid: true });
     for (const [x0, z0, x1, z1] of [[-5, -5, 5, -5], [-5, -5, -5, 5], [5, -5, 5, 5], [-5, 5, -1, 5], [1, 5, 5, 5]]) M.box(LX + (x0 + x1) / 2, 0, LZ + (z0 + z1) / 2, Math.max(0.5, Math.abs(x1 - x0)), 1.0, Math.max(0.5, Math.abs(z1 - z0)), 'stone', { solid: true });

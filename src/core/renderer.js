@@ -362,7 +362,15 @@ void main(){ float t = smoothstep(uHorizon - 0.05, 1.0, vY); gl_FragColor = vec4
     const c = col || [0.5, 0.5, 0.5, 1];
     const bl = [x - rx * hw, y, z - rz * hw], br = [x + rx * hw, y, z + rz * hw];
     let tl = [bl[0], y + h, bl[2]], tr = [br[0], y + h, br[2]];
-    if (opts && opts.lean) { // lean top toward camera a touch so sprites read from above
+    if (opts && opts.upright) {
+      // looking down on an upright sprite squashes it (by the cosine of the angle): stretch it
+      // back up so characters keep their proportions however high the camera is
+      const dx = camPos[0] - x, dz = camPos[2] - z, dh = Math.hypot(dx, dz) || 1e-3;
+      const th = Math.atan2(camPos[1] - (y + h * 0.5), dh);
+      const k = 1 / Math.max(0.5, Math.cos(th));
+      const hh = h * (1 + (k - 1) * opts.upright);
+      tl = [bl[0], y + hh, bl[2]]; tr = [br[0], y + hh, br[2]];
+    } else if (opts && opts.lean) { // lean top toward camera a touch so sprites read from above
       const dx = camPos[0] - x, dz = camPos[2] - z, l = Math.hypot(dx, dz) || 1;
       const k = opts.lean * h;
       tl = [tl[0] + dx / l * k, tl[1], tl[2] + dz / l * k]; tr = [tr[0] + dx / l * k, tr[1], tr[2] + dz / l * k];

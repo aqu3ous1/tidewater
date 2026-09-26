@@ -19,6 +19,7 @@ MAPS.aq2 = {
     const f = st.flags, d = st.day, ph = aqPhase(st), old = ph === 'old' || ph === 'dark';
     const hired = !!f.hired, ghostNight = d === 7 && st.tod === 'night';
     const H = 3.4, lk = ph === 'dark' ? 0.08 : old ? 0.4 : 0.6;
+    const DC = 140; // the dome's centre
     const zone = (x0, z0, x1, z1, o) => M.cam(x0, z0, x1, z1, Object.assign({ mode: 'follow', yaw: 0, pitch: 46, dist: 8, fov: 56, lookY: 0.8, ahead: 0.8, clamp: [x0 + 0.6, z0 + 0.6, x1 - 0.6, z1 - 0.4] }, o || {}));
 
     // ---------------------------------------------------------------- landing + stairs down
@@ -172,40 +173,41 @@ MAPS.aq2 = {
       const s = S.st;
       if (s.day < 5 && !(s.day === 7 && s.tod === 'night')) { await S.say(null, 'A ladder up to the dome. There\'s a padlocked cage around the bottom rungs: AUTHORIZED PERSONNEL.'); return; }
       await S.say(null, 'The cage around the ladder is open. You climb up into the dome.');
-      await S.fade(1, 0.5); World.player.x = 52; World.player.z = 1.5; World.player.face = 0; await S.fade(0, 0.6);
+      await S.fade(1, 0.5); World.player.x = DC; World.player.z = 1.5; World.player.face = 0; await S.fade(0, 0.6);
     } });
     M.light(35, 3, 1, 6, '#f0f0e0', lk * 0.6);
     zone(30, -4, 40, 6);
 
     // ---------------------------------------------------------------- the dome (up the ladder)
+    // it sits well away from the rest of the floor: the town panorama around it is a big ring
     // a round room: wooden floor, a rim, glass all the way round
-    M.cyl(52, -0.12, -3, 7.2, 0.12, 'wood_dark', { sides: 20, solid: false });
-    M.cyl(52, 0, -3, 7.25, 0.14, 'grate', { sides: 20, solid: false, cap: false });
-    for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; M.box(52 + Math.cos(a) * 7.1, 0, -3 + Math.sin(a) * 7.1, 0.2, 3.5, 0.2, 'metal', { solid: false }); }
-    M.cyl(52, 0.9, -3, 7.2, 2.6, 'glass_dark', { sides: 12, solid: false, blend: true, alpha: 0.22, color: '#8ab0e0', cap: false });
-    for (let i = 0; i < 16; i++) { const a0 = i / 16 * Math.PI * 2, a1 = (i + 1) / 16 * Math.PI * 2; M.fence(52 + Math.cos(a0) * 6.6, -3 + Math.sin(a0) * 6.6, 52 + Math.cos(a1) * 6.6, -3 + Math.sin(a1) * 6.6, { region: 'rail_metal', h: 0.9 }); }
-    M.cyl(52, -0.45, -3, 14, 0.1, 'roof_grey', { sides: 16, solid: false, cap: true });
+    M.cyl(DC, -0.12, -3, 7.2, 0.12, 'wood_dark', { sides: 20, solid: false });
+    M.cyl(DC, 0, -3, 7.25, 0.14, 'grate', { sides: 20, solid: false, cap: false });
+    for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; M.box(DC + Math.cos(a) * 7.1, 0, -3 + Math.sin(a) * 7.1, 0.2, 3.5, 0.2, 'metal', { solid: false }); }
+    M.cyl(DC, 0.9, -3, 7.2, 2.6, 'glass_dark', { sides: 12, solid: false, blend: true, alpha: 0.22, color: '#8ab0e0', cap: false });
+    for (let i = 0; i < 16; i++) { const a0 = i / 16 * Math.PI * 2, a1 = (i + 1) / 16 * Math.PI * 2; M.fence(DC + Math.cos(a0) * 6.6, -3 + Math.sin(a0) * 6.6, DC + Math.cos(a1) * 6.6, -3 + Math.sin(a1) * 6.6, { region: 'rail_metal', h: 0.9 }); }
+    M.cyl(DC, -0.45, -3, 14, 0.1, 'roof_grey', { sides: 16, solid: false, cap: true });
     // Bellwood all the way round, past the glass (the ring faces inward; the camera never sees its back)
     const pano = '@' + (st.tod === 'night' || ph === 'dark' ? 'dome_night' : 'dome_day'), PN = 24;
     for (let i = 0; i < PN; i++) {
       const a0 = -1.5 * Math.PI + i / PN * Math.PI * 2, a1 = -1.5 * Math.PI + (i + 1) / PN * Math.PI * 2, R0 = 28;
-      const p0 = [52 + Math.cos(a0) * R0, -3 + Math.sin(a0) * R0], p1 = [52 + Math.cos(a1) * R0, -3 + Math.sin(a1) * R0];
+      const p0 = [DC + Math.cos(a0) * R0, -3 + Math.sin(a0) * R0], p1 = [DC + Math.cos(a1) * R0, -3 + Math.sin(a1) * R0];
       M.quad(pano, [[p0[0], -8, p0[1]], [p1[0], -8, p1[1]], [p1[0], 20, p1[1]], [p0[0], 20, p0[1]]], null, { lit: false, uvRect: [i / PN, 0, (i + 1) / PN, 1], bright: ph === 'dark' ? 0.4 : 1 });
     }
-    for (let i = 0; i < 32; i++) { const a = i / 32 * Math.PI * 2; M.solidCircle(52 + Math.cos(a) * 6.9, -3 + Math.sin(a) * 6.9, 0.6); }
-    M.decal('plaque_dome', 52, 0.95, -9.55, 0.9, 0.5, 's', { off: 0.02 });
-    M.look(52, -8.8, ['A brass plaque on the railing: THE VANE OBSERVATORY. DEDICATED 1976.', 'Somebody has scratched a line through OBSERVATORY and written LOOKOUT.'], { r: 1.0 });
-    M.bench(47.6, -4.6, 'e'); M.bench(56.4, -4.6, 'w');
-    M.cyl(52, 0, -6.6, 0.15, 1.3, 'chrome', { sides: 4 });
-    M.box(52.3, 1.3, -6.6, 0.9, 0.22, 0.22, 'chrome', { solid: false });
-    M.inter(52, -5.4, { r: 1.5, y: 1.4, use: async (S) => Story.telescope(S) });
-    M.look(57.5, -3, 'Carved into the railing: W.V. + R.V. 1976. And under it, smaller, newer: + E.', { r: 1.2 });
-    M.floorDecal('hatch_open', 52, 2.6, 1.4, 1.4, { y: 0.02 });
-    M.inter(52, 2.2, { r: 1.3, y: 0.5, exit: true, use: async (S) => { await S.fade(1, 0.4); World.player.x = 35; World.player.z = 3.6; World.player.face = Math.PI; await S.fade(0, 0.5); } });
-    M.look(46.5, -3, (s) => s.day >= 7 ? 'From up here the town looks like a model of a town. The river is very still. Somebody is walking along it with a flashlight.' : 'From up here you can see all of Bellwood. The river, the school, your house. Everything looks like a model of itself.', { r: 1.4 });
-    M.light(52, 3, -3, 12, st.tod === 'night' ? '#6a80c0' : '#fff8e0', ph === 'dark' ? 0.2 : 0.7);
-    M.cam(44, -10, 60, 4, { mode: 'follow', yaw: 0, pitch: 34, dist: 7.5, fov: 58, lookY: 1.4, ahead: 1.2, clamp: [44, -9, 60, 6] });
-    M.spawn('dome', 52, 1.5, 'n');
+    for (let i = 0; i < 32; i++) { const a = i / 32 * Math.PI * 2; M.solidCircle(DC + Math.cos(a) * 6.9, -3 + Math.sin(a) * 6.9, 0.6); }
+    M.decal('plaque_dome', DC, 0.95, -9.55, 0.9, 0.5, 's', { off: 0.02 });
+    M.look(DC, -8.8, ['A brass plaque on the railing: THE VANE OBSERVATORY. DEDICATED 1976.', 'Somebody has scratched a line through OBSERVATORY and written LOOKOUT.'], { r: 1.0 });
+    M.bench(DC - 4.4, -4.6, 'e'); M.bench(DC + 4.4, -4.6, 'w');
+    M.cyl(DC, 0, -6.6, 0.15, 1.3, 'chrome', { sides: 4 });
+    M.box(DC + 0.3, 1.3, -6.6, 0.9, 0.22, 0.22, 'chrome', { solid: false });
+    M.inter(DC, -5.4, { r: 1.5, y: 1.4, use: async (S) => Story.telescope(S) });
+    M.look(DC + 5.5, -3, 'Carved into the railing: W.V. + R.V. 1976. And under it, smaller, newer: + E.', { r: 1.2 });
+    M.floorDecal('hatch_open', DC, 2.6, 1.4, 1.4, { y: 0.02 });
+    M.inter(DC, 2.2, { r: 1.3, y: 0.5, exit: true, use: async (S) => { await S.fade(1, 0.4); World.player.x = 35; World.player.z = 3.6; World.player.face = Math.PI; await S.fade(0, 0.5); } });
+    M.look(DC - 5.5, -3, (s) => s.day >= 7 ? 'From up here the town looks like a model of a town. The river is very still. Somebody is walking along it with a flashlight.' : 'From up here you can see all of Bellwood. The river, the school, your house. Everything looks like a model of itself.', { r: 1.4 });
+    M.light(DC, 3, -3, 12, st.tod === 'night' ? '#6a80c0' : '#fff8e0', ph === 'dark' ? 0.2 : 0.7);
+    M.cam(DC - 8, -10, DC + 8, 4, { mode: 'follow', yaw: 0, pitch: 34, dist: 7.5, fov: 58, lookY: 1.4, ahead: 1.2, clamp: [DC - 8, -9, DC + 8, 6] });
+    M.spawn('dome', DC, 1.5, 'n');
 
     // ---------------------------------------------------------------- the room that doesn't exist
     if (ghostNight) {

@@ -67,7 +67,7 @@ const path = require('path');
   await run(() => T.door('belltower', 'mid'));
   await run(() => T.door('belltower', 'loft'));
   s = await st(); check(s.map === 'belltower' && s.x > 35, 'up the tower to the bell', s);
-  await run(() => T.useAt(41.3, 0.6));
+  await run(() => T.useAt(120.3, 0.6));
   s = await st(); check(!!s.flags.bellRung, 'ring the bell', s.flags.bellRung);
   await run(() => T.door('belltower', 'midDown'));
   await run(() => T.door('belltower', 'bottomUp'));

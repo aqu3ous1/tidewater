@@ -5,8 +5,9 @@
 // ---------------------------------------------------------------------------
 
 const MAPS = {}; // id -> definition { name, build(M, st), env(st), music(st), amb(st), cam }
-// follow-camera pitch above CAM_FLAT degrees is scaled down by CAM_KEEP; characters lean toward the camera by CHAR_LEAN of their height
-const CAM_FLAT = 22, CAM_KEEP = 0.4, CHAR_LEAN = 0.2;
+// follow-camera pitch above CAM_FLAT degrees is scaled down by CAM_KEEP; characters are stretched to
+// make up for the camera looking down on them (CHAR_UPRIGHT = how much: 1 = fully), so they keep their shape
+const CAM_FLAT = 22, CAM_KEEP = 0.4, CHAR_UPRIGHT = 1;
 
 const World = (() => {
   const P_RADIUS = 0.3;
@@ -368,7 +369,7 @@ const World = (() => {
     const k = opts.scale || 1;
     const w = 32 / 28 * k, h = 50 / 28 * k;
     const c = opts.col || COL;
-    R.sprite(x, (opts.y || 0), z, w, h, reg, flip, c, { lean: CHAR_LEAN });
+    R.sprite(x, (opts.y || 0), z, w, h, reg, flip, c, { upright: CHAR_UPRIGHT });
     if (!opts.noShadow) R.spriteFlat(x, (opts.y || 0) + 0.02, z, 0.7 * k, 0.35 * k, Atlas.get('shadow'), [0.5, 0.5, 0.5, c[3]]);
   }
 
