@@ -34,7 +34,9 @@ function houseExt(M, x0, z0, x1, z1, o) {
   M.gable(x0, z0, x1, z1, h, o.rh || 2.6, dead ? 'roof_flat' : (o.roof || 'roof_grey'), siding);
   const dx = o.doorX == null ? (x0 + x1) / 2 : o.doorX;
   const win = (x) => M.decal(dead || o.boarded ? 'win_board' : (o.lit ? 'win_house_lit' : (isNight(st) ? 'win_dark' : 'win_house')), x, 1.3, z1, 1.3, 1.5, 's', { lit: !o.lit });
-  win(dx - 3.2); win(dx + 3.2);
+  // the windows belong to the house, not the door (the Delgados' door wanders later in the week)
+  const cx = (x0 + x1) / 2;
+  win(cx - 3.2); win(cx + 3.2);
   if (o.extraWin) { win(x0 + 1.6); win(x1 - 1.6); }
   M.box(dx, 0, z1 + 0.7, 2.6, 0.1, 1.4, 'wood', { solid: false });
   M.floor(dx - 0.8, z1 + 1.4, dx + 0.8, 16, 'sidewalk', { y: 0.03, tile: 2 });
